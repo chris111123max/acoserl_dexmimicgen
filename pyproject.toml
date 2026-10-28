@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools==69.5.1", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "acoserl-benchmark"
+version = "0.1.0"
+requires-python = ">=3.10,<3.11"
+dependencies = ["h5py==3.12.1", "numpy==1.23.3"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

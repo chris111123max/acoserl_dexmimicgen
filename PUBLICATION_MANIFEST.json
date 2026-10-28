@@ -1,0 +1,297 @@
+{
+  "reviewed": true,
+  "secret_and_private_path_scan_matches": 0,
+  "python_ast_and_shell_syntax": "passed",
+  "preserved_data_function_asts_exact": true,
+  "object_error_ast_exact": true,
+  "reward_labels_and_reference_grasps_exact": true,
+  "datasets_outputs_logs_weights_excluded": true,
+  "old_git_history_excluded": true,
+  "live_training_not_modified": true,
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 109,
+      "sha256": "ae19bd6a29f90e5dbfa85bc43647f76c6795ab9b3647bf682586c5c51c10cdf9"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 263,
+      "sha256": "0db746c23b2d5fc1a44bb38804429c7e163a58146448e6697811f4c4d7e67bcb"
+    },
+    {
+      "path": ".gitmodules",
+      "bytes": 473,
+      "sha256": "4233b04d87de1a2e168be6e017d62e2fa9c45820f22019326fd1d75eff8a217e"
+    },
+    {
+      "path": "README.md",
+      "bytes": 5838,
+      "sha256": "3187959de378e0e707298f6bbc3011fca6860876eaaa7efdaa89bd5655a5df21"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "bytes": 2018,
+      "sha256": "e2e12c2666b37fc9bf4732f27100201555b471eaa917621b34e3faf5568267d3"
+    },
+    {
+      "path": "configs/ascend16/formal.json",
+      "bytes": 1223,
+      "sha256": "5d274ed897748483d4165524f57114a8b91e8d3276e3ff62638a131834d2fac0"
+    },
+    {
+      "path": "configs/ascend16/npu_runtime_freeze.txt",
+      "bytes": 2159,
+      "sha256": "400a47e166b3f7513ff2f8a46750d7494c10806333932934df9205a3e19f3fd8"
+    },
+    {
+      "path": "configs/ascend16/runtime_dependencies.txt",
+      "bytes": 1821,
+      "sha256": "aa59ee66815f290149a17d983505f7813133018ecca0a8adc8de36b5192a790f"
+    },
+    {
+      "path": "configs/bimanual_autoserl/reference_grasps.json",
+      "bytes": 65854,
+      "sha256": "91fe7e84010ff8c373e133edb60fcf99e7f770e0d1cbca1c727300ac0da45070"
+    },
+    {
+      "path": "configs/bimanual_autoserl/v1.json",
+      "bytes": 1355,
+      "sha256": "02b0e35dfeb46868a2f3fcfc9e44c7b66465e9a2631898ea3c218d490366cece"
+    },
+    {
+      "path": "docs/PUBLIC_RELEASE_ZH.md",
+      "bytes": 2572,
+      "sha256": "a90307b565c15de8dcd9a5ae9093e2aff1e192891c498c6a5eb1311aef0f2714"
+    },
+    {
+      "path": "docs/ascend16/FORMAL_DEPLOYMENT_ZH.md",
+      "bytes": 7487,
+      "sha256": "b06e66f474c87a9ea8783edb2e47dfa3463829c2cb0a3f37c9103f05be1a6bd0"
+    },
+    {
+      "path": "docs/ascend16/deployment_gate.json",
+      "bytes": 649,
+      "sha256": "5e08d1ac6dd7c6d3b50ec29571a8d711de7d05d7aa1f7cc835b567223c719fff"
+    },
+    {
+      "path": "docs/bimanual_autoserl/strict_semantics.json",
+      "bytes": 4955,
+      "sha256": "fdc682085ace1f93d3f1b4ab1f1ba7c62ebf53796ed65288fbc9b565923bf12d"
+    },
+    {
+      "path": "docs/hf_manifest.json",
+      "bytes": 1150,
+      "sha256": "d9fc2c343f29f2c6e99368f31e5f195eb14c7d9ef5bf97df89fc6307af88b71a"
+    },
+    {
+      "path": "licenses/dexmimicgen.LICENSE",
+      "bytes": 4042,
+      "sha256": "c61872e27a1c33a016491dfd9145211deb46230ec4e94338e022df23ea81b9b5"
+    },
+    {
+      "path": "licenses/lerobot-resfit.LICENSE",
+      "bytes": 27627,
+      "sha256": "0583375a0ec642ec79c447781f34322b0cfa66baff31258214d040f1f6d86d7c"
+    },
+    {
+      "path": "licenses/residual-offpolicy-rl.LICENSE",
+      "bytes": 19346,
+      "sha256": "3711f963c05d0be80d53e5923308a6dee31b203da23435c9cfb7c7b6e4dd5e19"
+    },
+    {
+      "path": "licenses/robosuite.LICENSE",
+      "bytes": 1474,
+      "sha256": "177978cbece0a4c454c2aaec5b3f145b39270814874c43109da9e829c39d9cba"
+    },
+    {
+      "path": "licenses/tensordict_npu.LICENSE",
+      "bytes": 1098,
+      "sha256": "c5d8d2e3fc64f88c272ee2050af4d84e5f58f1a5d17a3aa99a47b77466a6fe72"
+    },
+    {
+      "path": "licenses/torchrl_npu.LICENSE",
+      "bytes": 1098,
+      "sha256": "c5d8d2e3fc64f88c272ee2050af4d84e5f58f1a5d17a3aa99a47b77466a6fe72"
+    },
+    {
+      "path": "patches/resfit-environment.patch",
+      "bytes": 6494,
+      "sha256": "4b004a4400a344ba9198d4356d96453fa9805630ca48a6b7482f987d8ddaf4a6"
+    },
+    {
+      "path": "pyproject.toml",
+      "bytes": 285,
+      "sha256": "03a988523333b7bb5b754b0508893ef9e2f8b9ee4d27e86250b636a4c33095ea"
+    },
+    {
+      "path": "release-source.json",
+      "bytes": 324,
+      "sha256": "0c3485a7165bbd2ef483766303a7917de7c20d363f9ea7c13bf1bbb9d22eb3f2"
+    },
+    {
+      "path": "scripts/ascend16/activate.sh",
+      "bytes": 1225,
+      "sha256": "5c5478d216a98de7cfbbec599bcaddb4c71a92c524a90bc9fefcac3169363ce5"
+    },
+    {
+      "path": "scripts/ascend16/launch_formal.sh",
+      "bytes": 789,
+      "sha256": "d9e0f6c14f9ee0a1f5b00971478a003981cfe8d15d0b17f572e0e9ebbb2777f3"
+    },
+    {
+      "path": "scripts/ascend16/plot_curves.py",
+      "bytes": 2222,
+      "sha256": "875464634c6c94c00408b267a8d0d570b76216aeb45106b830d90e018ac386e2"
+    },
+    {
+      "path": "scripts/ascend16/setup_npu.sh",
+      "bytes": 1621,
+      "sha256": "f7c979e1764004e6b3fed79f22859fdea0d42111b93d6eff05e432023016bc9b"
+    },
+    {
+      "path": "scripts/ascend16/status.py",
+      "bytes": 1014,
+      "sha256": "e4fc47a8b9bb9cec8ebbf9248f2fac92b32478f7782e5f125bb09092ba0e155a"
+    },
+    {
+      "path": "scripts/ascend16/summarize.py",
+      "bytes": 2505,
+      "sha256": "1c7665028d0b58fdeb62f3dadbae0a440a5e77eb0c1bc3e3dd11aa05c0f26a4a"
+    },
+    {
+      "path": "scripts/ascend16/train.py",
+      "bytes": 12703,
+      "sha256": "af6f739f1ab7ebdeddb0126bb8dfa7e16dfd663e62525f16a34fcd2ab3d53cb4"
+    },
+    {
+      "path": "scripts/assembly_feasibility/common.py",
+      "bytes": 7614,
+      "sha256": "892bf8405d76aae62fdcb7a711a8e4b7a75d2e070314b608560c48d08044fa46"
+    },
+    {
+      "path": "scripts/benchmark.py",
+      "bytes": 10671,
+      "sha256": "9a81742086a887a8e07eea046548798e4722cc6454d0935ee97809427ee50720"
+    },
+    {
+      "path": "scripts/bimanual_autoserl/activate_render.sh",
+      "bytes": 224,
+      "sha256": "11ede5e86f629ab56d1d24042af954d8e1ef25a11f2c54da79120b7d5849ff12"
+    },
+    {
+      "path": "scripts/bootstrap_sources.py",
+      "bytes": 1034,
+      "sha256": "6c44cc97890cecb1454db1a603209d4ccbd3581a3b26fac8e26456c32cf9fe29"
+    },
+    {
+      "path": "scripts/download_data_only.py",
+      "bytes": 582,
+      "sha256": "fd229610ac5e2f2d93a7cee550da661fccc6a2da78a64223412e27b8c6070a21"
+    },
+    {
+      "path": "src/acoserl/__init__.py",
+      "bytes": 57,
+      "sha256": "588031ec05ac6f9763a849cb91a7675518ee1da83b4ccdf4fd9d94be386423e1"
+    },
+    {
+      "path": "src/acoserl/ascend_checkpoint.py",
+      "bytes": 2492,
+      "sha256": "8d1481565f71698f67fddcf2be33b486edc45b8320b9532cd0a6860efe1edfe6"
+    },
+    {
+      "path": "src/acoserl/ascend_data.py",
+      "bytes": 1572,
+      "sha256": "bfa61fd6fb4f61dd37628d97cc5ac67a1eb366b71e420fd783f87b513ae10dd3"
+    },
+    {
+      "path": "src/acoserl/ascend_monitor.py",
+      "bytes": 1135,
+      "sha256": "3edc35ac573eeb3611f15d39f7a65fef715119ab173d6792e50bb81d45180417"
+    },
+    {
+      "path": "src/acoserl/autoserl_env.py",
+      "bytes": 4528,
+      "sha256": "88123136fb873fd4d31f321fff814e58544185e7d8b485dbc222d19d5d3a4a10"
+    },
+    {
+      "path": "src/acoserl/bimanual_autoserl.py",
+      "bytes": 20811,
+      "sha256": "bc22d29063e85083c1f9074ad00725fa889b018ec954bb70f4fcc0f84efff3c5"
+    },
+    {
+      "path": "src/acoserl/config.py",
+      "bytes": 1151,
+      "sha256": "6d1bc0c0bb5d9283f6e9920ba9629db0aa8abd023d0212b88c50fe03554dfce1"
+    },
+    {
+      "path": "src/acoserl/data.py",
+      "bytes": 2370,
+      "sha256": "75b813e940e9260f748e1177272e64eb34b4792f356b2a0eccbf52034ee0e7fc"
+    },
+    {
+      "path": "src/acoserl/envs.py",
+      "bytes": 1756,
+      "sha256": "9eb1329e4dd1fd47bc4993c54d9077741d5798846852b1431d3fb5789944f380"
+    },
+    {
+      "path": "src/acoserl/isolated_nstep.py",
+      "bytes": 2386,
+      "sha256": "d4391db9fda4fe0bf9b834cbc2f30ca5a7dc8e4d43e03f2d05c7578b858c3d1e"
+    },
+    {
+      "path": "src/acoserl/parallel_autoserl.py",
+      "bytes": 13586,
+      "sha256": "e98c1f758d4c06d77743cda0cec1d7b3a939b74e1c5bc3fd604bb7d13cf1a00b"
+    },
+    {
+      "path": "src/acoserl/single_demo_rlpd.py",
+      "bytes": 4014,
+      "sha256": "b6ad164bd4a0de622be4b7a0645b222a54247d0f34948f218d933d24fa945d18"
+    },
+    {
+      "path": "src/acoserl/trajectories.py",
+      "bytes": 1854,
+      "sha256": "25ebbfea3857dd55a267c44f4fb48e0b05b5c899eb6b9cf0b85d9d89853f6f53"
+    },
+    {
+      "path": "third_party.lock.json",
+      "bytes": 1917,
+      "sha256": "268dee06fa260112a21a7b1dc2408acefff55fa3ab6a1691d7567ce04234ba15"
+    }
+  ],
+  "submodules": [
+    {
+      "name": "robosuite",
+      "path": "third_party/robosuite",
+      "url": "https://github.com/ARISE-Initiative/robosuite.git",
+      "commit": "a071383d53568ab798eb315c0e95357911be922d",
+      "license_file": "licenses/robosuite.LICENSE",
+      "patch": null
+    },
+    {
+      "name": "dexmimicgen",
+      "path": "third_party/dexmimicgen",
+      "url": "https://github.com/NVlabs/dexmimicgen.git",
+      "commit": "940e8a1b3ad70eb1925ada6b364b197de6bb2af9",
+      "license_file": "licenses/dexmimicgen.LICENSE",
+      "patch": null
+    },
+    {
+      "name": "residual-offpolicy-rl",
+      "path": "third_party/residual-offpolicy-rl",
+      "url": "https://github.com/amazon-far/residual-offpolicy-rl.git",
+      "commit": "66262b06a0caf159fb001504949b7b48ccda5f64",
+      "license_file": "licenses/residual-offpolicy-rl.LICENSE",
+      "patch": "patches/resfit-environment.patch"
+    },
+    {
+      "name": "lerobot-resfit",
+      "path": "third_party/lerobot-resfit",
+      "url": "https://github.com/huggingface/lerobot.git",
+      "commit": "69901b9b6a2300914ca3de0ea14b6fa6e0203bd4",
+      "license_file": "licenses/lerobot-resfit.LICENSE",
+      "patch": null
+    }
+  ]
+}

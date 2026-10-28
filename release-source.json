@@ -1,0 +1,12 @@
+{
+  "source_history_scanned": true,
+  "source_blob_counts": {
+    "blobs": 227,
+    "secret_pattern_matches": 0,
+    "private_path_blobs": 79
+  },
+  "source_history_published": false,
+  "fresh_public_history": true,
+  "old_identity_metadata_not_copied": true,
+  "source_commit": "bef49075759f6815b2de36851bc18edfb3065e65"
+}

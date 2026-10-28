@@ -1,0 +1,24 @@
+{
+  "passed": false,
+  "selected_utd": 1,
+  "prior_component_checks": {
+    "npu": true,
+    "nstep": true,
+    "offline": true
+  },
+  "joint_stress_passed": false,
+  "joint_checkpoint_restore_verified": false,
+  "authorization": "Historical server authorization does not transfer to a new checkout. Validate your own runtime before explicitly enabling formal training.",
+  "current_runtime": {
+    "torch": "2.3.1",
+    "torch_npu": "2.3.1",
+    "logical_device": "npu:0",
+    "model": "Ascend910B3",
+    "tensor_operation_cpu_readback": [
+      2.0
+    ],
+    "cpu_quota_cores": 22
+  },
+  "time": 1793151225.7814155,
+  "start_authorized": false
+}

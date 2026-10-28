@@ -1,0 +1,39 @@
+[
+  {
+    "type": "file",
+    "oid": "89e60ec5af9c75c03a3616fc9ca0ffc7c4d88d50",
+    "size": 4322918683,
+    "lfs": {
+      "oid": "e12cf336e23b362d8c5317b6e195df472d32bb424a797ab1858e8aa20fabe752",
+      "size": 4322918683,
+      "pointerSize": 135
+    },
+    "xetHash": "3c93464494743c948e416b85024d1429d42d26f1f1af679e04c947693318d281",
+    "path": "generated/two_arm_three_piece_assembly.hdf5",
+    "lastCommit": {
+      "id": "157c1328bc23e6cd4c8c8b402601145e481ccc8f",
+      "title": "Upload folder using huggingface_hub",
+      "date": "2025-02-22T23:06:23.000Z"
+    },
+    "securityFileStatus": {
+      "status": "queued",
+      "protectAiScan": {
+        "status": "unscanned"
+      },
+      "avScan": {
+        "status": "unscanned",
+        "message": ""
+      },
+      "pickleImportScan": {
+        "status": "unscanned",
+        "pickleImports": [],
+        "version": "0.0.0"
+      },
+      "virusTotalScan": {
+        "status": "queued",
+        "message": "QUEUED",
+        "reportLink": "https://www.virustotal.com/gui/file/e12cf336e23b362d8c5317b6e195df472d32bb424a797ab1858e8aa20fabe752?utm_source=huggingface"
+      }
+    }
+  }
+]

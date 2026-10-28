@@ -1,0 +1,58 @@
+{
+  "repositories": [
+    {
+      "name": "robosuite",
+      "path": "third_party/robosuite",
+      "url": "https://github.com/ARISE-Initiative/robosuite.git",
+      "commit": "a071383d53568ab798eb315c0e95357911be922d",
+      "license_file": "licenses/robosuite.LICENSE",
+      "patch": null
+    },
+    {
+      "name": "dexmimicgen",
+      "path": "third_party/dexmimicgen",
+      "url": "https://github.com/NVlabs/dexmimicgen.git",
+      "commit": "940e8a1b3ad70eb1925ada6b364b197de6bb2af9",
+      "license_file": "licenses/dexmimicgen.LICENSE",
+      "patch": null
+    },
+    {
+      "name": "residual-offpolicy-rl",
+      "path": "third_party/residual-offpolicy-rl",
+      "url": "https://github.com/amazon-far/residual-offpolicy-rl.git",
+      "commit": "66262b06a0caf159fb001504949b7b48ccda5f64",
+      "license_file": "licenses/residual-offpolicy-rl.LICENSE",
+      "patch": "patches/resfit-environment.patch"
+    },
+    {
+      "name": "lerobot-resfit",
+      "path": "third_party/lerobot-resfit",
+      "url": "https://github.com/huggingface/lerobot.git",
+      "commit": "69901b9b6a2300914ca3de0ea14b6fa6e0203bd4",
+      "license_file": "licenses/lerobot-resfit.LICENSE",
+      "patch": null
+    }
+  ],
+  "autoserl_reference_only": {
+    "url": "https://github.com/autoserl/AutoSERL",
+    "commit": "238271246e39ef0cf7e06a94392c4b2d184a9af2",
+    "source_redistributed": false,
+    "license_status": "No license found; concepts and citation only."
+  },
+  "npu_build_sources": [
+    {
+      "name": "tensordict_npu",
+      "url": "https://github.com/pytorch/tensordict.git",
+      "commit": "6dc8c6837000f8c6e0a9b3fa3e459f4bdb876491",
+      "license": "MIT",
+      "build_dependency": true
+    },
+    {
+      "name": "torchrl_npu",
+      "url": "https://github.com/pytorch/rl.git",
+      "commit": "b4f4daf7ffe52cb7927529155cdb309d1b63d6bb",
+      "license": "MIT",
+      "build_dependency": true
+    }
+  ]
+}

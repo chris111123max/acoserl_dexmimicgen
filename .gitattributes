@@ -1,0 +1,3 @@
+# Preserve verbatim upstream notices and exact patch context.
+licenses/** -whitespace
+patches/** -whitespace

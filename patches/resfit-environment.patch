@@ -1,0 +1,137 @@
+diff --git a/resfit/dexmg/environments/dexmg.py b/resfit/dexmg/environments/dexmg.py
+index 508ffd9..7a6d3b4 100644
+--- a/resfit/dexmg/environments/dexmg.py
++++ b/resfit/dexmg/environments/dexmg.py
+@@ -58,26 +58,18 @@ ENV_ROBOTS = {
+ logger = logging.getLogger(__name__)
+ 
+ 
+-class RobosuiteGymWrapper:
++class RobosuiteGymWrapper(gym.Env):
+     """
+     Gym-like wrapper for robosuite environments to make them compatible with the training script.
+ 
+     Robosuite environments use the old gym API (step returns 4 values) and have different
+     observation/action interfaces, so this wrapper adapts them to work with our training loop.
+ 
+-    Idxs	Meaning (all values are per-time-step targets, sent at 20 Hz)
+-    0-2	Right wrist Δpos Cartesian x / y / z offset (metres) for the EE site gripper0_right_grip_site.
+-    3-5	Right wrist Δrot Axis-angle components rx,ry,rzrx,ry,rz; ‖r‖ = rotation angle (rad).
+-    6-11	Right Inspire-hand joints (joint-position targets, rad)
+-    6 Thumb flexion
+-    7 Thumb roll / opposition
+-    8 Index flexion
+-    9 Middle flexion
+-    10 Ring flexion
+-    11 Pinky flexion
+-    12-14	Left wrist Δpos Cartesian x / y / z offset for gripper0_left_grip_site.
+-    15-17	Left wrist Δrot Axis-angle components for left EE orientation.
+-    18-23	Left Inspire-hand joints (same ordering as right).
++    Action dimensions are discovered from the actual robosuite robots.
++    For the fixed dual-Panda benchmark: robot0 / right action_dict block first,
++    robot1 / left block second; each block is six normalized OSC_POSE delta
++    inputs in the recorded base frame followed by one Panda gripper command.
++    These are scaled by the original controller; inputs are not raw metres.
+ 
+ 
+     """
+@@ -164,6 +156,7 @@ class RobosuiteGymWrapper:
+             "TwoArmCoffee",
+             "TwoArmThreePieceAssembly",
+             "TwoArmThreading",
++            "TwoArmTransport",
+             "TwoArmCanSortRandom",
+         ]:
+             import dexmimicgen  # noqa: F401, PLC0415
+@@ -195,7 +188,8 @@ class RobosuiteGymWrapper:
+             "render_gpu_device_id": self.render_gpu_device_id,
+         }
+ 
+-        os.environ["MUJOCO_EGL_DEVICE_ID"] = str(self.render_gpu_device_id)
++        if os.environ.get("MUJOCO_GL", "egl") == "egl":
++            os.environ["MUJOCO_EGL_DEVICE_ID"] = str(self.render_gpu_device_id)
+ 
+         # Only log once per vectorized group (env_id==0) and at DEBUG level
+         if self.env_id == 0:
+@@ -205,9 +199,10 @@ class RobosuiteGymWrapper:
+         if "composite_controller_specific_configs" in env_kwargs["controller_configs"]:
+             env_kwargs["controller_configs"]["composite_controller_specific_configs"]["ik_input_ref_frame"] = "world"
+ 
+-        if env_name == "TwoArmTransport":
+-            env_kwargs["env_configuration"] = "opposed"
+-            env_kwargs["controller_configs"]["body_parts"]["right"]["input_ref_frame"] = "world"
++        if env_name in ("TwoArmThreading", "TwoArmThreePieceAssembly", "TwoArmTransport"):
++            # Match the existing official HDF5 benchmark metadata. Do not rotate
++            # Transport actions into a different frame or instantiate the built-in task.
++            env_kwargs["env_configuration"] = "parallel"
+ 
+         self.env: ManipulationEnv = robosuite.make(**env_kwargs)
+ 
+@@ -248,6 +243,7 @@ class RobosuiteGymWrapper:
+ 
+     def _process_obs_for_space_inference(self, obs):
+         """Process observations for space inference without storing _last_obs."""
++        self._validate_required_observations(obs)
+         processed_obs = {}
+ 
+         # Extract robot state
+@@ -289,7 +285,8 @@ class RobosuiteGymWrapper:
+     def reset(self, *, seed=None, options=None):
+         """Reset the environment and return initial observation."""
+         # Gymnasium interface: reset can accept seed and options
+-        # For robosuite environments, we'll ignore these for now
++        # Gymnasium RNG bookkeeping; robosuite's own randomization is unchanged.
++        super().reset(seed=seed)
+         obs = self.env.reset()
+         processed_obs = self._process_obs(obs)
+         self._last_obs = processed_obs  # Store for video recording
+@@ -312,10 +309,11 @@ class RobosuiteGymWrapper:
+         # Return scalar values - Gymnasium will handle device placement and batching in vectorized env
+         reward_scalar = float(reward)
+ 
+-        # Terminate episode on success (reward == 1) to shortcircuit successful rollouts
+-        success = reward == 1.0
+-        terminated_scalar = bool(success)
+-        truncated_scalar = bool(done)  # Robosuite returns done when timeout
++        # Use the original task predicate, independent of reward scaling.
++        success = bool(self.env._check_success())
++        terminated_scalar = success
++        truncated_scalar = bool(done) and not success  # timeout without task success
++        info = {**info, "success": success}
+ 
+         if terminated_scalar or truncated_scalar:
+             info = {
+@@ -329,6 +327,7 @@ class RobosuiteGymWrapper:
+ 
+     def _process_obs(self, obs):
+         """Process robosuite observations to match expected format."""
++        self._validate_required_observations(obs)
+         processed_obs = {}
+ 
+         # Extract robot state using the same features as dataset conversion
+@@ -379,6 +378,12 @@ class RobosuiteGymWrapper:
+ 
+         return processed_obs
+ 
++    def _validate_required_observations(self, obs):
++        required = self._get_expected_low_dim_keys(self.env_name) + self.expected_image_keys
++        missing = [key for key in required if key not in obs]
++        if missing:
++            raise KeyError(f"Missing required observations for {self.env_name}: {missing}")
++
+     def _get_expected_image_keys(self, env_name: str):
+         """Return the expected image keys for a given environment.
+ 
+diff --git a/resfit/rl_finetuning/scripts/train_rlpd_dexmg.py b/resfit/rl_finetuning/scripts/train_rlpd_dexmg.py
+index 3a87d9f..734b7d1 100644
+--- a/resfit/rl_finetuning/scripts/train_rlpd_dexmg.py
++++ b/resfit/rl_finetuning/scripts/train_rlpd_dexmg.py
+@@ -67,7 +67,7 @@ RLPD_ONLINE_CACHE_DIR = _CACHE_ROOT / "online_buffer_cache"
+ # Repository-local imports ------------------------------------------------------
+ # -----------------------------------------------------------------------------
+ 
+-os.environ["MUJOCO_GL"] = "egl"
++os.environ.setdefault("MUJOCO_GL", "egl")
+ 
+ if "MUJOCO_EGL_DEVICE_ID" in os.environ:
+     del os.environ["MUJOCO_EGL_DEVICE_ID"]

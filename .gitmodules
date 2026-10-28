@@ -1,0 +1,12 @@
+[submodule "robosuite"]
+	path = third_party/robosuite
+	url = https://github.com/ARISE-Initiative/robosuite.git
+[submodule "dexmimicgen"]
+	path = third_party/dexmimicgen
+	url = https://github.com/NVlabs/dexmimicgen.git
+[submodule "residual-offpolicy-rl"]
+	path = third_party/residual-offpolicy-rl
+	url = https://github.com/amazon-far/residual-offpolicy-rl.git
+[submodule "lerobot-resfit"]
+	path = third_party/lerobot-resfit
+	url = https://github.com/huggingface/lerobot.git

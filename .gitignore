@@ -1,0 +1,24 @@
+# Generated data, training artifacts and machine-specific runtime state
+/datasets/
+/outputs/
+/logs/
+/cache/
+/kernel_meta/
+/.venv*/
+/third_party/*
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+.env.*
+*.pem
+*.key
+*.pt
+*.pth
+*.ckpt
+*.hdf5
+*.h5
+*.onnx
+*.npz
+*.pkl
+*.pickle
