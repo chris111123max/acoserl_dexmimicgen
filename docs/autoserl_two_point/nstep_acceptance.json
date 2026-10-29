@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "workers": 16,
+  "episodes": 48,
+  "real_rows": 183,
+  "output_rows": 183,
+  "n_step": 3,
+  "interleaving_and_episode_boundaries_verified": true,
+  "terminated_disables_bootstrap": true,
+  "truncated_and_safety_cut_bootstrap": true,
+  "short_tails_flushed": true,
+  "no_fake_safety_transition": true,
+  "single_stream_official_n3_oracle": true,
+  "accepted_n1_timeout_oracle": true
+}

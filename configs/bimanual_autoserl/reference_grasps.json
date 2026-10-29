@@ -1,9 +1,7 @@
 {
-  "source_demo": "TwoArmThreePieceAssembly/demo_0",
-  "purpose": "Only immutable reference grasp relationships used by the existing window filter; no raw trajectories or physical states.",
   "records": [
     {
-      "reference_index": 0,
+      "index": 0,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -15,10 +13,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 1,
+      "index": 1,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -30,10 +32,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 2,
+      "index": 2,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -45,10 +51,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 3,
+      "index": 3,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -60,10 +70,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 4,
+      "index": 4,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -75,10 +89,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 5,
+      "index": 5,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -90,10 +108,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 6,
+      "index": 6,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -105,10 +127,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 7,
+      "index": 7,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -120,10 +146,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 8,
+      "index": 8,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -135,10 +165,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 9,
+      "index": 9,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -150,10 +184,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 10,
+      "index": 10,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -165,10 +203,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 11,
+      "index": 11,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -180,10 +222,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 12,
+      "index": 12,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -195,10 +241,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 13,
+      "index": 13,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -210,10 +260,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 14,
+      "index": 14,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -225,10 +279,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 15,
+      "index": 15,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -240,10 +298,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 16,
+      "index": 16,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -255,10 +317,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 17,
+      "index": 17,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -270,10 +336,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 18,
+      "index": 18,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -285,10 +355,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 19,
+      "index": 19,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -300,10 +374,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 20,
+      "index": 20,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -315,10 +393,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 21,
+      "index": 21,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -330,10 +412,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 22,
+      "index": 22,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -345,10 +431,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 23,
+      "index": 23,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -360,10 +450,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 24,
+      "index": 24,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -375,10 +469,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 25,
+      "index": 25,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -390,10 +488,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 26,
+      "index": 26,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -405,10 +507,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 27,
+      "index": 27,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -420,10 +526,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 28,
+      "index": 28,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -435,10 +545,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 29,
+      "index": 29,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -450,10 +564,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 30,
+      "index": 30,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -465,10 +583,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 31,
+      "index": 31,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -480,10 +602,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 32,
+      "index": 32,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -495,10 +621,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 33,
+      "index": 33,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -510,10 +640,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 34,
+      "index": 34,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -525,10 +659,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 35,
+      "index": 35,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -540,10 +678,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 36,
+      "index": 36,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -555,10 +697,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 37,
+      "index": 37,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -570,10 +716,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 38,
+      "index": 38,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -585,10 +735,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 39,
+      "index": 39,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -600,10 +754,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 40,
+      "index": 40,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -615,10 +773,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 41,
+      "index": 41,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -630,10 +792,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 42,
+      "index": 42,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -645,10 +811,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 43,
+      "index": 43,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -660,10 +830,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 44,
+      "index": 44,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -675,10 +849,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 45,
+      "index": 45,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -690,10 +868,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 46,
+      "index": 46,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -705,10 +887,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 47,
+      "index": 47,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -720,10 +906,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 48,
+      "index": 48,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -735,10 +925,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 49,
+      "index": 49,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -750,10 +944,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 50,
+      "index": 50,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -765,10 +963,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 51,
+      "index": 51,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -780,10 +982,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 52,
+      "index": 52,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -795,10 +1001,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 53,
+      "index": 53,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -810,10 +1020,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 54,
+      "index": 54,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -825,10 +1039,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 55,
+      "index": 55,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -840,10 +1058,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 56,
+      "index": 56,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -855,10 +1077,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 57,
+      "index": 57,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -870,10 +1096,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 58,
+      "index": 58,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -885,10 +1115,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 59,
+      "index": 59,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -900,10 +1134,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 60,
+      "index": 60,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -915,10 +1153,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 61,
+      "index": 61,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -930,10 +1172,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 62,
+      "index": 62,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -945,10 +1191,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 63,
+      "index": 63,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -960,10 +1210,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 64,
+      "index": 64,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -975,10 +1229,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 65,
+      "index": 65,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -990,10 +1248,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 66,
+      "index": 66,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1005,10 +1267,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 67,
+      "index": 67,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1020,10 +1286,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 68,
+      "index": 68,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1035,10 +1305,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 69,
+      "index": 69,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1050,10 +1324,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 70,
+      "index": 70,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1065,10 +1343,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 71,
+      "index": 71,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1080,10 +1362,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 72,
+      "index": 72,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1095,10 +1381,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 73,
+      "index": 73,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1110,10 +1400,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 74,
+      "index": 74,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1125,10 +1419,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 75,
+      "index": 75,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1140,10 +1438,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 76,
+      "index": 76,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1155,10 +1457,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 77,
+      "index": 77,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1170,10 +1476,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 78,
+      "index": 78,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1185,10 +1495,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 79,
+      "index": 79,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1200,10 +1514,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 80,
+      "index": 80,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1215,10 +1533,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 81,
+      "index": 81,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1230,10 +1552,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 82,
+      "index": 82,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1245,10 +1571,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 83,
+      "index": 83,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1260,10 +1590,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 84,
+      "index": 84,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1275,10 +1609,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 85,
+      "index": 85,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1290,10 +1628,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 86,
+      "index": 86,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1305,10 +1647,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 87,
+      "index": 87,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1320,10 +1666,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 88,
+      "index": 88,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1335,10 +1685,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 89,
+      "index": 89,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1350,10 +1704,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 90,
+      "index": 90,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1365,10 +1723,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 91,
+      "index": 91,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1380,10 +1742,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 92,
+      "index": 92,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1395,10 +1761,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 93,
+      "index": 93,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1410,10 +1780,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 94,
+      "index": 94,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1425,10 +1799,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 95,
+      "index": 95,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1440,10 +1818,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 96,
+      "index": 96,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1455,10 +1837,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 97,
+      "index": 97,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1470,10 +1856,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 98,
+      "index": 98,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1485,10 +1875,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 99,
+      "index": 99,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1500,10 +1894,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 100,
+      "index": 100,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1515,10 +1913,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 101,
+      "index": 101,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1530,10 +1932,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 102,
+      "index": 102,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1545,10 +1951,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 103,
+      "index": 103,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1560,10 +1970,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": false,
+        "task": false
       }
     },
     {
-      "reference_index": 104,
+      "index": 104,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1575,10 +1989,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 105,
+      "index": 105,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1590,10 +2008,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 106,
+      "index": 106,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1605,10 +2027,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 107,
+      "index": 107,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1620,10 +2046,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 108,
+      "index": 108,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1635,10 +2065,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 109,
+      "index": 109,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1650,10 +2084,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 110,
+      "index": 110,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1665,10 +2103,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 111,
+      "index": 111,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1680,10 +2122,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 112,
+      "index": 112,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1695,10 +2141,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 113,
+      "index": 113,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1710,10 +2160,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 114,
+      "index": 114,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1725,10 +2179,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 115,
+      "index": 115,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1740,10 +2198,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 116,
+      "index": 116,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1755,10 +2217,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 117,
+      "index": 117,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1770,10 +2236,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 118,
+      "index": 118,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1785,10 +2255,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 119,
+      "index": 119,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1800,10 +2274,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 120,
+      "index": 120,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1815,10 +2293,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 121,
+      "index": 121,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1830,10 +2312,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 122,
+      "index": 122,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1845,10 +2331,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 123,
+      "index": 123,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1860,10 +2350,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 124,
+      "index": 124,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1875,10 +2369,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 125,
+      "index": 125,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1890,10 +2388,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 126,
+      "index": 126,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1905,10 +2407,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 127,
+      "index": 127,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1920,10 +2426,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 128,
+      "index": 128,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1935,10 +2445,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 129,
+      "index": 129,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1950,10 +2464,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 130,
+      "index": 130,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1965,10 +2483,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 131,
+      "index": 131,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1980,10 +2502,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 132,
+      "index": 132,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -1995,10 +2521,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 133,
+      "index": 133,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2010,10 +2540,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 134,
+      "index": 134,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2025,10 +2559,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 135,
+      "index": 135,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2040,10 +2578,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 136,
+      "index": 136,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2055,10 +2597,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 137,
+      "index": 137,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2070,10 +2616,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 138,
+      "index": 138,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2085,10 +2635,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 139,
+      "index": 139,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2100,10 +2654,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 140,
+      "index": 140,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2115,10 +2673,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 141,
+      "index": 141,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2130,10 +2692,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 142,
+      "index": 142,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2145,10 +2711,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 143,
+      "index": 143,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2160,10 +2730,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 144,
+      "index": 144,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2175,10 +2749,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 145,
+      "index": 145,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2190,10 +2768,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 146,
+      "index": 146,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2205,10 +2787,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 147,
+      "index": 147,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2220,10 +2806,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 148,
+      "index": 148,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2235,10 +2825,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 149,
+      "index": 149,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2250,10 +2844,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 150,
+      "index": 150,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2265,10 +2863,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 151,
+      "index": 151,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2280,10 +2882,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 152,
+      "index": 152,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2295,10 +2901,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 153,
+      "index": 153,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2310,10 +2920,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 154,
+      "index": 154,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2325,10 +2939,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 155,
+      "index": 155,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2340,10 +2958,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 156,
+      "index": 156,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2355,10 +2977,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 157,
+      "index": 157,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2370,10 +2996,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 158,
+      "index": 158,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2385,10 +3015,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 159,
+      "index": 159,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2400,10 +3034,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 160,
+      "index": 160,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2415,10 +3053,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 161,
+      "index": 161,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2430,10 +3072,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 162,
+      "index": 162,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2445,10 +3091,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 163,
+      "index": 163,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2460,10 +3110,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 164,
+      "index": 164,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2475,10 +3129,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 165,
+      "index": 165,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2490,10 +3148,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 166,
+      "index": 166,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2505,10 +3167,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 167,
+      "index": 167,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2520,10 +3186,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 168,
+      "index": 168,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2535,10 +3205,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 169,
+      "index": 169,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2550,10 +3224,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 170,
+      "index": 170,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2565,10 +3243,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 171,
+      "index": 171,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2580,10 +3262,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 172,
+      "index": 172,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2595,10 +3281,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 173,
+      "index": 173,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2610,10 +3300,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 174,
+      "index": 174,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2625,10 +3319,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 175,
+      "index": 175,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2640,10 +3338,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 176,
+      "index": 176,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2655,10 +3357,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 177,
+      "index": 177,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2670,10 +3376,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 178,
+      "index": 178,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2685,10 +3395,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 179,
+      "index": 179,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2700,10 +3414,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 180,
+      "index": 180,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2715,10 +3433,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 181,
+      "index": 181,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2730,10 +3452,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 182,
+      "index": 182,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2745,10 +3471,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 183,
+      "index": 183,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2760,10 +3490,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 184,
+      "index": 184,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2775,10 +3509,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 185,
+      "index": 185,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2790,10 +3528,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 186,
+      "index": 186,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2805,10 +3547,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 187,
+      "index": 187,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2820,10 +3566,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 188,
+      "index": 188,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2835,10 +3585,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 189,
+      "index": 189,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2850,10 +3604,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 190,
+      "index": 190,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2865,10 +3623,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 191,
+      "index": 191,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2880,10 +3642,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 192,
+      "index": 192,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2895,10 +3661,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 193,
+      "index": 193,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2910,10 +3680,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 194,
+      "index": 194,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2925,10 +3699,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 195,
+      "index": 195,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2940,10 +3718,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 196,
+      "index": 196,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2955,10 +3737,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 197,
+      "index": 197,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2970,10 +3756,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 198,
+      "index": 198,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -2985,10 +3775,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 199,
+      "index": 199,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3000,10 +3794,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 200,
+      "index": 200,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3015,10 +3813,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 201,
+      "index": 201,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3030,10 +3832,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 202,
+      "index": 202,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3045,10 +3851,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 203,
+      "index": 203,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3060,10 +3870,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 204,
+      "index": 204,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3075,10 +3889,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 205,
+      "index": 205,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3090,10 +3908,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 206,
+      "index": 206,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3105,10 +3927,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 207,
+      "index": 207,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3120,10 +3946,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 208,
+      "index": 208,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3135,10 +3965,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 209,
+      "index": 209,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3150,10 +3984,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 210,
+      "index": 210,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3165,10 +4003,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 211,
+      "index": 211,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3180,10 +4022,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 212,
+      "index": 212,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3195,10 +4041,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 213,
+      "index": 213,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3210,10 +4060,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 214,
+      "index": 214,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3225,10 +4079,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 215,
+      "index": 215,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3240,10 +4098,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 216,
+      "index": 216,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3255,10 +4117,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 217,
+      "index": 217,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3270,10 +4136,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 218,
+      "index": 218,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3285,10 +4155,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 219,
+      "index": 219,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3300,10 +4174,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 220,
+      "index": 220,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3315,10 +4193,14 @@
           "piece_1": false,
           "piece_2": true
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 221,
+      "index": 221,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3330,10 +4212,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": false
       }
     },
     {
-      "reference_index": 222,
+      "index": 222,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3345,10 +4231,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": true
       }
     },
     {
-      "reference_index": 223,
+      "index": 223,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3360,10 +4250,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": true
       }
     },
     {
-      "reference_index": 224,
+      "index": 224,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3375,10 +4269,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": true
       }
     },
     {
-      "reference_index": 225,
+      "index": 225,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3390,10 +4288,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": true
       }
     },
     {
-      "reference_index": 226,
+      "index": 226,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3405,10 +4307,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": true
       }
     },
     {
-      "reference_index": 227,
+      "index": 227,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3420,10 +4326,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": true
       }
     },
     {
-      "reference_index": 228,
+      "index": 228,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3435,10 +4345,14 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": true
       }
     },
     {
-      "reference_index": 229,
+      "index": 229,
       "actual_grasps": {
         "A": {
           "base": false,
@@ -3450,6 +4364,10 @@
           "piece_1": false,
           "piece_2": false
         }
+      },
+      "official_metrics": {
+        "first_piece_assembled": true,
+        "task": true
       }
     }
   ]

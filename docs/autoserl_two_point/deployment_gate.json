@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "selected_utd": 1,
+  "start_authorized": false,
+  "method": "Bimanual AutoSERL V1 section3.3 adaptation",
+  "acceptance_path": "docs/autoserl_two_point/acceptance.json",
+  "checkpoint_scope": "learner/optimizer/replay/RNG load and one real NPU update; full 16-process resume not tested; new episode boundary required",
+  "time": 1793175725.511436
+}

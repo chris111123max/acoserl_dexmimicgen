@@ -12,7 +12,7 @@ from scipy.spatial.transform import Rotation
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'scripts/assembly_feasibility'))
 from common import poses,objects,snapshot,Contacts,servo,errors,ARMS,SafetyStop,ActionOnly
-from common import object_error
+from acoserl.object_geometry import object_error
 from acoserl.trajectories import load_single_reference
 DEFAULT=json.loads((ROOT/'configs/bimanual_autoserl/v1.json').read_text())
 # Explicitly logged in checkpoint configuration; False is only for legacy diagnosis.
@@ -35,7 +35,7 @@ def direction_ok(tangent,to_target,eps=1e-6,minimum=0):
  cosine=float(np.clip(np.dot(tangent,to_target)/(a*b),-1,1))
  return cosine>=minimum,cosine
 
-class BimanualAutoSERL:
+class LegacyBimanualAutoSERL:
  def __init__(self,env,config=None,intervention_enabled=None):
   self.env=env;self.cfg=copy.deepcopy(DEFAULT if config is None else config)
   if intervention_enabled is not None:self.cfg['intervention_enabled']=intervention_enabled
@@ -272,3 +272,10 @@ class BimanualAutoSERL:
   self.auto_disabled=self.clean_successes>=self.cfg['disable_after_clean_success_episodes']
   row={'stable_full_success':bool(stable_full_success),'had_intervention':bool(intervened),'full_policy_episode':bool(full_policy_episode),'consecutive_clean_successes':self.clean_successes,'auto_disabled':self.auto_disabled}
   self.termination_log.append(row);return row
+
+
+from acoserl.two_point_supervisor import TwoPointMixin
+
+class BimanualAutoSERL(TwoPointMixin,LegacyBimanualAutoSERL):
+ """Section-3.3 windows and two-point recovery; inherit verified OSC/hold gates."""
+ pass

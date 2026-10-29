@@ -48,6 +48,8 @@ class InterventionBridge:
  def __init__(self,env,action_scaler,intervention_enabled=True,initial_progress=(0,0),config=None):
   self.env=env;self.scaler=action_scaler
   self.manager=BimanualAutoSERL(env.env,config,intervention_enabled)
+  # Recovery commands obey the same physical action domain as policy and offline rows.
+  self.manager.action_bounds=(self.scaler.limits.min.numpy().copy(),self.scaler.limits.max.numpy().copy())
   self.manager.reset(initial_progress)
  def reset(self,**kwargs):
   obs,info=self.env.reset(**kwargs);self.manager.reset();return obs,info

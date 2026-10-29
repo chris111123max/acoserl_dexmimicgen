@@ -1,0 +1,20 @@
+{
+  "python": "3.10.20",
+  "machine": "aarch64",
+  "packages": {
+    "torch": "2.3.1",
+    "torch-npu": "2.3.1",
+    "torchvision": "0.18.1",
+    "tensordict": "0.4.0+6dc8c68",
+    "torchrl": "0.4.0+b4f4daf",
+    "mujoco": "3.2.3",
+    "gymnasium": "1.1.1"
+  },
+  "cann_toolkit": "/data/home/3220251075/lerobot_workspace/Ascend/ascend-toolkit/latest",
+  "/sys/fs/cgroup/cpu/cpu.cfs_quota_us": "2200000",
+  "/sys/fs/cgroup/cpu/cpu.cfs_period_us": "100000",
+  "/sys/fs/cgroup/memory/memory.limit_in_bytes": "208240902144",
+  "cann_version_info": "Version=7.3.0.1.231\nversion_dir=8.0.RC2\ntimestamp=20240714_203535342\nruntime_acl_version=1.0\nruntime_dvpp_version=1.0\nrequired_driver_ascendhal_version=4.0.0\nrequired_driver_dvppkernels_version=1.1\nrequired_driver_tsfw_version=1.0\nrequired_opp_abi_version=\">=6.3, <=7.3\"\nrequired_package_amct_acl_version=\"7.3\"\nrequired_package_aoe_version=\"7.3\"\nrequired_package_compiler_version=\"7.3\"\nrequired_package_fwkplugin_version=\"7.3\"\nrequired_package_hccl_version=\"7.3\"\nrequired_package_nca_version=\"7.3\"\nrequired_package_ncs_version=\"7.3\"\nrequired_package_opp_version=\"7.3\"\nrequired_package_opp_kernel_version=\"7.3\"\nrequired_package_toolkit_version=\"7.3\"\n",
+  "driver_npu_smi": "26.1.1",
+  "device": "Ascend910B3 physical2 logicalnpu:0"
+}

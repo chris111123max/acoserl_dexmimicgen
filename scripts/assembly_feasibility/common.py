@@ -132,9 +132,3 @@ def servo(env,targets,grippers,max_position_step=0.002,max_rotation_step=0.02,po
 def errors(actual,target):
     return {'position_m':float(np.linalg.norm(actual['position']-target['position'])),
             'rotation_rad':float(Rotation.from_matrix(actual['rotation']@target['rotation'].T).magnitude())}
-
-
-def object_error(a,b):
-    qa=np.asarray(a['quaternion_wxyz']);qb=np.asarray(b['quaternion_wxyz'])
-    angle=2*np.arccos(np.clip(abs(np.dot(qa,qb)),0,1))
-    return {'position_m':float(np.linalg.norm(np.asarray(a['position'])-b['position'])),'rotation_rad':float(angle)}

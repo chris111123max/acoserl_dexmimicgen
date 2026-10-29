@@ -1,0 +1,52 @@
+{
+  "name": "dinov2_vits14",
+  "passed": false,
+  "manifest": {
+    "name": "dinov2_vits14",
+    "feature_shape_per_camera": [
+      81,
+      128
+    ],
+    "parameters_total": 124565554,
+    "parameters_trainable": 58395826,
+    "encoder_trainable": 147840,
+    "encoder_frozen": 66169728,
+    "load_evidence": [
+      {
+        "file": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/cache/pretrained_visual/dinov2_vits14_pretrain.pth",
+        "sha256": "b938bf1bc15cd2ec0feacfe3a1bb553fe8ea9ca46a7e1d8d00217f29aef60cd9",
+        "strict": true,
+        "keys": 175,
+        "all_tensors_exact": true
+      },
+      {
+        "file": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/cache/pretrained_visual/dinov2_vits14_pretrain.pth",
+        "sha256": "b938bf1bc15cd2ec0feacfe3a1bb553fe8ea9ca46a7e1d8d00217f29aef60cd9",
+        "strict": true,
+        "keys": 175,
+        "all_tensors_exact": true
+      },
+      {
+        "file": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/cache/pretrained_visual/dinov2_vits14_pretrain.pth",
+        "sha256": "b938bf1bc15cd2ec0feacfe3a1bb553fe8ea9ca46a7e1d8d00217f29aef60cd9",
+        "strict": true,
+        "keys": 175,
+        "all_tensors_exact": true
+      }
+    ],
+    "backbone_hashes": [
+      "190859844203f530e178165b42ed96c811144b0c1945d8b8e8306e68e468ab48",
+      "190859844203f530e178165b42ed96c811144b0c1945d8b8e8306e68e468ab48",
+      "190859844203f530e178165b42ed96c811144b0c1945d8b8e8306e68e468ab48"
+    ]
+  },
+  "cpu_npu_max_abs": 1.3054444789886475,
+  "cpu_npu_relative_l2": 0.09541429579257965,
+  "shape": [
+    2,
+    81,
+    128
+  ],
+  "spatial_variation": 0.8627471327781677,
+  "error": "Traceback (most recent call last):\n  File \"/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/scripts/pretrained_visual/benchmark.py\", line 22, in <module>\n    assert torch.isfinite(npu).all() and result['cpu_npu_relative_l2']<.01 and result['spatial_variation']>1e-8\nAssertionError\n"
+}

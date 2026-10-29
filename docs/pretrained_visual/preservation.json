@@ -1,0 +1,41 @@
+{
+  "src/acoserl/bimanual_autoserl.py": "53097f4948205da2003f22595105162250ceb378590b0e5629ecde4360658879",
+  "src/acoserl/two_point_supervisor.py": "a2d1962efb52c477901e7b24440ab0758ec8927c6a2f0a0f2637b45e7d997888",
+  "src/acoserl/trajectories.py": "a3847294191620125663ded00a935c4ac83a0579cc93bb5f692ce8da88ea7e29",
+  "src/acoserl/autoserl_env.py": "45e33613cfc875c930d15dbddc0067438e9ef3fb89c9955f34e86952df9402b5",
+  "src/acoserl/parallel_autoserl.py": "ca0c88ca72dfb24de8e0b2c0fa50487a8ef9163e1c4769bc04e6df80e782e063",
+  "src/acoserl/isolated_nstep.py": "d4391db9fda4fe0bf9b834cbc2f30ca5a7dc8e4d43e03f2d05c7578b858c3d1e",
+  "src/acoserl/ascend_data.py": "bfa61fd6fb4f61dd37628d97cc5ac67a1eb366b71e420fd783f87b513ae10dd3",
+  "configs/bimanual_autoserl/v1.json": "841543748e2df98f0e13a77a26c0cf69f7f42c86481d0ff2a0b66814eb909295",
+  "configs/bimanual_autoserl/recovery_points.json": "b2586d922750242dc059d62fe2d9aee651cf2ff23c04e4ef59bd622c0b1a31d4",
+  "configs/ascend16/formal.json": "5d274ed897748483d4165524f57114a8b91e8d3276e3ff62638a131834d2fac0",
+  "old_run": {
+    "path": "outputs/ascend16/autoserl_two_point_20261028_163354",
+    "metadata": {
+      "complete": true,
+      "time": 1793177254.5726185,
+      "counters": {
+        "actual_interactions": 1610,
+        "valid_real_steps": 1610,
+        "partial_action_attempts": 0,
+        "warmup_real_steps": 1038,
+        "critic_updates": 572,
+        "actor_updates": 572,
+        "proposals": 1632,
+        "evaluation_interactions": 0,
+        "evaluation_seconds": 0.0
+      },
+      "online_rows": 1610,
+      "offline_rows": 224,
+      "pending_real_rows": 0,
+      "resume_boundary": "pending real tails truncated; reset all workers into NEW episodes; no mid-physics restoration"
+    },
+    "preservation": "read-only archive in original directory; no weights/replay imported into new run"
+  },
+  "official_algorithm": {
+    "resfit/rl_finetuning/off_policy/rl/q_agent.py": "0d0bdbf1717cfe32bd5ae955ef25967a243f78be355deea8312554ea73be4548",
+    "resfit/rl_finetuning/off_policy/rl/actor.py": "9acad66c309c5f9c6bf8bad3c51cae1f4cb354bf235f8dd99d40005200c036c7",
+    "resfit/rl_finetuning/off_policy/rl/critic.py": "ed1a6616bfb02805126bc719d8fbae91d5a54e1dce7ad8f537b0dc29345c0d3f",
+    "resfit/rl_finetuning/utils/rb_transforms.py": "772fd197d0d1e4bdd97fb3f8760569c615513f0fcd92a67aa465526e203bfea8"
+  }
+}

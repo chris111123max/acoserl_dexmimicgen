@@ -462,8 +462,8166 @@
     false,
     false
   ],
+  "strict_state_audit": [
+    {
+      "state_index": 0,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 1,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 2,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 3,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 4,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 5,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 6,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 7,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 8,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 9,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 10,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 11,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 12,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 13,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 14,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 15,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 16,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 17,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 18,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 19,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 20,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 21,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 22,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 23,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 24,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 25,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 26,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 27,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 28,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 29,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 30,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 31,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 32,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 33,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 34,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 35,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 36,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 37,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 38,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 39,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 40,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 41,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 42,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 43,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 44,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 45,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 46,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 47,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 48,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 49,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 50,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 51,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 52,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 53,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 54,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 55,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 56,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 57,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 58,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 59,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 60,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 61,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 62,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 63,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 64,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 65,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 66,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 67,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 68,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 69,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 70,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 71,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 72,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 73,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 74,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 75,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 76,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 77,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 78,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 79,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 80,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 81,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 82,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 83,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 84,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 85,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 86,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 87,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 88,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 89,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 90,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 91,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 92,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 93,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 94,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 95,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 96,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 97,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 98,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 99,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 100,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 101,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 102,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 103,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 104,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 105,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 106,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 107,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 108,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 109,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 110,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 111,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 112,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 113,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 114,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 115,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 116,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 117,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 118,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 119,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 120,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 121,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 122,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 123,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 124,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 125,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 126,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 127,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 128,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 129,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 130,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 131,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 132,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 133,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 134,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 135,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 136,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 137,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 138,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 139,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 140,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 141,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 142,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 143,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 144,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 145,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 146,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 147,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 148,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 149,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 150,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 151,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 152,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 153,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 154,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 155,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 156,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 157,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 158,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 159,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 160,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 161,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 162,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 163,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 164,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 165,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 166,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 167,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 168,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 169,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 170,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 171,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 172,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 173,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 174,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 175,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 176,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 177,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 178,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 179,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 180,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 181,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 182,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 183,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 184,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 185,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 186,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 187,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 188,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 189,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 190,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 191,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 192,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 193,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 194,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 195,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 196,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 197,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 198,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 199,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 200,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 201,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 202,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 203,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 204,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 205,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 206,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 207,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 208,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 209,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 210,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 211,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 212,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 213,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 214,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 215,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 216,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 217,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 218,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 219,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 220,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 221,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 222,
+      "success": false,
+      "strict_instant_success": true,
+      "legacy_success": true,
+      "strict_success_streak": 1,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 223,
+      "success": false,
+      "strict_instant_success": true,
+      "legacy_success": true,
+      "strict_success_streak": 2,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 224,
+      "success": true,
+      "strict_instant_success": true,
+      "legacy_success": true,
+      "strict_success_streak": 3,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 225,
+      "success": true,
+      "strict_instant_success": true,
+      "legacy_success": true,
+      "strict_success_streak": 4,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 226,
+      "success": true,
+      "strict_instant_success": true,
+      "legacy_success": true,
+      "strict_success_streak": 5,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 227,
+      "success": true,
+      "strict_instant_success": true,
+      "legacy_success": true,
+      "strict_success_streak": 6,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "state_index": 228,
+      "success": true,
+      "strict_instant_success": true,
+      "legacy_success": true,
+      "strict_success_streak": 7,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    }
+  ],
   "protocol": "assembly_real_grippers_stable3_v1",
   "source": "TwoArmThreePieceAssembly/demo_0",
   "label_rule": "strict real grippers, 3 consecutive success states; one sparse reward at first terminal; obs[t] a[t] -> obs[t+1]",
+  "action_replay": [
+    {
+      "action_index": 0,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 1,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 2,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 3,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 4,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 5,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 6,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 7,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 8,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 9,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 10,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 11,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 12,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 13,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 14,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 15,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 16,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 17,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 18,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 19,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 20,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 21,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 22,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 23,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 24,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 25,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 26,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 27,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 28,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 29,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 30,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 31,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 32,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 33,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 34,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 35,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 36,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 37,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 38,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 39,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 40,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 41,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 42,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 43,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 44,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 45,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 46,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 47,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 48,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 49,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 50,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 51,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 52,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 53,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 54,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 55,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 56,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 57,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 58,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 59,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 60,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 61,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 62,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 63,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 64,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 65,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 66,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 67,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 68,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 69,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 70,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 71,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 72,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 73,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 74,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 75,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 76,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 77,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 78,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 79,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 80,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 81,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 82,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 83,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 84,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 85,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 86,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 87,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 88,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 89,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 90,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 91,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 92,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 93,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 94,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 95,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 96,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 97,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 98,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 99,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 100,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 101,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 102,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 103,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 104,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 105,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 106,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 107,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 108,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 109,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 110,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 111,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 112,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 113,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 114,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 115,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 116,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 117,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 118,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 119,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 120,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 121,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 122,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 123,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 124,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 125,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 126,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 127,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 128,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 129,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 130,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 131,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 132,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 133,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 134,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 135,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 136,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 137,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 138,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 139,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 140,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 141,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 142,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 143,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 144,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 145,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 146,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 147,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 148,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 149,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 150,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 151,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 152,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 153,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 154,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 155,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 156,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 157,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 158,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 159,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 160,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 161,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 162,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 163,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 164,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 165,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 166,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 167,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 168,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 169,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 170,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 171,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 172,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 173,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 174,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 175,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 176,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 177,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 178,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 179,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 180,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 181,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 182,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 183,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 184,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 185,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 186,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 187,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 188,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 189,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 190,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 191,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 192,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 193,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 194,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 195,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 196,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 197,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 198,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 199,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 200,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 201,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 202,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 203,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 204,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 205,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 206,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 207,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 208,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 209,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 210,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 211,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 212,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 213,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 214,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 215,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 216,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 217,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 218,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 219,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 220,
+      "success": false,
+      "strict_instant_success": false,
+      "legacy_success": false,
+      "strict_success_streak": 0,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 221,
+      "success": false,
+      "strict_instant_success": true,
+      "legacy_success": true,
+      "strict_success_streak": 1,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 222,
+      "success": false,
+      "strict_instant_success": true,
+      "legacy_success": true,
+      "strict_success_streak": 2,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    },
+    {
+      "action_index": 223,
+      "success": true,
+      "strict_instant_success": true,
+      "legacy_success": true,
+      "strict_success_streak": 3,
+      "actual_grasps": {
+        "A": {
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "reward_protocol": "assembly_real_grippers_stable3_v1"
+    }
+  ],
   "legacy_false_positive_frames": []
 }

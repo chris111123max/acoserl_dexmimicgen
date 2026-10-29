@@ -1,0 +1,11 @@
+{
+  "tasks": ["TwoArmThreading", "TwoArmThreePieceAssembly", "TwoArmTransport"],
+  "dataset_directory": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/datasets/generated",
+  "selection_policy": "Explicit single demo per task, verified with official success criterion",
+  "expert_demos_per_task": 1,
+  "training_enabled": false,
+  "render_backend": "osmesa",
+  "reference_progress": "independent A and B cursors preserving original joint time indices",
+  "event_annotations": "manual evidence required; no barriers inferred",
+  "future_replay_sources": ["expert_single_demo", "automatic_intervention", "online_exploration"]
+}

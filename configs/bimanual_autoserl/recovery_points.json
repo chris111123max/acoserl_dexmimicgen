@@ -1,0 +1,93 @@
+{
+  "task": "TwoArmThreePieceAssembly",
+  "demo": "demo_0",
+  "recorded_actions": 229,
+  "recorded_states": 229,
+  "reference_states": 230,
+  "reference_path": "configs/bimanual_autoserl/reference_trace.npz",
+  "arms": {
+    "A": {
+      "object": "piece_1",
+      "p0": 30,
+      "p1": 57,
+      "window_length": 27,
+      "first_contact": 52,
+      "first_grasp": 53,
+      "validated": true,
+      "basis": "Revised P0 before closure and before any actual target contacts, collision-enabled geometry distance >20mm in measured prefix; P1 has three closed-command true-grasp states and <1mm relative translation drift. P0 return/replay validation required. Controlled real P0 return/replay/handback and normalized image bridge now passed; later assembly/joint intervals remain unvalidated.",
+      "geometry_evidence": {
+        "minimum_collision_enabled_distance": [
+          0.022402227415929246,
+          "gripper0_right_finger1_pad_collision",
+          "piece_1_2_1_1"
+        ],
+        "raw_contacts": []
+      },
+      "validation_evidence": {
+        "controlled_cases": [
+          "outputs/autoserl_two_point/accepted_A_s1.json",
+          "outputs/autoserl_two_point/accepted_A_s2.json",
+          "outputs/autoserl_two_point/accepted_A_s3.json"
+        ],
+        "image_scaler_bridge": "outputs/autoserl_two_point/bounded_bridge_A/result.json",
+        "domain": "empty active gripper; target object at measured pick pose; no active contact/coupling; verified quasistatic passive hold; elevated corridor check; physical drift monitored every control step. Not a global path safety certificate."
+      },
+      "first_close_action": 45,
+      "first_release_action": 149
+    },
+    "B": {
+      "object": "piece_2",
+      "p0": 38,
+      "p1": 70,
+      "window_length": 32,
+      "first_contact": 64,
+      "first_grasp": 65,
+      "validated": true,
+      "basis": "Revised P0 before closure and before any actual target contacts, collision-enabled geometry distance >20mm in measured prefix; P1 has three closed-command true-grasp states and <1mm relative translation drift. P0 return/replay validation required. Controlled real P0 return/replay/handback and normalized image bridge now passed; later assembly/joint intervals remain unvalidated.",
+      "geometry_evidence": {
+        "minimum_collision_enabled_distance": [
+          0.021989930080354103,
+          "gripper1_right_finger2_collision",
+          "piece_2_3_1_1"
+        ],
+        "raw_contacts": []
+      },
+      "validation_evidence": {
+        "controlled_cases": [
+          "outputs/autoserl_two_point/accepted_B_s1.json",
+          "outputs/autoserl_two_point/accepted_B_s2.json",
+          "outputs/autoserl_two_point/accepted_B_s3.json"
+        ],
+        "image_scaler_bridge": "outputs/autoserl_two_point/bounded_bridge_B/result.json",
+        "domain": "empty active gripper; target object at measured pick pose; no active contact/coupling; verified quasistatic passive hold; elevated corridor check; physical drift monitored every control step. Not a global path safety certificate."
+      },
+      "first_close_action": 58,
+      "first_release_action": 215
+    }
+  },
+  "assembly": [
+    {
+      "objects": [
+        "base",
+        "piece_1"
+      ],
+      "first_contact": 105,
+      "last_contact": 213,
+      "unilateral_recovery_validated": false,
+      "joint_recovery_validated": false,
+      "barrier": "No unilateral replay across assembly contact; do not rewind completed piece_1. No invented joint recovery."
+    },
+    {
+      "objects": [
+        "piece_1",
+        "piece_2"
+      ],
+      "first_contact": 213,
+      "last_contact": 215,
+      "unilateral_recovery_validated": false,
+      "joint_recovery_validated": false,
+      "barrier": "No unilateral replay across assembly contact; do not rewind completed piece_1. No invented joint recovery."
+    }
+  ],
+  "reset_protocol": "Only canonical demo frame0; every intermediate state reached by actual control actions"
+}

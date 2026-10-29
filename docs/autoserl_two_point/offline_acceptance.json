@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "original_valid_rows": 224,
+  "n_step_rows": 224,
+  "n_step": 3,
+  "all_actions_current_observations_and_future_images_exact": true,
+  "all_strict_labels_and_bootstrap_correct": true,
+  "buffer_reload_exact": true
+}

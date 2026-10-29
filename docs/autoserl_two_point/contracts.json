@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "kind": "pure numerical and metadata; no physical recovery claimed",
+  "checks": {
+    "trailing_window_independence_event_caps_no_rewind_final_state": true,
+    "direction_at_global_cpoint_90_inclusive_reverse_and_zero_tangent_cancel": true,
+    "position_thresholds_20mm_trigger_5mm_exit_not_orientation": true,
+    "stagnation_20_step_lag_global_reference_point_5mm": true,
+    "l_term_counts_executed_intervention_control_steps_strict_less_10": true,
+    "safe_free_space_distinct_from_force_and_coupling_danger": true,
+    "passive_limits_unchanged": true
+  }
+}

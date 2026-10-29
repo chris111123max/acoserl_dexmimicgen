@@ -1,0 +1,109 @@
+{
+  "name": "minivit",
+  "passed": true,
+  "manifest": {
+    "name": "minivit",
+    "feature_shape_per_camera": [
+      81,
+      128
+    ],
+    "parameters_total": 59391538,
+    "parameters_trainable": 59391538,
+    "encoder_trainable": 1143552,
+    "encoder_frozen": 0,
+    "load_evidence": [
+      null,
+      null,
+      null
+    ],
+    "backbone_hashes": []
+  },
+  "cpu_npu_max_abs": 0.0006820559501647949,
+  "cpu_npu_relative_l2": 0.00015728925063740462,
+  "shape": [
+    2,
+    81,
+    128
+  ],
+  "spatial_variation": 0.3597477376461029,
+  "inference16_seconds": 0.007010597409680486,
+  "encoding_3x16_seconds": 0.004816891811788082,
+  "updates": [
+    {
+      "seconds": 1.8896470409817994,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": -0.03503567725419998,
+      "train/critic_loss": 0.11865659803152084,
+      "train/encoder_grad_norm": 1.0019757747650146,
+      "train/critic_grad_norm": 4.586174488067627,
+      "train/actor_loss_base": 0.36653679609298706,
+      "train/actor_loss_total": 0.36653679609298706,
+      "train/actor_grad_norm": 0.33439207077026367
+    },
+    {
+      "seconds": 0.17728305491618812,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": -0.20723813772201538,
+      "train/critic_loss": 1.7988154888153076,
+      "train/encoder_grad_norm": 4.498264789581299,
+      "train/critic_grad_norm": 26.665559768676758,
+      "train/actor_loss_base": 0.3448120057582855,
+      "train/actor_loss_total": 0.3448120057582855,
+      "train/actor_grad_norm": 0.1664021611213684
+    },
+    {
+      "seconds": 0.12973205116577446,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": 0.11992685496807098,
+      "train/critic_loss": 0.9575783014297485,
+      "train/encoder_grad_norm": 2.734140396118164,
+      "train/critic_grad_norm": 17.4258975982666,
+      "train/actor_loss_base": 0.10976241528987885,
+      "train/actor_loss_total": 0.10976241528987885,
+      "train/actor_grad_norm": 0.10061991214752197
+    },
+    {
+      "seconds": 0.14219836704432964,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": -0.271647185087204,
+      "train/critic_loss": 0.2973487377166748,
+      "train/encoder_grad_norm": 1.518518328666687,
+      "train/critic_grad_norm": 9.223831176757812,
+      "train/actor_loss_base": -0.09075572341680527,
+      "train/actor_loss_total": -0.09075572341680527,
+      "train/actor_grad_norm": 0.08729466795921326
+    },
+    {
+      "seconds": 0.13566742301918566,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": 0.09068282693624496,
+      "train/critic_loss": 0.1058347225189209,
+      "train/encoder_grad_norm": 0.6669489145278931,
+      "train/critic_grad_norm": 4.566943168640137,
+      "train/actor_loss_base": -0.21717289090156555,
+      "train/actor_loss_total": -0.21717289090156555,
+      "train/actor_grad_norm": 0.0725984200835228
+    },
+    {
+      "seconds": 0.13153524114750326,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": -0.39149072766304016,
+      "train/critic_loss": 0.38957709074020386,
+      "train/encoder_grad_norm": 1.5741769075393677,
+      "train/critic_grad_norm": 10.303581237792969,
+      "train/actor_loss_base": -0.009572362527251244,
+      "train/actor_loss_total": -0.009572362527251244,
+      "train/actor_grad_norm": 0.0474470853805542
+    }
+  ],
+  "steady_update_seconds": 0.13478327059419826,
+  "changed_parameter_tensors": {
+    "actor.": 14,
+    "critic.": 15,
+    "encoders.": 57
+  },
+  "adapter_grad_norms": [],
+  "backbones_unchanged": true,
+  "backbones_eval": true,
+  "peak_npu_allocated_bytes": 2252044288
+}

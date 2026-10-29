@@ -1,0 +1,535 @@
+{
+  "passed": true,
+  "selected_visual": "resnet18_spatial84",
+  "pretrained_validation_passed": true,
+  "selected_utd": 1,
+  "pressure_run": "outputs/ascend16/pretrained_spatial84_validation_20261028_1",
+  "performance": {
+    "actual_steps_s": 1.8167383916439332,
+    "updates_s": 1.8167383916439332,
+    "timing": {
+      "inference": 1.2673020265065134,
+      "step": 21.601909837918356,
+      "reset": 2.098117537330836,
+      "sample": 7.238716997671872,
+      "transfer": 0.6876626252196729,
+      "update": 43.2057688923087
+    },
+    "peak_npu_allocated_bytes": 1599198208,
+    "training_seconds": 77.0611776818987,
+    "wall_seconds": 333.95098876953125,
+    "utd_effective": 1.0,
+    "aicore_peak": 98,
+    "aicore_mean_including_startup": 12.137254901960784,
+    "hbm_peak_mb": 5162
+  },
+  "counters": {
+    "actual_interactions": 140,
+    "valid_real_steps": 140,
+    "partial_action_attempts": 0,
+    "warmup_real_steps": 0,
+    "critic_updates": 140,
+    "actor_updates": 140,
+    "proposals": 144,
+    "evaluation_interactions": 0,
+    "evaluation_seconds": 0.0
+  },
+  "workers": [
+    {
+      "env_id": 0,
+      "pid": 82072,
+      "seed": 20261027,
+      "episodes": 2,
+      "resets": 2,
+      "real_steps": 8,
+      "proposals": 9,
+      "interventions": 0,
+      "recoveries": 0,
+      "safe_stops": 1,
+      "reasons": {
+        "pressure_test_explicit_collector_cut": 1
+      },
+      "episode_length_sum": 8,
+      "episode_length_histogram": {
+        "1": 1,
+        "7": 1
+      },
+      "episode_id": 1,
+      "frame": 7,
+      "dead": true,
+      "npu_plugin_loaded": false
+    },
+    {
+      "env_id": 1,
+      "pid": 82073,
+      "seed": 20262036,
+      "episodes": 1,
+      "resets": 1,
+      "real_steps": 9,
+      "proposals": 9,
+      "interventions": 0,
+      "recoveries": 0,
+      "safe_stops": 0,
+      "reasons": {},
+      "episode_length_sum": 9,
+      "episode_length_histogram": {
+        "9": 1
+      },
+      "episode_id": 0,
+      "frame": 9,
+      "dead": true,
+      "npu_plugin_loaded": false
+    },
+    {
+      "env_id": 2,
+      "pid": 82074,
+      "seed": 20263045,
+      "episodes": 1,
+      "resets": 1,
+      "real_steps": 9,
+      "proposals": 9,
+      "interventions": 0,
+      "recoveries": 0,
+      "safe_stops": 0,
+      "reasons": {},
+      "episode_length_sum": 9,
+      "episode_length_histogram": {
+        "9": 1
+      },
+      "episode_id": 0,
+      "frame": 9,
+      "dead": true,
+      "npu_plugin_loaded": false
+    },
+    {
+      "env_id": 3,
+      "pid": 82075,
+      "seed": 20264054,
+      "episodes": 1,
+      "resets": 1,
+      "real_steps": 9,
+      "proposals": 9,
+      "interventions": 0,
+      "recoveries": 0,
+      "safe_stops": 0,
+      "reasons": {},
+      "episode_length_sum": 9,
+      "episode_length_histogram": {
+        "9": 1
+      },
+      "episode_id": 0,
+      "frame": 9,
+      "dead": true,
+      "npu_plugin_loaded": false
+    },
+    {
+      "env_id": 4,
+      "pid": 83313,
+      "seed": 20265063,
+      "episodes": 2,
+      "resets": 2,
+      "real_steps": 8,
+      "proposals": 9,
+      "interventions": 0,
+      "recoveries": 0,
+      "safe_stops": 1,
+      "reasons": {
+        "pressure_test_explicit_collector_cut": 1
+      },
+      "episode_length_sum": 8,
+      "episode_length_histogram": {
+        "1": 1,
+        "7": 1
+      },
+      "episode_id": 1,
+      "frame": 7,
+      "dead": true,
+      "npu_plugin_loaded": false
+    },
+    {
+      "env_id": 5,
+      "pid": 83314,
+      "seed": 20266072,
+      "episodes": 1,
+      "resets": 1,
+      "real_steps": 9,
+      "proposals": 9,
+      "interventions": 0,
+      "recoveries": 0,
+      "safe_stops": 0,
+      "reasons": {},
+      "episode_length_sum": 9,
+      "episode_length_histogram": {
+        "9": 1
+      },
+      "episode_id": 0,
+      "frame": 9,
+      "dead": true,
+      "npu_plugin_loaded": false
+    },
+    {
+      "env_id": 6,
+      "pid": 83315,
+      "seed": 20267081,
+      "episodes": 1,
+      "resets": 1,
+      "real_steps": 9,
+      "proposals": 9,
+      "interventions": 0,
+      "recoveries": 0,
+      "safe_stops": 0,
+      "reasons": {},
+      "episode_length_sum": 9,
+      "episode_length_histogram": {
+        "9": 1
+      },
+      "episode_id": 0,
+      "frame": 9,
+      "dead": true,
+      "npu_plugin_loaded": false
+    },
+    {
+      "env_id": 7,
+      "pid": 83316,
+      "seed": 20268090,
+      "episodes": 1,
+      "resets": 1,
+      "real_steps": 9,
+      "proposals": 9,
+      "interventions": 0,
+      "recoveries": 0,
+      "safe_stops": 0,
+      "reasons": {},
+      "episode_length_sum": 9,
+      "episode_length_histogram": {
+        "9": 1
+      },
+      "episode_id": 0,
+      "frame": 9,
+      "dead": true,
+      "npu_plugin_loaded": false
+    },
+    {
+      "env_id": 8,
+      "pid": 84584,
+      "seed": 20269099,
+      "episodes": 2,
+      "resets": 2,
+      "real_steps": 8,
+      "proposals": 9,
+      "interventions": 0,
+      "recoveries": 0,
+      "safe_stops": 1,
+      "reasons": {
+        "pressure_test_explicit_collector_cut": 1
+      },
+      "episode_length_sum": 8,
+      "episode_length_histogram": {
+        "1": 1,
+        "7": 1
+      },
+      "episode_id": 1,
+      "frame": 7,
+      "dead": true,
+      "npu_plugin_loaded": false
+    },
+    {
+      "env_id": 9,
+      "pid": 84585,
+      "seed": 20270108,
+      "episodes": 1,
+      "resets": 1,
+      "real_steps": 9,
+      "proposals": 9,
+      "interventions": 0,
+      "recoveries": 0,
+      "safe_stops": 0,
+      "reasons": {},
+      "episode_length_sum": 9,
+      "episode_length_histogram": {
+        "9": 1
+      },
+      "episode_id": 0,
+      "frame": 9,
+      "dead": true,
+      "npu_plugin_loaded": false
+    },
+    {
+      "env_id": 10,
+      "pid": 84586,
+      "seed": 20271117,
+      "episodes": 1,
+      "resets": 1,
+      "real_steps": 9,
+      "proposals": 9,
+      "interventions": 0,
+      "recoveries": 0,
+      "safe_stops": 0,
+      "reasons": {},
+      "episode_length_sum": 9,
+      "episode_length_histogram": {
+        "9": 1
+      },
+      "episode_id": 0,
+      "frame": 9,
+      "dead": true,
+      "npu_plugin_loaded": false
+    },
+    {
+      "env_id": 11,
+      "pid": 84587,
+      "seed": 20272126,
+      "episodes": 1,
+      "resets": 1,
+      "real_steps": 9,
+      "proposals": 9,
+      "interventions": 0,
+      "recoveries": 0,
+      "safe_stops": 0,
+      "reasons": {},
+      "episode_length_sum": 9,
+      "episode_length_histogram": {
+        "9": 1
+      },
+      "episode_id": 0,
+      "frame": 9,
+      "dead": true,
+      "npu_plugin_loaded": false
+    },
+    {
+      "env_id": 12,
+      "pid": 85832,
+      "seed": 20273135,
+      "episodes": 2,
+      "resets": 2,
+      "real_steps": 8,
+      "proposals": 9,
+      "interventions": 0,
+      "recoveries": 0,
+      "safe_stops": 1,
+      "reasons": {
+        "pressure_test_explicit_collector_cut": 1
+      },
+      "episode_length_sum": 8,
+      "episode_length_histogram": {
+        "1": 1,
+        "7": 1
+      },
+      "episode_id": 1,
+      "frame": 7,
+      "dead": true,
+      "npu_plugin_loaded": false
+    },
+    {
+      "env_id": 13,
+      "pid": 85833,
+      "seed": 20274144,
+      "episodes": 1,
+      "resets": 1,
+      "real_steps": 9,
+      "proposals": 9,
+      "interventions": 0,
+      "recoveries": 0,
+      "safe_stops": 0,
+      "reasons": {},
+      "episode_length_sum": 9,
+      "episode_length_histogram": {
+        "9": 1
+      },
+      "episode_id": 0,
+      "frame": 9,
+      "dead": true,
+      "npu_plugin_loaded": false
+    },
+    {
+      "env_id": 14,
+      "pid": 85834,
+      "seed": 20275153,
+      "episodes": 1,
+      "resets": 1,
+      "real_steps": 9,
+      "proposals": 9,
+      "interventions": 0,
+      "recoveries": 0,
+      "safe_stops": 0,
+      "reasons": {},
+      "episode_length_sum": 9,
+      "episode_length_histogram": {
+        "9": 1
+      },
+      "episode_id": 0,
+      "frame": 9,
+      "dead": true,
+      "npu_plugin_loaded": false
+    },
+    {
+      "env_id": 15,
+      "pid": 85835,
+      "seed": 20276162,
+      "episodes": 1,
+      "resets": 1,
+      "real_steps": 9,
+      "proposals": 9,
+      "interventions": 0,
+      "recoveries": 0,
+      "safe_stops": 0,
+      "reasons": {},
+      "episode_length_sum": 9,
+      "episode_length_histogram": {
+        "9": 1
+      },
+      "episode_id": 0,
+      "frame": 9,
+      "dead": true,
+      "npu_plugin_loaded": false
+    }
+  ],
+  "visual_audit": {
+    "frozen_backbones_unchanged": true,
+    "backbones_eval": true,
+    "adapter_grad_norms": [
+      0.004751717671751976,
+      0.00493408739566803,
+      0.004844519775360823
+    ],
+    "changed_tensors": {
+      "actor.": 14,
+      "critic.": 15,
+      "encoders.": 6
+    }
+  },
+  "bridge_recoveries": {
+    "A": {
+      "arm": "A",
+      "passed": true,
+      "complete_physics_steps": 220,
+      "events": [
+        {
+          "event": "start",
+          "step": 21,
+          "arm": "A",
+          "kind": "safety_recovery",
+          "target": 30,
+          "plan": [
+            [
+              -0.04221283914304414,
+              -0.20384185613731542,
+              0.981
+            ],
+            [
+              -0.042215592893122246,
+              -0.20389985493030346,
+              0.981
+            ],
+            [
+              -0.042215592893122246,
+              -0.20389985493030346,
+              0.9511506383108684
+            ]
+          ]
+        },
+        {
+          "event": "handback",
+          "arm": "A",
+          "kind": "safety_recovery",
+          "steps": 70,
+          "indices": [
+            57,
+            58
+          ]
+        }
+      ],
+      "final_grasps": {
+        "A": {
+          "base": false,
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "base": false,
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "max_normalized_action": 1.0
+    },
+    "B": {
+      "arm": "B",
+      "passed": true,
+      "complete_physics_steps": 303,
+      "events": [
+        {
+          "event": "start",
+          "step": 21,
+          "arm": "B",
+          "kind": "safety_recovery",
+          "target": 38,
+          "plan": [
+            [
+              -0.22044549549541056,
+              0.17012958022833827,
+              0.981
+            ],
+            [
+              -0.16042682198083158,
+              0.16721840482427877,
+              0.981
+            ],
+            [
+              -0.16042682198083158,
+              0.16721840482427877,
+              0.9783509088326338
+            ]
+          ]
+        },
+        {
+          "event": "handback",
+          "arm": "B",
+          "kind": "safety_recovery",
+          "steps": 125,
+          "indices": [
+            104,
+            70
+          ]
+        }
+      ],
+      "final_grasps": {
+        "A": {
+          "base": false,
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "base": false,
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "max_normalized_action": 1.0
+    }
+  },
+  "checkpoint_reload": {
+    "passed": true,
+    "run": "pretrained_spatial84_validation_20261028_1",
+    "parameters_exact_on_load": true,
+    "optimizers_loaded": true,
+    "online_rows": 140,
+    "offline_rows": 224,
+    "post_reload_real_updates": 1,
+    "backbone_preserved": true,
+    "metrics": {
+      "data/batch_R": 0.007773437537252903,
+      "train/critic_qt": -0.11807731539011002,
+      "train/critic_loss": 0.0026686550118029118,
+      "train/encoder_grad_norm": 0.0042634098790585995,
+      "train/critic_grad_norm": 0.5092686414718628,
+      "train/actor_loss_base": 0.07630245387554169,
+      "train/actor_loss_total": 0.07630245387554169,
+      "train/actor_grad_norm": 0.008936494588851929
+    },
+    "physics_boundary": "new episodes, no mid-physics state restore"
+  },
+  "invariants_preserved": true,
+  "fresh_formal_required": true,
+  "resume_physics": "new episode boundary only"
+}

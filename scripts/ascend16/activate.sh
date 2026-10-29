@@ -1,10 +1,10 @@
 # Existing CPU environments are never modified.
-export ACOSERL_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)"
+export ACOSERL_ROOT=/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen
 source "$ACOSERL_ROOT/.venv_autoserl_npu/bin/activate"
 export LD_LIBRARY_PATH="/usr/local/Ascend/driver/lib64/common:/usr/local/Ascend/driver/lib64/driver${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-source "${CANN_ROOT:-/usr/local/Ascend/ascend-toolkit}/set_env.sh"
+source /data/home/3220251075/lerobot_workspace/Ascend/ascend-toolkit/set_env.sh
 export PYTHONPATH="$ACOSERL_ROOT/src:$ACOSERL_ROOT/third_party/residual-offpolicy-rl:$ACOSERL_ROOT/third_party/lerobot-resfit:$ACOSERL_ROOT/third_party/robosuite:$ACOSERL_ROOT/third_party/dexmimicgen${PYTHONPATH:+:$PYTHONPATH}"
-export LD_LIBRARY_PATH="$ACOSERL_ROOT/third_party/system_deps<LOCAL_BUILD_PATH>"
+export LD_LIBRARY_PATH="$ACOSERL_ROOT/third_party/system_deps/root/usr/lib/aarch64-linux-gnu:$LD_LIBRARY_PATH"
 source "$ACOSERL_ROOT/scripts/bimanual_autoserl/activate_render.sh"
 export PYTHONNOUSERSITE=1 MUJOCO_GL=osmesa PYOPENGL_PLATFORM=osmesa
 export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1

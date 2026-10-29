@@ -1,0 +1,429 @@
+{
+  "files": [
+    {
+      "path": "outputs/autoserl_two_point/accepted_A_s1.json",
+      "bytes": 2648623,
+      "sha256": "002d708b268e597994cc30a2b23fa026fe4e65eb484cea32b6e791704505290f"
+    },
+    {
+      "path": "outputs/autoserl_two_point/accepted_A_s1.log",
+      "bytes": 3463,
+      "sha256": "73d35d9fd5b82cd151fd70591dec14fdb429f25193519ee2baf457b624432641"
+    },
+    {
+      "path": "outputs/autoserl_two_point/accepted_A_s2.json",
+      "bytes": 2648884,
+      "sha256": "96532a28d4b80935301a4f885b01b152390f6681de3432aab58c69d49fd243ba"
+    },
+    {
+      "path": "outputs/autoserl_two_point/accepted_A_s2.log",
+      "bytes": 3459,
+      "sha256": "476d7865bb575351920b1904dc552161d593b26d43c1d54d0cdf5ccf82dc908a"
+    },
+    {
+      "path": "outputs/autoserl_two_point/accepted_A_s3.json",
+      "bytes": 2676300,
+      "sha256": "2744d69061bb1445aa52a4cebe20c73dbe891aa73b985d326c909654f292f34b"
+    },
+    {
+      "path": "outputs/autoserl_two_point/accepted_A_s3.log",
+      "bytes": 3462,
+      "sha256": "e511bf9166e2312310d7c7116516f811a7f0fcfc3cee411883a637e38381844b"
+    },
+    {
+      "path": "outputs/autoserl_two_point/accepted_B_s1.json",
+      "bytes": 4706899,
+      "sha256": "53b3746bfcb632c4d274ce1f5cc8ba4d1ec8d4e81c13df520f21234fcdfbead0"
+    },
+    {
+      "path": "outputs/autoserl_two_point/accepted_B_s1.log",
+      "bytes": 3466,
+      "sha256": "a2f8c041f34871db45c1cc256419c3ea27aee2c4b8e5492b6e81f8edcb54aaaf"
+    },
+    {
+      "path": "outputs/autoserl_two_point/accepted_B_s2.json",
+      "bytes": 4706067,
+      "sha256": "88612ee9bfa577506c745f8fcbd0e4b5db823a5f32910e3b5fe333a6df77682e"
+    },
+    {
+      "path": "outputs/autoserl_two_point/accepted_B_s2.log",
+      "bytes": 3465,
+      "sha256": "f6bdd54ac31e44655699f33b8a7de071a4ae3ba456257ebf1b5dae2e8042b28a"
+    },
+    {
+      "path": "outputs/autoserl_two_point/accepted_B_s3.json",
+      "bytes": 4737923,
+      "sha256": "f159b53ed08b36e70c2721068fd96a7052b5018230b1ef20d7fad41ee122ebc8"
+    },
+    {
+      "path": "outputs/autoserl_two_point/accepted_B_s3.log",
+      "bytes": 3465,
+      "sha256": "dd4179677dd419becb4b5833b4054b1b314ef0b6569057b6cda264a9b7d9c034"
+    },
+    {
+      "path": "outputs/autoserl_two_point/accepted_free.log",
+      "bytes": 6133,
+      "sha256": "9bf95ced310bb4448c825168da69472269c5bb8f5b7d8a43c40ddbb92260a216"
+    },
+    {
+      "path": "outputs/autoserl_two_point/accepted_free_free_s0.json",
+      "bytes": 4518321,
+      "sha256": "b2ad573c2c070f67bc50ee136ef2c2b78bb86942ca70e48cef7db0db5eedf2a1"
+    },
+    {
+      "path": "outputs/autoserl_two_point/bounded_bridge_A/result.json",
+      "bytes": 1060082,
+      "sha256": "0bc62abafebc391ead092a4e9d0a0c4f4d39f31bd7b25726ddb4c8c51f4b011a"
+    },
+    {
+      "path": "outputs/autoserl_two_point/bounded_bridge_A.log",
+      "bytes": 1631,
+      "sha256": "31a6f0d868545a31bc8aeddb966691fb4ea6080f6988ccdbd04beaf3df6a5b7e"
+    },
+    {
+      "path": "outputs/autoserl_two_point/bounded_bridge_B/result.json",
+      "bytes": 1466625,
+      "sha256": "6588b47c51a6dcee704dac74817da82ec8c2edc40585dfaa1a94cbff3358296d"
+    },
+    {
+      "path": "outputs/autoserl_two_point/bounded_bridge_B.log",
+      "bytes": 1627,
+      "sha256": "3084b8e986d90b86e73a33270fb1ec586e21255a88f11cd09c30be4fca7144c2"
+    },
+    {
+      "path": "outputs/autoserl_two_point/bridge_A/result.json",
+      "bytes": 886201,
+      "sha256": "1cb6bd74f9a43f8cc4c0388b5336a37825598808ab3004702bd5ba9a0bc322ea"
+    },
+    {
+      "path": "outputs/autoserl_two_point/bridge_A.log",
+      "bytes": 1637,
+      "sha256": "6029678d8f502fd79ec1fa810ee2caccdd50a8ce40f3d89a4fce72a3f20e3e7b"
+    },
+    {
+      "path": "outputs/autoserl_two_point/bridge_B/result.json",
+      "bytes": 1460713,
+      "sha256": "2ee624a53b90ebc5d394626263f34157b87a7a037da4039ebc4a7cfd0ee1e93b"
+    },
+    {
+      "path": "outputs/autoserl_two_point/bridge_B.log",
+      "bytes": 1627,
+      "sha256": "3084b8e986d90b86e73a33270fb1ec586e21255a88f11cd09c30be4fca7144c2"
+    },
+    {
+      "path": "outputs/autoserl_two_point/checkpoint_acceptance.json",
+      "bytes": 657,
+      "sha256": "c07c57d318acc9cc2a236b9d0c0b8a8313abf2bdc229f5cf8d919f10319f00ca"
+    },
+    {
+      "path": "outputs/autoserl_two_point/clear_p0_A.log",
+      "bytes": 1461,
+      "sha256": "76e15230fc1c69d5759bfd6ae302e83d85945cddd9e759ed51f4304bad68c49d"
+    },
+    {
+      "path": "outputs/autoserl_two_point/clear_p0_A_s0.json",
+      "bytes": 2328927,
+      "sha256": "cd49cc36fd5d534bfd7553a95657017cd25b01b2f34f2ed70111a53c1c0a6327"
+    },
+    {
+      "path": "outputs/autoserl_two_point/clear_p0_B.log",
+      "bytes": 1835,
+      "sha256": "cbe8e3da53342b639c0b13b75255830b43cd5a8821263d0f61eeb218611d171a"
+    },
+    {
+      "path": "outputs/autoserl_two_point/clear_p0_B_s0.json",
+      "bytes": 3861703,
+      "sha256": "f127550549cb415fe13911e22cbc26eb2fa63946f063068c52bb96a484a5e641"
+    },
+    {
+      "path": "outputs/autoserl_two_point/compare_episodes.log",
+      "bytes": 1605,
+      "sha256": "437792475f9f5dcb6e6912dbed070d8691a945941a175fad9592cf2307afe086"
+    },
+    {
+      "path": "outputs/autoserl_two_point/contracts.json",
+      "bytes": 589,
+      "sha256": "208a026d40851fdb36545a7b7d34c9cb02a12f1e635550ca415d8412a8395b96"
+    },
+    {
+      "path": "outputs/autoserl_two_point/contracts.log",
+      "bytes": 443,
+      "sha256": "5b0c66d527001728500fa9fd6807789e1aeb537843a5a8d166d4095a47039999"
+    },
+    {
+      "path": "outputs/autoserl_two_point/contracts_delivery.log",
+      "bytes": 1120,
+      "sha256": "0722bf20e937656fdc013846ba06a63db712d428ba1a2c8fdbb3706a3d47addb"
+    },
+    {
+      "path": "outputs/autoserl_two_point/contracts_final.log",
+      "bytes": 1120,
+      "sha256": "b1f49687baea8631a2c20381254dcfeadfc33f5ac7bfb50edcd8223729afb6a2"
+    },
+    {
+      "path": "outputs/autoserl_two_point/contracts_fixed.log",
+      "bytes": 102,
+      "sha256": "63df0c3c026bd5f28d770fa2afc58c1bd01ec5c02ec245cf8190380853ee25a9"
+    },
+    {
+      "path": "outputs/autoserl_two_point/contracts_gripper.log",
+      "bytes": 1120,
+      "sha256": "0d0f8129a89970a8467e90582b072001c025582e5649b348a7186b0f2e4cd406"
+    },
+    {
+      "path": "outputs/autoserl_two_point/demo_audit.json",
+      "bytes": 6440278,
+      "sha256": "b1190c8befb8d03c567222f6fcf9df07701a1ea783a3094c1316c8afedf4f3bd"
+    },
+    {
+      "path": "outputs/autoserl_two_point/demo_audit.log",
+      "bytes": 666,
+      "sha256": "d7ff1fe3311cae0b2514713380d288cfcb40eed7957f088e972589ac5c59284f"
+    },
+    {
+      "path": "outputs/autoserl_two_point/final_full_demo.log",
+      "bytes": 788,
+      "sha256": "80687b31c9c46532f6e35ee79368702594532b3781893102ec2043804f4030c6"
+    },
+    {
+      "path": "outputs/autoserl_two_point/final_gripper_barriers.json",
+      "bytes": 7512045,
+      "sha256": "bb57ba9884509e457f9d88815b634c4380cbe85b41865e8cd829a563c7cf00cb"
+    },
+    {
+      "path": "outputs/autoserl_two_point/final_gripper_barriers.log",
+      "bytes": 788,
+      "sha256": "80687b31c9c46532f6e35ee79368702594532b3781893102ec2043804f4030c6"
+    },
+    {
+      "path": "outputs/autoserl_two_point/final_verified_A.log",
+      "bytes": 4968,
+      "sha256": "7794e3900eda38e5aa174ea0bca7dcfa3db8b58e5468a5518b76808c17f7e80f"
+    },
+    {
+      "path": "outputs/autoserl_two_point/final_verified_A_s4.json",
+      "bytes": 2678036,
+      "sha256": "db9f94d55278b1f4f9c8ea8df9a55dfd2bed9c44affed0f42c55c156d6480ab4"
+    },
+    {
+      "path": "outputs/autoserl_two_point/final_verified_B.log",
+      "bytes": 4971,
+      "sha256": "2c3d174333addbc82030c9467419ce923dd3a85876dadd4f017182b4d1b77880"
+    },
+    {
+      "path": "outputs/autoserl_two_point/final_verified_B_s4.json",
+      "bytes": 4739651,
+      "sha256": "400df5a1a3b5319d3f6c6c8761f2542eb817dc4ef618b4ebc0c4fd69a45a3d56"
+    },
+    {
+      "path": "outputs/autoserl_two_point/free_initial.log",
+      "bytes": 1632,
+      "sha256": "d5eb1af151c37cf693aa39012e9bf9329af497c1124e28ab959e0be78aed028c"
+    },
+    {
+      "path": "outputs/autoserl_two_point/free_initial_free_s0.json",
+      "bytes": 2819024,
+      "sha256": "e6cfa4031679045089ebc6e80424171538ca2fa202f3d9abbbd83aac28100bcd"
+    },
+    {
+      "path": "outputs/autoserl_two_point/full_demo.json",
+      "bytes": 7512045,
+      "sha256": "5c0975de3033e9fd00474e80aeb57fdc36b3544032d00180b10307a580bf1254"
+    },
+    {
+      "path": "outputs/autoserl_two_point/full_demo.log",
+      "bytes": 1340,
+      "sha256": "4e916525dc747dc4ea4e9a40dbb15ff8c92b037a1c419f3416c9d530eca51d31"
+    },
+    {
+      "path": "outputs/autoserl_two_point/full_demo_fixed.log",
+      "bytes": 826,
+      "sha256": "79655e455712ee2d080ce810bd86d00eb6fd3702b4a110c4e868e3c4ed1e27d0"
+    },
+    {
+      "path": "outputs/autoserl_two_point/full_demo_release.log",
+      "bytes": 784,
+      "sha256": "a9c84ab371056e576d83be05c9c36d6492de21b25021037a698bcb6255f0ce1d"
+    },
+    {
+      "path": "outputs/autoserl_two_point/held_passive_B.log",
+      "bytes": 3301,
+      "sha256": "9c140e5ffe2c4927a9cb0e4a2cf03b998a020426b7b796dbd7a9a05a08b3d097"
+    },
+    {
+      "path": "outputs/autoserl_two_point/held_passive_B_s0.json",
+      "bytes": 12595385,
+      "sha256": "bd60a2196bd7ff6fcbd9cc0e0ed0f662c7b88262959b9d4df0f9486c9a2fba6c"
+    },
+    {
+      "path": "outputs/autoserl_two_point/initial_A.log",
+      "bytes": 1903,
+      "sha256": "303a85f5f97a14bc9a9fd4b87d44dc79a60f244a2b3c0ee1abff617cb5b05c3b"
+    },
+    {
+      "path": "outputs/autoserl_two_point/initial_A_s0.json",
+      "bytes": 4556307,
+      "sha256": "219863d62eea03a512f2a393fccab26c201d8f2ba7afcfa7bddc06b41a5ade5f"
+    },
+    {
+      "path": "outputs/autoserl_two_point/nstep.log",
+      "bytes": 738,
+      "sha256": "620b1ac61204039dbcf881dd9e286e8bfe189bdb8b77a3738a83be27c2ca5868"
+    },
+    {
+      "path": "outputs/autoserl_two_point/nstep_acceptance.json",
+      "bytes": 406,
+      "sha256": "644c9a8d6a13bd5b3cdbcc4b4728c4f3e2f7d3538c6775fc23d5c5114b6ddb0e"
+    },
+    {
+      "path": "outputs/autoserl_two_point/offline.log",
+      "bytes": 1267,
+      "sha256": "11dc3be19fd9f9465ce2374ee4c3c8a52e81e347ee5f86f9ec2b4b381e11d648"
+    },
+    {
+      "path": "outputs/autoserl_two_point/offline_acceptance.json",
+      "bytes": 238,
+      "sha256": "2177ba8262d9bc74fe83a0d29af86a00377f50817fe49ac2abfd2036a6470075"
+    },
+    {
+      "path": "outputs/autoserl_two_point/paired_verified/summary.json",
+      "bytes": 9829,
+      "sha256": "748367ecf9128fcc2ea518ae5b5bda4752c6ac48faad4c2f6c78e32427f51118"
+    },
+    {
+      "path": "outputs/autoserl_two_point/paired_verified.log",
+      "bytes": 5368,
+      "sha256": "94d5dfccb1ac3781af2d429d48cb9b0a53d9911730329ab6836b122c62893e09"
+    },
+    {
+      "path": "outputs/autoserl_two_point/parked_A_held.log",
+      "bytes": 1061,
+      "sha256": "6d2650ef2627f98c47d4f7d33d3d1193a16903db9c1997e35b4144b82f02b66f"
+    },
+    {
+      "path": "outputs/autoserl_two_point/parked_A_passiveheldTrue.json",
+      "bytes": 2875167,
+      "sha256": "ba608e9c31788c91dcf6a7ecaaf4683f8eef1cf1dde4756c004c06e64358fc32"
+    },
+    {
+      "path": "outputs/autoserl_two_point/parked_B_empty.log",
+      "bytes": 1056,
+      "sha256": "bf0df28f04921ab9c47c83e71ae9b9c93dd19b70077ed632ffc2b275a860a772"
+    },
+    {
+      "path": "outputs/autoserl_two_point/parked_B_passiveheldFalse.json",
+      "bytes": 3028639,
+      "sha256": "882d253c3cf92934f29009a46e0959b585f2e6f86f3a307581cac6e7f209e0c0"
+    },
+    {
+      "path": "outputs/autoserl_two_point/preservation.json",
+      "bytes": 1643,
+      "sha256": "63bec923597b32a8d836e4391a2f887618b7fa59a78397ad94a238ee286c580c"
+    },
+    {
+      "path": "outputs/autoserl_two_point/proximity.json",
+      "bytes": 32794,
+      "sha256": "23ee36b40be9da5ee479308072648d335b9962c364bc1df8b24700f7da980a40"
+    },
+    {
+      "path": "outputs/autoserl_two_point/proximity.log",
+      "bytes": 4558,
+      "sha256": "2f6d74f8bd57b205a0624fc44c7f62d1ca47a66130f5661d352315bf9a21b086"
+    },
+    {
+      "path": "outputs/autoserl_two_point/reference.npz",
+      "bytes": 93885,
+      "sha256": "d3ad1818599867201a5705600905f467d168b36c61a3df8c62cc2ef00ea5c71d"
+    },
+    {
+      "path": "outputs/autoserl_two_point/release_guard_regression.json",
+      "bytes": 7512045,
+      "sha256": "5c0975de3033e9fd00474e80aeb57fdc36b3544032d00180b10307a580bf1254"
+    },
+    {
+      "path": "outputs/autoserl_two_point/release_guard_regression.log",
+      "bytes": 788,
+      "sha256": "80687b31c9c46532f6e35ee79368702594532b3781893102ec2043804f4030c6"
+    },
+    {
+      "path": "outputs/autoserl_two_point/repeat_A.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/autoserl_two_point/repeat_B.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/autoserl_two_point/revised_A.log",
+      "bytes": 1991,
+      "sha256": "8a10bb6b31d3e3fcb31ab68b1a03f59712d04f825b0aa05469c349f06049acc3"
+    },
+    {
+      "path": "outputs/autoserl_two_point/revised_A_s0.json",
+      "bytes": 4556398,
+      "sha256": "f514f120410446fe36921e9c8ee316c91b81b85362c4c7063067a44e4b01d7ee"
+    },
+    {
+      "path": "outputs/autoserl_two_point/revised_B.log",
+      "bytes": 1462,
+      "sha256": "fa9ab506de9f58f6b74321a73098438aaa1564bef009184e572a430949643cb9"
+    },
+    {
+      "path": "outputs/autoserl_two_point/revised_B_s0.json",
+      "bytes": 2599171,
+      "sha256": "14f73ac9f75c20319a887d7bc647cc937b9d4f45846dae03df836165e6681884"
+    },
+    {
+      "path": "outputs/autoserl_two_point/safety_real_contact.json",
+      "bytes": 1805737,
+      "sha256": "7b55585cc1a49cc0340e1d1fa9785bfd3728eae41e7cc8914fb5149de5147281"
+    },
+    {
+      "path": "outputs/autoserl_two_point/safety_real_contact.log",
+      "bytes": 620,
+      "sha256": "6d92f8205c6fe0868ae1db0b0f711902132f1b0e3a517b1d2e1feb2b181ab9e0"
+    },
+    {
+      "path": "outputs/autoserl_two_point/safety_real_contact_fixed.json",
+      "bytes": 1805737,
+      "sha256": "7b55585cc1a49cc0340e1d1fa9785bfd3728eae41e7cc8914fb5149de5147281"
+    },
+    {
+      "path": "outputs/autoserl_two_point/safety_real_contact_fixed.log",
+      "bytes": 714,
+      "sha256": "f804bddb3e7fe16df37aa4dd7095689a7e145ed0f2bb8a380aaef141f10d4186"
+    },
+    {
+      "path": "outputs/autoserl_two_point/stable_A_s1.json",
+      "bytes": 2676455,
+      "sha256": "8b3b27addaf4f0d8cc0b596abafe426b42472e5b42ef500dcf9b13be16ba21c7"
+    },
+    {
+      "path": "outputs/autoserl_two_point/stable_A_s1.log",
+      "bytes": 3461,
+      "sha256": "2c89bd71d2cb936f26dc6646af7d6921d9fde16d01142abc40da8c32b58fffc4"
+    },
+    {
+      "path": "outputs/autoserl_two_point/tracked_A_s2.json",
+      "bytes": 2648883,
+      "sha256": "ed4c0256fa8df119c3d13aadabff8267e13fad30057f10220cc81a2ee0089295"
+    },
+    {
+      "path": "outputs/autoserl_two_point/tracked_A_s2.log",
+      "bytes": 3458,
+      "sha256": "a5c40b51a50bc9374e20defa7cd08aa8a0fbb417da9cb566c17ea7c2bcc3f909"
+    },
+    {
+      "path": "outputs/autoserl_two_point/tracked_B.log",
+      "bytes": 3465,
+      "sha256": "8f49f0c68ac83c4bcea579c0e5199478ba5d870f6988ec47ad8fff447b769a9a"
+    },
+    {
+      "path": "outputs/autoserl_two_point/tracked_B_s0.json",
+      "bytes": 4706697,
+      "sha256": "7ab35a5f20062bf1ef30dfb8716ce49b01ebf05c5519d9ab78f6cb3af6a3ea22"
+    }
+  ]
+}

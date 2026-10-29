@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "parameters_exact_on_load": true,
+  "optimizer_and_scheduler_loaded": true,
+  "online_rows": 140,
+  "offline_rows": 224,
+  "actual_post_reload_updates": 1,
+  "metrics": {
+    "data/batch_R": 0.0,
+    "train/critic_qt": -0.1978885978460312,
+    "train/critic_loss": 0.0017226053168997169,
+    "train/encoder_grad_norm": 0.009226691909134388,
+    "train/critic_grad_norm": 0.06121032312512398,
+    "train/actor_loss_base": 0.09966205805540085,
+    "train/actor_loss_total": 0.09966205805540085,
+    "train/actor_grad_norm": 0.0011677551083266735
+  },
+  "physics_resume_boundary": "not tested mid-episode; resume requires new episodes"
+}

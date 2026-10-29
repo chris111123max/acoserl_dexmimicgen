@@ -1,5 +1,5 @@
 """One-method, NPU-only learner; sixteen CPU environments, isolated three-step rows."""
-import argparse,json,time,random,traceback,os,signal
+import argparse,json,time,random,traceback,os,signal,subprocess,hashlib
 from pathlib import Path
 import numpy as np
 ROOT=Path(__file__).resolve().parents[2]
@@ -31,16 +31,21 @@ def evaluate(agent,normalization,out,step,deadline,torch,device,episodes=20):
  write(out/f'evaluation_{step:07d}.json',result);return result
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--mode',choices=['stress','formal'],required=True);p.add_argument('--tag',required=True);p.add_argument('--utd',type=int,choices=[1,2,4]);p.add_argument('--resume',type=Path);p.add_argument('--stress-steps',type=int,default=64);a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--mode',choices=['stress','formal'],required=True);p.add_argument('--tag',required=True);p.add_argument('--utd',type=int,choices=[1,2,4]);p.add_argument('--resume',type=Path);p.add_argument('--stress-steps',type=int,default=64);p.add_argument('--gate',type=Path,default=ROOT/'docs/ascend16/deployment_gate.json');p.add_argument('--visual',choices=['minivit','dinov2_vits14','resnet18_imagenet','squeezenet1_1_imagenet','resnet18_spatial84'],default='minivit');a=p.parse_args()
  assert a.tag.replace('_','').replace('-','').isalnum() and '/' not in a.tag
  stop_requested={'value':False}
  signal.signal(signal.SIGTERM,lambda *_:stop_requested.update(value=True))
  signal.signal(signal.SIGINT,lambda *_:stop_requested.update(value=True))
  config=json.loads((ROOT/'configs/ascend16/formal.json').read_text())
  config['purpose']=a.mode
+ config['visual_encoder']=a.visual
+ if a.visual!='minivit':config['initial_weights']='verified frozen public pretrained visual backbone; fresh random Actor/Critic/adapters; empty online replay; no smoke/old RL checkpoint'
+ config['source_commit']=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
  if a.mode=='formal':
-  gate=json.loads((ROOT/'docs/ascend16/deployment_gate.json').read_text());assert gate['passed'] or gate.get('start_authorized',False)
+  gate=json.loads(a.gate.read_text());assert gate['passed'] or gate.get('start_authorized',False)
   config['utd']=gate['selected_utd'];assert a.utd in [None,config['utd']]
+  if gate.get('selected_visual'):assert gate['selected_visual']==a.visual,'encoder disagrees with acceptance gate'
+  if a.visual!='minivit':assert gate.get('selected_visual')==a.visual and gate.get('pretrained_validation_passed'), 'pretrained-specific acceptance gate required'
  else:
   assert a.utd in [1,2,4] and 16<=a.stress_steps<=128
   config.update(utd=a.utd,warmup_real_steps=0,online_capacity=256,maximum_actual_interactions=a.stress_steps+16,wall_limit_seconds=1200)
@@ -56,19 +61,29 @@ def main():
   from acoserl.ascend_monitor import Telemetry
   from acoserl.ascend_checkpoint import save,load,restore_rng
   from resfit.rl_finetuning.config.rlpd import QAgentConfig
-  from resfit.rl_finetuning.off_policy.rl.q_agent import QAgent
+  from acoserl.pretrained_visual import make_agent,manifest,digest
   from resfit.rl_finetuning.off_policy.common_utils.utils import eval_mode
   from acoserl.single_demo_rlpd import IMAGES
+  from acoserl.bimanual_autoserl import DEFAULT as supervisor_config
+  config['supervisor_config']=supervisor_config
+  config['recovery_points']=json.loads((ROOT/'configs/bimanual_autoserl/recovery_points.json').read_text())
+  config['reference_sha256']=hashlib.sha256((ROOT/config['recovery_points']['reference_path']).read_bytes()).hexdigest()
+  config['acceptance_gate']=str(a.gate)
   assert torch.npu.is_available();device=torch.device('npu:0');torch.npu.set_device(device);torch.npu.set_option({'ACL_PRECISION_MODE':'must_keep_origin_dtype'});torch.npu.config.allow_internal_format=False
   torch.set_num_threads(2);torch.manual_seed(config['seed']);torch.npu.manual_seed_all(config['seed']);np.random.seed(config['seed']);random.seed(config['seed'])
   telemetry=Telemetry(out/'npu_telemetry.jsonl')
   off,std,scale,norm=offline(config['batch_size']//2,config['gamma']);on=replay(config['online_capacity'],config['batch_size']//2)
-  agent=QAgent((3,84,84),(18,),14,IMAGES,QAgentConfig(device=str(device)))
+  agent=make_agent((3,84,84),(18,),14,IMAGES,QAgentConfig(device=str(device)),a.visual)
+  visual_initial=manifest(agent);config['visual_manifest']=visual_initial
+  write(out/'initialization.json',{'fresh_rl':a.resume is None,'fresh_online_replay':len(on)==0,'online_rows':len(on),'offline_rows':len(off),'actor_hash':digest(agent.actor),'critic_hash':digest(agent.critic),'visual':visual_initial})
+  visual_snapshot={k:p.detach().cpu().clone() for k,p in agent.named_parameters() if p.requires_grad} if a.mode=='stress' else None
   assert all(t.device.type=='npu' for t in agent.parameters());assert agent.cfg.critic.num_q==10
   config['agent_config']=asdict(agent.cfg);config['normalization_frames']=224;write(out/'config.json',config);write(out/'normalization.json',norm)
   assembler=IsolatedNStep(3,config['gamma']);restored=None
   if a.resume:
    restored,assembler=load(a.resume,agent,on,off,norm);assert restored['config']['purpose']==a.mode and restored['config']['utd']==config['utd']
+   assert restored['config'].get('visual_encoder','minivit')==a.visual,'incompatible visual encoder on resume'
+   assert restored['config'].get('supervisor_config')==config['supervisor_config'] and restored['config'].get('reference_sha256')==config['reference_sha256'],'incompatible recovery protocol/reference on resume'
    c=restored['counters'];write(out/'resume_verified.json',{'parameters_exact':True,'optimizers_loaded':True,'online_rows':len(on),'offline_rows':len(off),'pending_tails_legally_truncated':True,'source':str(a.resume)})
   pool=FourByFour(config['seed'],norm,out/'workers',resume_workers=None if restored is None else restored['workers'])
   if restored:restore_rng(restored['rng'])
@@ -130,6 +145,13 @@ def main():
    actor=(c['critic_updates']+1)%config['utd']==0;values=agent.update(batch,.1,actor,bc_batch=None,ref_agent=agent);torch.npu.synchronize();assert all(np.isfinite(float(v)) for k,v in values.items() if not k.startswith('_'))
    c['critic_updates']+=1;c['actor_updates']+=int(actor);budget-=1
   pool.cut_all(stop_reason)
+  visual_final=manifest(agent);assert visual_initial['backbone_hashes']==visual_final['backbone_hashes'],'frozen pretrained weights changed'
+  visual_audit={'frozen_backbones_unchanged':True,'backbones_eval':all(not e.backbone.training for e in agent.encoders if hasattr(e,'backbone')),'adapter_grad_norms':[float(e.adapter.weight.grad.norm()) for e in agent.encoders if hasattr(e,'adapter') and e.adapter.weight.grad is not None]}
+  if visual_snapshot is not None:
+   changes={k:bool(torch.any(p.detach().cpu()!=visual_snapshot[k])) for k,p in agent.named_parameters() if k in visual_snapshot}
+   visual_audit['changed_tensors']={prefix:sum(v for k,v in changes.items() if k.startswith(prefix)) for prefix in ['actor.','critic.','encoders.']}
+   assert all(visual_audit['changed_tensors'].values())
+  write(out/'visual_audit.json',visual_audit)
   elapsed=time.perf_counter()-training_start
   final=save(out/'checkpoints'/'final',agent,on,off,assembler,pool,c,config,norm)
   result.update(status='completed',stop_reason=stop_reason,counters=c,workers=pool.diagnostics(),online_rows=len(on),offline_rows=len(off),rounds=rounds,

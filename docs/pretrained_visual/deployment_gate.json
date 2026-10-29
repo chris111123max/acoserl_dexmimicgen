@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "selected_visual": "resnet18_spatial84",
+  "pretrained_validation_passed": true,
+  "selected_utd": 1,
+  "pressure_run": "outputs/ascend16/pretrained_spatial84_validation_20261028_1"
+}

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-cd "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd /data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen
 mkdir -p logs/ascend16
 exec 9>/tmp/acoserl_dexmimicgen_formal.lock
 flock -n 9 || { echo 'Formal learner already owns lock'; exit 1; }

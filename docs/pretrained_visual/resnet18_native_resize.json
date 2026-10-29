@@ -1,0 +1,201 @@
+{
+  "name": "resnet18_imagenet",
+  "passed": true,
+  "manifest": {
+    "name": "resnet18_imagenet",
+    "feature_shape_per_camera": [
+      81,
+      128
+    ],
+    "parameters_total": 93415210,
+    "parameters_trainable": 58346674,
+    "encoder_trainable": 98688,
+    "encoder_frozen": 35068536,
+    "load_evidence": [
+      {
+        "file": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/cache/pretrained_visual/resnet18-f37072fd.pth",
+        "sha256": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec",
+        "strict": true,
+        "keys": 102,
+        "all_tensors_exact": true,
+        "legacy_batchnorm_zero_counters": [
+          "bn1.num_batches_tracked",
+          "layer1.0.bn1.num_batches_tracked",
+          "layer1.0.bn2.num_batches_tracked",
+          "layer1.1.bn1.num_batches_tracked",
+          "layer1.1.bn2.num_batches_tracked",
+          "layer2.0.bn1.num_batches_tracked",
+          "layer2.0.bn2.num_batches_tracked",
+          "layer2.0.downsample.1.num_batches_tracked",
+          "layer2.1.bn1.num_batches_tracked",
+          "layer2.1.bn2.num_batches_tracked",
+          "layer3.0.bn1.num_batches_tracked",
+          "layer3.0.bn2.num_batches_tracked",
+          "layer3.0.downsample.1.num_batches_tracked",
+          "layer3.1.bn1.num_batches_tracked",
+          "layer3.1.bn2.num_batches_tracked",
+          "layer4.0.bn1.num_batches_tracked",
+          "layer4.0.bn2.num_batches_tracked",
+          "layer4.0.downsample.1.num_batches_tracked",
+          "layer4.1.bn1.num_batches_tracked",
+          "layer4.1.bn2.num_batches_tracked"
+        ]
+      },
+      {
+        "file": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/cache/pretrained_visual/resnet18-f37072fd.pth",
+        "sha256": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec",
+        "strict": true,
+        "keys": 102,
+        "all_tensors_exact": true,
+        "legacy_batchnorm_zero_counters": [
+          "bn1.num_batches_tracked",
+          "layer1.0.bn1.num_batches_tracked",
+          "layer1.0.bn2.num_batches_tracked",
+          "layer1.1.bn1.num_batches_tracked",
+          "layer1.1.bn2.num_batches_tracked",
+          "layer2.0.bn1.num_batches_tracked",
+          "layer2.0.bn2.num_batches_tracked",
+          "layer2.0.downsample.1.num_batches_tracked",
+          "layer2.1.bn1.num_batches_tracked",
+          "layer2.1.bn2.num_batches_tracked",
+          "layer3.0.bn1.num_batches_tracked",
+          "layer3.0.bn2.num_batches_tracked",
+          "layer3.0.downsample.1.num_batches_tracked",
+          "layer3.1.bn1.num_batches_tracked",
+          "layer3.1.bn2.num_batches_tracked",
+          "layer4.0.bn1.num_batches_tracked",
+          "layer4.0.bn2.num_batches_tracked",
+          "layer4.0.downsample.1.num_batches_tracked",
+          "layer4.1.bn1.num_batches_tracked",
+          "layer4.1.bn2.num_batches_tracked"
+        ]
+      },
+      {
+        "file": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/cache/pretrained_visual/resnet18-f37072fd.pth",
+        "sha256": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec",
+        "strict": true,
+        "keys": 102,
+        "all_tensors_exact": true,
+        "legacy_batchnorm_zero_counters": [
+          "bn1.num_batches_tracked",
+          "layer1.0.bn1.num_batches_tracked",
+          "layer1.0.bn2.num_batches_tracked",
+          "layer1.1.bn1.num_batches_tracked",
+          "layer1.1.bn2.num_batches_tracked",
+          "layer2.0.bn1.num_batches_tracked",
+          "layer2.0.bn2.num_batches_tracked",
+          "layer2.0.downsample.1.num_batches_tracked",
+          "layer2.1.bn1.num_batches_tracked",
+          "layer2.1.bn2.num_batches_tracked",
+          "layer3.0.bn1.num_batches_tracked",
+          "layer3.0.bn2.num_batches_tracked",
+          "layer3.0.downsample.1.num_batches_tracked",
+          "layer3.1.bn1.num_batches_tracked",
+          "layer3.1.bn2.num_batches_tracked",
+          "layer4.0.bn1.num_batches_tracked",
+          "layer4.0.bn2.num_batches_tracked",
+          "layer4.0.downsample.1.num_batches_tracked",
+          "layer4.1.bn1.num_batches_tracked",
+          "layer4.1.bn2.num_batches_tracked"
+        ]
+      }
+    ],
+    "backbone_hashes": [
+      "b6e132d398763cadd5e66a4e994f5a5eb6cf7bd415eb7e8fae476475f749ffe2",
+      "b6e132d398763cadd5e66a4e994f5a5eb6cf7bd415eb7e8fae476475f749ffe2",
+      "b6e132d398763cadd5e66a4e994f5a5eb6cf7bd415eb7e8fae476475f749ffe2"
+    ]
+  },
+  "cpu_npu_max_abs": 0.00102292001247406,
+  "cpu_npu_relative_l2": 0.0009647100232541561,
+  "shape": [
+    2,
+    81,
+    128
+  ],
+  "spatial_variation": 0.005859373137354851,
+  "inference16_seconds": 0.023674876987934114,
+  "encoding_3x16_seconds": 0.022633159765973687,
+  "updates": [
+    {
+      "seconds": 2.3964801419060677,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": -0.656761884689331,
+      "train/critic_loss": 0.517102837562561,
+      "train/encoder_grad_norm": 0.3800455629825592,
+      "train/critic_grad_norm": 10.414952278137207,
+      "train/actor_loss_base": 1.2551395893096924,
+      "train/actor_loss_total": 1.2551395893096924,
+      "train/actor_grad_norm": 1.0671029090881348
+    },
+    {
+      "seconds": 0.750582471024245,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": -0.5845431089401245,
+      "train/critic_loss": 0.5879573822021484,
+      "train/encoder_grad_norm": 0.41416892409324646,
+      "train/critic_grad_norm": 11.174616813659668,
+      "train/actor_loss_base": 1.0738654136657715,
+      "train/actor_loss_total": 1.0738654136657715,
+      "train/actor_grad_norm": 0.6500620245933533
+    },
+    {
+      "seconds": 0.7804623120464385,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": 0.054850734770298004,
+      "train/critic_loss": 1.5058972835540771,
+      "train/encoder_grad_norm": 0.6314017176628113,
+      "train/critic_grad_norm": 18.938072204589844,
+      "train/actor_loss_base": 0.4883294403553009,
+      "train/actor_loss_total": 0.4883294403553009,
+      "train/actor_grad_norm": 0.3932706117630005
+    },
+    {
+      "seconds": 0.7703495810274035,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": -0.2927361726760864,
+      "train/critic_loss": 0.31716373562812805,
+      "train/encoder_grad_norm": 0.26694661378860474,
+      "train/critic_grad_norm": 8.008012771606445,
+      "train/actor_loss_base": -0.11744055151939392,
+      "train/actor_loss_total": -0.11744055151939392,
+      "train/actor_grad_norm": 0.30552762746810913
+    },
+    {
+      "seconds": 0.7679027779959142,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": -0.48617249727249146,
+      "train/critic_loss": 0.43234944343566895,
+      "train/encoder_grad_norm": 0.29227471351623535,
+      "train/critic_grad_norm": 8.369170188903809,
+      "train/actor_loss_base": -0.2462264597415924,
+      "train/actor_loss_total": -0.2462264597415924,
+      "train/actor_grad_norm": 0.1932974010705948
+    },
+    {
+      "seconds": 0.7387176619376987,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": -0.3152952194213867,
+      "train/critic_loss": 0.30048829317092896,
+      "train/encoder_grad_norm": 0.2455533891916275,
+      "train/critic_grad_norm": 7.740983963012695,
+      "train/actor_loss_base": -0.11594986915588379,
+      "train/actor_loss_total": -0.11594986915588379,
+      "train/actor_grad_norm": 0.16787542402744293
+    }
+  ],
+  "steady_update_seconds": 0.7643580832518637,
+  "changed_parameter_tensors": {
+    "actor.": 14,
+    "critic.": 15,
+    "encoders.": 6
+  },
+  "adapter_grad_norms": [
+    0.13063187897205353,
+    0.1334594190120697,
+    0.13869373500347137
+  ],
+  "backbones_unchanged": true,
+  "backbones_eval": true,
+  "peak_npu_allocated_bytes": 4046793728
+}

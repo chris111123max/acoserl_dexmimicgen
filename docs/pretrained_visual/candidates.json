@@ -1,0 +1,38 @@
+{
+  "R3M_ResNet18": {
+    "source": "https://github.com/facebookresearch/r3m",
+    "license": "MIT (official repository)",
+    "weights": "https://drive.google.com/uc?id=1A1ic-p4KtYlKXdXHcV2QV0cUzI4kn0u-",
+    "spatial": "ResNet convolutional feature maps, not global FC output",
+    "status": "official Google Drive download failed from current server: URLError [Errno 101] Network is unreachable; not loaded, not selected"
+  },
+  "DINOv2_ViTS14": {
+    "source": "https://github.com/facebookresearch/dinov2",
+    "source_revision": "7764ea0f912e53c92e82eb78a2a1631e92725fc8",
+    "license": "Apache-2.0 code and standard DINOv2 weights; not Cell/XRay variants",
+    "weights_version": "LVD142M distilled ViT-S/14, no registers",
+    "spatial": "native 9x9x384 tokens at 126x126, per-view Linear(384,128)",
+    "status": "strict 175-key load exact; rejected current NPU path after 0.0954143 CPU/NPU relative-L2 error; AA resize CPU fallback also observed; not attributed to one operator without isolation"
+  },
+  "ImageNet_ResNet18": {
+    "source": "https://docs.pytorch.org/vision/0.18/models/generated/torchvision.models.resnet18.html",
+    "implementation": "torchvision 0.18.1, BSD-3-Clause",
+    "weights_version": "IMAGENET1K_V1 / resnet18-f37072fd.pth",
+    "license_note": "Torchvision source BSD-3-Clause; pretrained weights/dataset follow their upstream terms; used here for research, not a claim that dataset rights equal code license",
+    "spatial": "layer3 14x14x256 at224 input -> adaptive spatial average9x9 -> per-view Linear(256,128)",
+    "status": "strict full checkpoint load and real official updates passed; CPU/NPU relative L2 .00096471; native-resize update .76436s vs MiniViT .13478s"
+  },
+  "ImageNet_SqueezeNet1_1": {
+    "source": "https://docs.pytorch.org/vision/0.24/models/generated/torchvision.models.squeezenet1_1.html",
+    "weights_version": "IMAGENET1K_V1 / squeezenet1_1-b8a52dc0.pth",
+    "source_license": "torchvision BSD-3-Clause, upstream weights/dataset terms separate",
+    "spatial": "13x13x512 -> spatial average9x9 -> Linear512x128",
+    "status": "all52 checkpoint tensors exact; .00099287 CPU/NPU relativeL2; 1.13725s update slower than ResNet despite fewer parameters"
+  },
+  "ResNet18_spatial84": {
+    "weights": "same complete IMAGENET1K_V1 official checkpoint",
+    "architecture": "only pretrained stem/layer1/layer2 executed; 11x11x128 spatial map -> average9x9 -> trainable Linear128x128 per camera; classifier/layer3/layer4 loaded/verified/frozen but unused",
+    "preprocessing": "native84 RGB [0,1], ImageNet mean/std. Explicit resolution transfer from224 pretraining, not the official classification224 preset. No extra crop/no synthetic detail enlargement.",
+    "status": "selected: strict full pretrained load, CPU/NPU parity, frozen hash preservation, real140-update16-worker stress, full-image A/B recoveries and checkpoint reload passed"
+  }
+}

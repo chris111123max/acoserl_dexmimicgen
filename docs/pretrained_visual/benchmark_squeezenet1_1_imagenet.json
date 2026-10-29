@@ -1,0 +1,138 @@
+{
+  "name": "squeezenet1_1_imagenet",
+  "passed": true,
+  "manifest": {
+    "name": "squeezenet1_1_imagenet",
+    "feature_shape_per_camera": [
+      81,
+      128
+    ],
+    "parameters_total": 62151466,
+    "parameters_trainable": 58444978,
+    "encoder_trainable": 196992,
+    "encoder_frozen": 3706488,
+    "load_evidence": [
+      {
+        "file": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/cache/pretrained_visual/squeezenet1_1-b8a52dc0.pth",
+        "sha256": "b8a52dc049b60e4b6ab68ad0df457362afab8b6304b2febdc1650a5dab4d7e7b",
+        "strict": true,
+        "keys": 52,
+        "all_tensors_exact": true,
+        "legacy_batchnorm_zero_counters": []
+      },
+      {
+        "file": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/cache/pretrained_visual/squeezenet1_1-b8a52dc0.pth",
+        "sha256": "b8a52dc049b60e4b6ab68ad0df457362afab8b6304b2febdc1650a5dab4d7e7b",
+        "strict": true,
+        "keys": 52,
+        "all_tensors_exact": true,
+        "legacy_batchnorm_zero_counters": []
+      },
+      {
+        "file": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/cache/pretrained_visual/squeezenet1_1-b8a52dc0.pth",
+        "sha256": "b8a52dc049b60e4b6ab68ad0df457362afab8b6304b2febdc1650a5dab4d7e7b",
+        "strict": true,
+        "keys": 52,
+        "all_tensors_exact": true,
+        "legacy_batchnorm_zero_counters": []
+      }
+    ],
+    "backbone_hashes": [
+      "261350c8642b8cb1f2fb7b19c96ff74f483f178a5538014cafa1b7094b6199c6",
+      "261350c8642b8cb1f2fb7b19c96ff74f483f178a5538014cafa1b7094b6199c6",
+      "261350c8642b8cb1f2fb7b19c96ff74f483f178a5538014cafa1b7094b6199c6"
+    ]
+  },
+  "cpu_npu_max_abs": 0.02062702178955078,
+  "cpu_npu_relative_l2": 0.0009286729036830366,
+  "shape": [
+    2,
+    81,
+    128
+  ],
+  "spatial_variation": 11.527467727661133,
+  "inference16_seconds": 0.03478435478173196,
+  "encoding_3x16_seconds": 0.034032138995826244,
+  "updates": [
+    {
+      "seconds": 2.695670024957508,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": 0.2377185821533203,
+      "train/critic_loss": 0.2493206262588501,
+      "train/encoder_grad_norm": 0.5565899014472961,
+      "train/critic_grad_norm": 6.235134601593018,
+      "train/actor_loss_base": -0.47188085317611694,
+      "train/actor_loss_total": -0.47188085317611694,
+      "train/actor_grad_norm": 0.05421396344900131
+    },
+    {
+      "seconds": 1.1913359961472452,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": -0.7542284727096558,
+      "train/critic_loss": 1.952411413192749,
+      "train/encoder_grad_norm": 1.755691647529602,
+      "train/critic_grad_norm": 21.516244888305664,
+      "train/actor_loss_base": -0.3023485541343689,
+      "train/actor_loss_total": -0.3023485541343689,
+      "train/actor_grad_norm": 0.03198351338505745
+    },
+    {
+      "seconds": 1.1921191799920052,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": -0.11215157061815262,
+      "train/critic_loss": 0.9578166604042053,
+      "train/encoder_grad_norm": 1.1730409860610962,
+      "train/critic_grad_norm": 15.614015579223633,
+      "train/actor_loss_base": -0.14873096346855164,
+      "train/actor_loss_total": -0.14873096346855164,
+      "train/actor_grad_norm": 0.02406473644077778
+    },
+    {
+      "seconds": 1.1613762059714645,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": -0.35140663385391235,
+      "train/critic_loss": 0.5828203558921814,
+      "train/encoder_grad_norm": 0.85500168800354,
+      "train/critic_grad_norm": 11.548135757446289,
+      "train/actor_loss_base": 0.18116912245750427,
+      "train/actor_loss_total": 0.18116912245750427,
+      "train/actor_grad_norm": 0.015608266927301884
+    },
+    {
+      "seconds": 1.1220114280004054,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": -0.3505226969718933,
+      "train/critic_loss": 0.21186421811580658,
+      "train/encoder_grad_norm": 0.46033143997192383,
+      "train/critic_grad_norm": 6.024574279785156,
+      "train/actor_loss_base": 0.5345290899276733,
+      "train/actor_loss_total": 0.5345290899276733,
+      "train/actor_grad_norm": 0.012670295313000679
+    },
+    {
+      "seconds": 1.073492803843692,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": -0.7562423944473267,
+      "train/critic_loss": 0.2123250663280487,
+      "train/encoder_grad_norm": 0.3531874120235443,
+      "train/critic_grad_norm": 4.496808052062988,
+      "train/actor_loss_base": 0.9388049840927124,
+      "train/actor_loss_total": 0.9388049840927124,
+      "train/actor_grad_norm": 0.007280243095010519
+    }
+  ],
+  "steady_update_seconds": 1.1372499044518918,
+  "changed_parameter_tensors": {
+    "actor.": 14,
+    "critic.": 15,
+    "encoders.": 6
+  },
+  "adapter_grad_norms": [
+    0.2193838357925415,
+    0.1879894733428955,
+    0.2031286507844925
+  ],
+  "backbones_unchanged": true,
+  "backbones_eval": true,
+  "peak_npu_allocated_bytes": 3914311680
+}

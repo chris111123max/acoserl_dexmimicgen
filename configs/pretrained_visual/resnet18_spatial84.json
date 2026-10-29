@@ -1,0 +1,35 @@
+{
+  "name": "resnet18_spatial84",
+  "pretrained": "torchvision ResNet18 IMAGENET1K_V1",
+  "implementation_version": "torchvision 0.18.1",
+  "weights_url": "https://download.pytorch.org/models/resnet18-f37072fd.pth",
+  "weights_sha256": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec",
+  "load": "full original checkpoint strict=True; every102 supplied tensor exact;20 legacy BatchNorm counters zero",
+  "executed_backbone": "conv1/bn1/relu/maxpool/layer1/layer2; layer3/layer4/fc retained frozen but not executed",
+  "independent_cameras": 3,
+  "input": "RGB uint8 CHW84 or float [0,1]; unchanged official RandomShiftsAug pad4 occurs before encoder",
+  "normalization_mean": [
+    0.485,
+    0.456,
+    0.406
+  ],
+  "normalization_std": [
+    0.229,
+    0.224,
+    0.225
+  ],
+  "resolution_transfer": "native84 spatial extraction, intentionally not224 classification resize/crop; task benefit not yet measured",
+  "spatial_raw": [
+    128,
+    11,
+    11
+  ],
+  "spatial_adapter": "adaptive spatial average9x9 then independent trainable Linear(128,128); no global pooling/repetition",
+  "output": [
+    81,
+    128
+  ],
+  "frozen": "entire loaded ResNet, BatchNorm eval, no_grad; gradients only adapter",
+  "selected_reason": "lowest actual NPU update cost among numerically accepted pretrained candidates; .30369s vs224ResNet .76436 andSqueezeNet1.13725; MiniViT .13478",
+  "rl_initialization": "fresh Actor/Critic/adapters and empty online replay; pretrained trunk only"
+}

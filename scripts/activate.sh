@@ -1,0 +1,11 @@
+export ACOSERL_ROOT=/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen
+source "$ACOSERL_ROOT/.venv/bin/activate"
+export PIP_CACHE_DIR="$ACOSERL_ROOT/cache/pip"
+export HF_HOME="$ACOSERL_ROOT/cache/huggingface"
+export XDG_CACHE_HOME="$ACOSERL_ROOT/cache"
+export NUMBA_CACHE_DIR="$ACOSERL_ROOT/cache/numba"
+export MUJOCO_GL=osmesa
+export PYTHONPATH="$ACOSERL_ROOT/src"
+export PYTHONNOUSERSITE=1
+cd "$ACOSERL_ROOT"
+export LD_LIBRARY_PATH="$ACOSERL_ROOT/third_party/system_deps/root/usr/lib/aarch64-linux-gnu${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"

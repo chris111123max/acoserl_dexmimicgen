@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "run": "pretrained_spatial84_validation_20261028_1",
+  "parameters_exact_on_load": true,
+  "optimizers_loaded": true,
+  "online_rows": 140,
+  "offline_rows": 224,
+  "post_reload_real_updates": 1,
+  "backbone_preserved": true,
+  "metrics": {
+    "data/batch_R": 0.007773437537252903,
+    "train/critic_qt": -0.11807731539011002,
+    "train/critic_loss": 0.0026686550118029118,
+    "train/encoder_grad_norm": 0.0042634098790585995,
+    "train/critic_grad_norm": 0.5092686414718628,
+    "train/actor_loss_base": 0.07630245387554169,
+    "train/actor_loss_total": 0.07630245387554169,
+    "train/actor_grad_norm": 0.008936494588851929
+  },
+  "physics_boundary": "new episodes, no mid-physics state restore"
+}

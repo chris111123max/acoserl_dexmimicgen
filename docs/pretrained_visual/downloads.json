@@ -1,0 +1,14 @@
+[
+  {
+    "name": "dinov2_vits14_pretrain.pth",
+    "url": "https://dl.fbaipublicfiles.com/dinov2/dinov2_vits14/dinov2_vits14_pretrain.pth",
+    "bytes": 88283115,
+    "sha256": "b938bf1bc15cd2ec0feacfe3a1bb553fe8ea9ca46a7e1d8d00217f29aef60cd9"
+  },
+  {
+    "name": "resnet18-f37072fd.pth",
+    "url": "https://download.pytorch.org/models/resnet18-f37072fd.pth",
+    "bytes": 46830571,
+    "sha256": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec"
+  }
+]

@@ -1,0 +1,1648 @@
+{
+  "passed": true,
+  "controlled_probes": [
+    {
+      "path": "outputs/autoserl_two_point/accepted_A_s1.json",
+      "arm": "A",
+      "seed": 1,
+      "nominal_offset_mm": 3,
+      "post_preparation_steps": 96,
+      "total_actual_steps": 226,
+      "handbacks": [
+        {
+          "event": "handback",
+          "arm": "A",
+          "kind": "safety_recovery",
+          "steps": 71,
+          "indices": [
+            57,
+            63
+          ]
+        }
+      ],
+      "max_passive_position_m": 1.1259455582530443e-06,
+      "policy_steps_after_handback": 5,
+      "active_window_frozen_during_recovery": true
+    },
+    {
+      "path": "outputs/autoserl_two_point/accepted_A_s2.json",
+      "arm": "A",
+      "seed": 2,
+      "nominal_offset_mm": 4,
+      "post_preparation_steps": 96,
+      "total_actual_steps": 226,
+      "handbacks": [
+        {
+          "event": "handback",
+          "arm": "A",
+          "kind": "safety_recovery",
+          "steps": 71,
+          "indices": [
+            57,
+            63
+          ]
+        }
+      ],
+      "max_passive_position_m": 1.125945604010353e-06,
+      "policy_steps_after_handback": 5,
+      "active_window_frozen_during_recovery": true
+    },
+    {
+      "path": "outputs/autoserl_two_point/accepted_A_s3.json",
+      "arm": "A",
+      "seed": 3,
+      "nominal_offset_mm": 5,
+      "post_preparation_steps": 97,
+      "total_actual_steps": 227,
+      "handbacks": [
+        {
+          "event": "handback",
+          "arm": "A",
+          "kind": "safety_recovery",
+          "steps": 72,
+          "indices": [
+            57,
+            63
+          ]
+        }
+      ],
+      "max_passive_position_m": 1.1311243000130794e-06,
+      "policy_steps_after_handback": 5,
+      "active_window_frozen_during_recovery": true
+    },
+    {
+      "path": "outputs/autoserl_two_point/final_verified_A_s4.json",
+      "arm": "A",
+      "seed": 4,
+      "nominal_offset_mm": 5,
+      "post_preparation_steps": 97,
+      "total_actual_steps": 227,
+      "handbacks": [
+        {
+          "event": "handback",
+          "arm": "A",
+          "kind": "safety_recovery",
+          "steps": 72,
+          "indices": [
+            57,
+            58
+          ]
+        }
+      ],
+      "max_passive_position_m": 1.1311243000130794e-06,
+      "policy_steps_after_handback": 5,
+      "active_window_frozen_during_recovery": true
+    },
+    {
+      "path": "outputs/autoserl_two_point/accepted_B_s1.json",
+      "arm": "B",
+      "seed": 1,
+      "nominal_offset_mm": 3,
+      "post_preparation_steps": 150,
+      "total_actual_steps": 308,
+      "handbacks": [
+        {
+          "event": "handback",
+          "arm": "B",
+          "kind": "safety_recovery",
+          "steps": 125,
+          "indices": [
+            104,
+            70
+          ]
+        }
+      ],
+      "max_passive_position_m": 0.00012057970433235877,
+      "policy_steps_after_handback": 5,
+      "active_window_frozen_during_recovery": true
+    },
+    {
+      "path": "outputs/autoserl_two_point/accepted_B_s2.json",
+      "arm": "B",
+      "seed": 2,
+      "nominal_offset_mm": 4,
+      "post_preparation_steps": 150,
+      "total_actual_steps": 308,
+      "handbacks": [
+        {
+          "event": "handback",
+          "arm": "B",
+          "kind": "safety_recovery",
+          "steps": 125,
+          "indices": [
+            104,
+            70
+          ]
+        }
+      ],
+      "max_passive_position_m": 0.0001205796910192859,
+      "policy_steps_after_handback": 5,
+      "active_window_frozen_during_recovery": true
+    },
+    {
+      "path": "outputs/autoserl_two_point/accepted_B_s3.json",
+      "arm": "B",
+      "seed": 3,
+      "nominal_offset_mm": 5,
+      "post_preparation_steps": 151,
+      "total_actual_steps": 309,
+      "handbacks": [
+        {
+          "event": "handback",
+          "arm": "B",
+          "kind": "safety_recovery",
+          "steps": 126,
+          "indices": [
+            104,
+            70
+          ]
+        }
+      ],
+      "max_passive_position_m": 0.0001206462442197715,
+      "policy_steps_after_handback": 5,
+      "active_window_frozen_during_recovery": true
+    },
+    {
+      "path": "outputs/autoserl_two_point/final_verified_B_s4.json",
+      "arm": "B",
+      "seed": 4,
+      "nominal_offset_mm": 5,
+      "post_preparation_steps": 151,
+      "total_actual_steps": 309,
+      "handbacks": [
+        {
+          "event": "handback",
+          "arm": "B",
+          "kind": "safety_recovery",
+          "steps": 126,
+          "indices": [
+            104,
+            70
+          ]
+        }
+      ],
+      "max_passive_position_m": 0.0001206462442197715,
+      "policy_steps_after_handback": 5,
+      "active_window_frozen_during_recovery": true
+    }
+  ],
+  "paired_episodes": [
+    {
+      "method": "before",
+      "seed": 71,
+      "complete_steps": 1,
+      "partial_attempts": 0,
+      "interventions": 0,
+      "recoveries": 0,
+      "stage_flags": {
+        "first_piece_assembled": false,
+        "task": false
+      },
+      "windows": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "reason": "no_validated_independent_phase",
+      "seconds": 2.349106765119359,
+      "proposals": 2
+    },
+    {
+      "method": "before",
+      "seed": 72,
+      "complete_steps": 1,
+      "partial_attempts": 0,
+      "interventions": 0,
+      "recoveries": 0,
+      "stage_flags": {
+        "first_piece_assembled": false,
+        "task": false
+      },
+      "windows": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "reason": "no_validated_independent_phase",
+      "seconds": 2.198569720145315,
+      "proposals": 2
+    },
+    {
+      "method": "before",
+      "seed": 73,
+      "complete_steps": 1,
+      "partial_attempts": 0,
+      "interventions": 0,
+      "recoveries": 0,
+      "stage_flags": {
+        "first_piece_assembled": false,
+        "task": false
+      },
+      "windows": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "reason": "no_validated_independent_phase",
+      "seconds": 2.2018090370111167,
+      "proposals": 2
+    },
+    {
+      "method": "before",
+      "seed": 74,
+      "complete_steps": 1,
+      "partial_attempts": 0,
+      "interventions": 0,
+      "recoveries": 0,
+      "stage_flags": {
+        "first_piece_assembled": false,
+        "task": false
+      },
+      "windows": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "reason": "no_validated_independent_phase",
+      "seconds": 2.1991076329723,
+      "proposals": 2
+    },
+    {
+      "method": "after",
+      "seed": 71,
+      "complete_steps": 49,
+      "partial_attempts": 0,
+      "interventions": 1,
+      "recoveries": 0,
+      "stage_flags": {
+        "first_piece_assembled": false,
+        "task": false
+      },
+      "windows": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          7,
+          7
+        ],
+        [
+          8,
+          8
+        ],
+        [
+          9,
+          9
+        ],
+        [
+          10,
+          10
+        ],
+        [
+          11,
+          11
+        ],
+        [
+          12,
+          12
+        ],
+        [
+          13,
+          13
+        ],
+        [
+          14,
+          14
+        ],
+        [
+          15,
+          15
+        ],
+        [
+          16,
+          16
+        ],
+        [
+          17,
+          17
+        ],
+        [
+          18,
+          18
+        ],
+        [
+          19,
+          19
+        ],
+        [
+          20,
+          20
+        ],
+        [
+          21,
+          21
+        ],
+        [
+          22,
+          22
+        ],
+        [
+          23,
+          23
+        ],
+        [
+          24,
+          24
+        ],
+        [
+          25,
+          25
+        ],
+        [
+          26,
+          26
+        ],
+        [
+          27,
+          27
+        ],
+        [
+          28,
+          28
+        ],
+        [
+          29,
+          29
+        ],
+        [
+          30,
+          30
+        ],
+        [
+          31,
+          31
+        ],
+        [
+          32,
+          32
+        ],
+        [
+          33,
+          33
+        ],
+        [
+          34,
+          34
+        ],
+        [
+          35,
+          35
+        ],
+        [
+          36,
+          36
+        ],
+        [
+          37,
+          37
+        ],
+        [
+          38,
+          38
+        ],
+        [
+          39,
+          39
+        ],
+        [
+          40,
+          40
+        ],
+        [
+          41,
+          41
+        ],
+        [
+          42,
+          42
+        ],
+        [
+          43,
+          43
+        ],
+        [
+          44,
+          44
+        ],
+        [
+          45,
+          45
+        ],
+        [
+          46,
+          46
+        ],
+        [
+          47,
+          47
+        ],
+        [
+          48,
+          47
+        ]
+      ],
+      "reason": "passive_pose_changed",
+      "seconds": 108.01156888180412,
+      "proposals": 49
+    },
+    {
+      "method": "after",
+      "seed": 72,
+      "complete_steps": 7,
+      "partial_attempts": 0,
+      "interventions": 1,
+      "recoveries": 0,
+      "stage_flags": {
+        "first_piece_assembled": false,
+        "task": false
+      },
+      "windows": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          6,
+          4
+        ]
+      ],
+      "reason": "passive_pose_changed",
+      "seconds": 15.492649387102574,
+      "proposals": 7
+    },
+    {
+      "method": "after",
+      "seed": 73,
+      "complete_steps": 14,
+      "partial_attempts": 0,
+      "interventions": 1,
+      "recoveries": 0,
+      "stage_flags": {
+        "first_piece_assembled": false,
+        "task": false
+      },
+      "windows": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          7,
+          7
+        ],
+        [
+          8,
+          8
+        ],
+        [
+          9,
+          9
+        ],
+        [
+          10,
+          10
+        ],
+        [
+          11,
+          11
+        ],
+        [
+          12,
+          12
+        ],
+        [
+          13,
+          13
+        ]
+      ],
+      "reason": "passive_pose_changed",
+      "seconds": 30.982933702180162,
+      "proposals": 14
+    },
+    {
+      "method": "after",
+      "seed": 74,
+      "complete_steps": 100,
+      "partial_attempts": 0,
+      "interventions": 1,
+      "recoveries": 0,
+      "stage_flags": {
+        "first_piece_assembled": false,
+        "task": false
+      },
+      "windows": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          7,
+          7
+        ],
+        [
+          8,
+          8
+        ],
+        [
+          9,
+          9
+        ],
+        [
+          10,
+          10
+        ],
+        [
+          11,
+          11
+        ],
+        [
+          12,
+          12
+        ],
+        [
+          13,
+          13
+        ],
+        [
+          14,
+          14
+        ],
+        [
+          15,
+          15
+        ],
+        [
+          16,
+          16
+        ],
+        [
+          17,
+          17
+        ],
+        [
+          18,
+          18
+        ],
+        [
+          19,
+          19
+        ],
+        [
+          20,
+          20
+        ],
+        [
+          21,
+          21
+        ],
+        [
+          22,
+          22
+        ],
+        [
+          23,
+          23
+        ],
+        [
+          24,
+          24
+        ],
+        [
+          25,
+          25
+        ],
+        [
+          26,
+          26
+        ],
+        [
+          27,
+          27
+        ],
+        [
+          28,
+          28
+        ],
+        [
+          29,
+          29
+        ],
+        [
+          30,
+          30
+        ],
+        [
+          31,
+          31
+        ],
+        [
+          32,
+          32
+        ],
+        [
+          33,
+          33
+        ],
+        [
+          34,
+          34
+        ],
+        [
+          34,
+          35
+        ],
+        [
+          34,
+          36
+        ],
+        [
+          34,
+          37
+        ],
+        [
+          34,
+          38
+        ],
+        [
+          34,
+          39
+        ],
+        [
+          34,
+          40
+        ],
+        [
+          34,
+          41
+        ],
+        [
+          34,
+          42
+        ],
+        [
+          34,
+          43
+        ],
+        [
+          34,
+          44
+        ],
+        [
+          34,
+          45
+        ],
+        [
+          34,
+          46
+        ],
+        [
+          34,
+          47
+        ],
+        [
+          34,
+          48
+        ],
+        [
+          34,
+          49
+        ],
+        [
+          34,
+          50
+        ],
+        [
+          34,
+          51
+        ],
+        [
+          34,
+          52
+        ],
+        [
+          34,
+          53
+        ],
+        [
+          34,
+          54
+        ],
+        [
+          34,
+          55
+        ],
+        [
+          34,
+          56
+        ],
+        [
+          34,
+          57
+        ],
+        [
+          34,
+          58
+        ],
+        [
+          34,
+          59
+        ],
+        [
+          34,
+          60
+        ],
+        [
+          34,
+          61
+        ],
+        [
+          34,
+          62
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          34,
+          63
+        ]
+      ],
+      "reason": null,
+      "seconds": 212.2816119559575,
+      "proposals": 100
+    }
+  ],
+  "full_demo": {
+    "status": "completed",
+    "assembly_barrier": {
+      "0": [
+        false,
+        "completed_arm_must_not_rewind"
+      ],
+      "1": [
+        false,
+        "held_object_long_return_not_validated"
+      ]
+    },
+    "steps": 229,
+    "strict_success": true,
+    "physical_writes": 0
+  },
+  "pressure": {
+    "status": "completed",
+    "config": {
+      "method": "ResFiT RLPD + Bimanual AutoSERL V1",
+      "task": "TwoArmThreePieceAssembly",
+      "demo": "demo_0",
+      "offline_transitions": 224,
+      "device": "npu:0",
+      "num_envs": 16,
+      "startup_groups": [
+        4,
+        4,
+        4,
+        4
+      ],
+      "n_step": 3,
+      "gamma": 0.99,
+      "batch_size": 256,
+      "offline_fraction": 0.5,
+      "online_capacity": 256,
+      "seed": 20261027,
+      "warmup_real_steps": 0,
+      "stddev": 0.1,
+      "utd": 1,
+      "utd_selection": "user_fixed_1; no UTD throughput comparison",
+      "maximum_actual_interactions": 144,
+      "wall_limit_seconds": 1200,
+      "checkpoint_interval": 25000,
+      "evaluation_interval": 50000,
+      "evaluation_episodes": 20,
+      "evaluation_extra_workers": 1,
+      "intervention_enabled": true,
+      "passive_hold_entry_gate_enabled": true,
+      "reset_protocol": "canonical demo_0 frame0 only, at explicit episode reset",
+      "initial_weights": "fresh random initialization; no smoke or acceptance checkpoint",
+      "resume_boundary": "learner/replay/RNG restore; pending real tails truncated, all workers start NEW episodes; no mid-episode physics restore",
+      "notes": "UTD is critic updates per valid real interaction after warmup; actor updated once per such interaction. No baseline or algorithm ablations.",
+      "purpose": "stress",
+      "source_commit": "bef49075759f6815b2de36851bc18edfb3065e65",
+      "supervisor_config": {
+        "intervention_enabled": true,
+        "trigger_position_m": 0.02,
+        "exit_position_m": 0.005,
+        "exit_rotation_rad": 0.02,
+        "stable_exit_steps": 3,
+        "max_recovery_steps": 350,
+        "cooldown_steps": 4,
+        "object_window_position_m": 0.012,
+        "object_window_rotation_rad": 0.15,
+        "passive_position_drift_m": 0.002,
+        "passive_rotation_drift_rad": 0.03,
+        "passive_object_position_drift_m": 0.003,
+        "passive_object_rotation_drift_rad": 0.035,
+        "base_drift_m": 0.001,
+        "robot_force_stop_N": 80,
+        "position_command_cap_m": 0.01,
+        "rotation_command_cap_rad": 0.02,
+        "position_gain": 2.0,
+        "rotation_gain": 1.0,
+        "stagnation_window": 20,
+        "stagnation_motion_m": 0.005,
+        "strict_success_stable_steps": 3,
+        "direction_epsilon_m": 1e-06,
+        "direction_cosine_min": 0.0,
+        "active_object_exit_position_m": 0.006,
+        "active_object_exit_rotation_rad": 0.1,
+        "assembled_object_drift_m": 0.002,
+        "assembled_object_rotation_drift_rad": 0.035,
+        "placed_object_linear_speed_m_s": 0.01,
+        "placed_object_angular_speed_rad_s": 0.1,
+        "placed_support_weight_fraction": 0.5,
+        "termination_intervention_steps": 10,
+        "fixed_initial_state": true,
+        "p0_alignment_m": 0.001,
+        "free_workspace_margin_m": 0.12,
+        "window_rule": "L = P1-P0; trailing window endpoint starts at 0; advance per actual non-intervened control step; task-event caps",
+        "return_path_mode": "empty gripper only; elevated waypoints; original hold gates and substep contact monitoring; object-pose-consistent",
+        "stable_grasp_window_steps": 10,
+        "relative_grasp_motion_m": 0.0005,
+        "release_settle_max_steps": 3,
+        "replay_tracking": "original active-arm action plus bounded OSC pose-error feedback at recorded pre-action state; original gripper action retained",
+        "passive_hold_entry_gate_enabled": true
+      },
+      "acceptance_gate": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/docs/ascend16/deployment_gate.json",
+      "agent_config": {
+        "device": "npu:0",
+        "actor_lr": 0.0001,
+        "critic_lr": 0.0001,
+        "critic_target_tau": 0.01,
+        "stddev_clip": 0.3,
+        "lr_warmup_steps": 0,
+        "lr_warmup_start": 1e-08,
+        "use_prop": 1,
+        "enc_type": "vit",
+        "vit": {
+          "depth": 1,
+          "embed_dim": 128,
+          "embed_norm": 0,
+          "embed_style": "embed2",
+          "num_heads": 4,
+          "patch_size": 8,
+          "stride": -1
+        },
+        "critic": {
+          "drop": 0,
+          "feature_dim": 128,
+          "fuse_patch": 1,
+          "hidden_dim": 1024,
+          "norm_weight": 0,
+          "orth": 1,
+          "spatial_emb": 1024,
+          "num_q": 10,
+          "loss": {
+            "type": "mse",
+            "n_bins": 51,
+            "v_min": 0.0,
+            "v_max": 1.0,
+            "sigma": -1.0
+          },
+          "policy_gradient_type": "ensemble_mean",
+          "num_layers": 2,
+          "use_layer_norm": true,
+          "min_q_heads": 2
+        },
+        "actor": {
+          "feature_dim": 128,
+          "hidden_dim": 1024,
+          "dropout": 0,
+          "orth": 1,
+          "max_action_norm": -1,
+          "spatial_emb": 0,
+          "actor_last_layer_init_scale": null,
+          "actor_last_layer_init_distribution": "normal",
+          "actor_intermediate_layer_init_distribution": "default",
+          "action_l2_reg_weight": 0.0,
+          "action_scale": 1.0,
+          "num_layers": 2,
+          "use_layer_norm": true
+        },
+        "critic_grad_clip_norm": 1.0,
+        "actor_grad_clip_norm": 1.0,
+        "bc_loss_coef": 0.0,
+        "bc_loss_dynamic": 0,
+        "bc_backprop_encoder": false,
+        "freeze_encoder": false,
+        "clip_q_target_to_reward_range": false,
+        "target_action_noise": true
+      },
+      "normalization_frames": 224
+    },
+    "stop_reason": "bounded_stress_complete",
+    "counters": {
+      "actual_interactions": 140,
+      "valid_real_steps": 140,
+      "partial_action_attempts": 0,
+      "warmup_real_steps": 0,
+      "critic_updates": 140,
+      "actor_updates": 140,
+      "proposals": 144,
+      "evaluation_interactions": 0,
+      "evaluation_seconds": 0.0
+    },
+    "workers": [
+      {
+        "env_id": 0,
+        "pid": 64963,
+        "seed": 20261027,
+        "episodes": 2,
+        "resets": 2,
+        "real_steps": 8,
+        "proposals": 9,
+        "interventions": 0,
+        "recoveries": 0,
+        "safe_stops": 1,
+        "reasons": {
+          "pressure_test_explicit_collector_cut": 1
+        },
+        "episode_length_sum": 8,
+        "episode_length_histogram": {
+          "1": 1,
+          "7": 1
+        },
+        "episode_id": 1,
+        "frame": 7,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 1,
+        "pid": 64964,
+        "seed": 20262036,
+        "episodes": 1,
+        "resets": 1,
+        "real_steps": 9,
+        "proposals": 9,
+        "interventions": 0,
+        "recoveries": 0,
+        "safe_stops": 0,
+        "reasons": {},
+        "episode_length_sum": 9,
+        "episode_length_histogram": {
+          "9": 1
+        },
+        "episode_id": 0,
+        "frame": 9,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 2,
+        "pid": 64965,
+        "seed": 20263045,
+        "episodes": 1,
+        "resets": 1,
+        "real_steps": 9,
+        "proposals": 9,
+        "interventions": 0,
+        "recoveries": 0,
+        "safe_stops": 0,
+        "reasons": {},
+        "episode_length_sum": 9,
+        "episode_length_histogram": {
+          "9": 1
+        },
+        "episode_id": 0,
+        "frame": 9,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 3,
+        "pid": 64966,
+        "seed": 20264054,
+        "episodes": 1,
+        "resets": 1,
+        "real_steps": 9,
+        "proposals": 9,
+        "interventions": 0,
+        "recoveries": 0,
+        "safe_stops": 0,
+        "reasons": {},
+        "episode_length_sum": 9,
+        "episode_length_histogram": {
+          "9": 1
+        },
+        "episode_id": 0,
+        "frame": 9,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 4,
+        "pid": 66347,
+        "seed": 20265063,
+        "episodes": 2,
+        "resets": 2,
+        "real_steps": 8,
+        "proposals": 9,
+        "interventions": 0,
+        "recoveries": 0,
+        "safe_stops": 1,
+        "reasons": {
+          "pressure_test_explicit_collector_cut": 1
+        },
+        "episode_length_sum": 8,
+        "episode_length_histogram": {
+          "1": 1,
+          "7": 1
+        },
+        "episode_id": 1,
+        "frame": 7,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 5,
+        "pid": 66348,
+        "seed": 20266072,
+        "episodes": 1,
+        "resets": 1,
+        "real_steps": 9,
+        "proposals": 9,
+        "interventions": 0,
+        "recoveries": 0,
+        "safe_stops": 0,
+        "reasons": {},
+        "episode_length_sum": 9,
+        "episode_length_histogram": {
+          "9": 1
+        },
+        "episode_id": 0,
+        "frame": 9,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 6,
+        "pid": 66349,
+        "seed": 20267081,
+        "episodes": 1,
+        "resets": 1,
+        "real_steps": 9,
+        "proposals": 9,
+        "interventions": 0,
+        "recoveries": 0,
+        "safe_stops": 0,
+        "reasons": {},
+        "episode_length_sum": 9,
+        "episode_length_histogram": {
+          "9": 1
+        },
+        "episode_id": 0,
+        "frame": 9,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 7,
+        "pid": 66350,
+        "seed": 20268090,
+        "episodes": 1,
+        "resets": 1,
+        "real_steps": 9,
+        "proposals": 9,
+        "interventions": 0,
+        "recoveries": 0,
+        "safe_stops": 0,
+        "reasons": {},
+        "episode_length_sum": 9,
+        "episode_length_histogram": {
+          "9": 1
+        },
+        "episode_id": 0,
+        "frame": 9,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 8,
+        "pid": 67614,
+        "seed": 20269099,
+        "episodes": 2,
+        "resets": 2,
+        "real_steps": 8,
+        "proposals": 9,
+        "interventions": 0,
+        "recoveries": 0,
+        "safe_stops": 1,
+        "reasons": {
+          "pressure_test_explicit_collector_cut": 1
+        },
+        "episode_length_sum": 8,
+        "episode_length_histogram": {
+          "1": 1,
+          "7": 1
+        },
+        "episode_id": 1,
+        "frame": 7,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 9,
+        "pid": 67615,
+        "seed": 20270108,
+        "episodes": 1,
+        "resets": 1,
+        "real_steps": 9,
+        "proposals": 9,
+        "interventions": 0,
+        "recoveries": 0,
+        "safe_stops": 0,
+        "reasons": {},
+        "episode_length_sum": 9,
+        "episode_length_histogram": {
+          "9": 1
+        },
+        "episode_id": 0,
+        "frame": 9,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 10,
+        "pid": 67616,
+        "seed": 20271117,
+        "episodes": 1,
+        "resets": 1,
+        "real_steps": 9,
+        "proposals": 9,
+        "interventions": 0,
+        "recoveries": 0,
+        "safe_stops": 0,
+        "reasons": {},
+        "episode_length_sum": 9,
+        "episode_length_histogram": {
+          "9": 1
+        },
+        "episode_id": 0,
+        "frame": 9,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 11,
+        "pid": 67617,
+        "seed": 20272126,
+        "episodes": 1,
+        "resets": 1,
+        "real_steps": 9,
+        "proposals": 9,
+        "interventions": 0,
+        "recoveries": 0,
+        "safe_stops": 0,
+        "reasons": {},
+        "episode_length_sum": 9,
+        "episode_length_histogram": {
+          "9": 1
+        },
+        "episode_id": 0,
+        "frame": 9,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 12,
+        "pid": 69074,
+        "seed": 20273135,
+        "episodes": 2,
+        "resets": 2,
+        "real_steps": 8,
+        "proposals": 9,
+        "interventions": 0,
+        "recoveries": 0,
+        "safe_stops": 1,
+        "reasons": {
+          "pressure_test_explicit_collector_cut": 1
+        },
+        "episode_length_sum": 8,
+        "episode_length_histogram": {
+          "1": 1,
+          "7": 1
+        },
+        "episode_id": 1,
+        "frame": 7,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 13,
+        "pid": 69075,
+        "seed": 20274144,
+        "episodes": 1,
+        "resets": 1,
+        "real_steps": 9,
+        "proposals": 9,
+        "interventions": 0,
+        "recoveries": 0,
+        "safe_stops": 0,
+        "reasons": {},
+        "episode_length_sum": 9,
+        "episode_length_histogram": {
+          "9": 1
+        },
+        "episode_id": 0,
+        "frame": 9,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 14,
+        "pid": 69076,
+        "seed": 20275153,
+        "episodes": 1,
+        "resets": 1,
+        "real_steps": 9,
+        "proposals": 9,
+        "interventions": 0,
+        "recoveries": 0,
+        "safe_stops": 0,
+        "reasons": {},
+        "episode_length_sum": 9,
+        "episode_length_histogram": {
+          "9": 1
+        },
+        "episode_id": 0,
+        "frame": 9,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 15,
+        "pid": 69077,
+        "seed": 20276162,
+        "episodes": 1,
+        "resets": 1,
+        "real_steps": 9,
+        "proposals": 9,
+        "interventions": 0,
+        "recoveries": 0,
+        "safe_stops": 0,
+        "reasons": {},
+        "episode_length_sum": 9,
+        "episode_length_histogram": {
+          "9": 1
+        },
+        "episode_id": 0,
+        "frame": 9,
+        "dead": true,
+        "npu_plugin_loaded": false
+      }
+    ],
+    "online_rows": 140,
+    "offline_rows": 224,
+    "rounds": 9,
+    "wall_seconds": 397.97226572036743,
+    "training_seconds": 56.39885976118967,
+    "timing": {
+      "inference": 2.2534573012962937,
+      "step": 21.332171878777444,
+      "reset": 2.157095316099003,
+      "sample": 8.09653919748962,
+      "transfer": 1.011159103596583,
+      "update": 20.887085812864825
+    },
+    "actual_steps_s": 2.4823196886036984,
+    "updates_s": 2.4823196886036984,
+    "stage_counts": {},
+    "checkpoint": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/outputs/ascend16/autoserl2_validation_20261028_1/checkpoints/final",
+    "peak_npu_allocated_bytes": 2253062656,
+    "utd_effective": 1.0,
+    "all_losses_and_gradient_norms_finite": true,
+    "all_workers_cpu_only": true,
+    "all_actions_stored_are_executed": true,
+    "passed": true
+  },
+  "runtime": {
+    "cpu_cores": 22.0,
+    "memory_limit_bytes": 208240902144,
+    "python": "3.10.20 (main, Jun 11 2026, 15:12:11) [GCC 14.3.0]",
+    "packages": {
+      "torch": "2.3.1",
+      "torch-npu": "2.3.1",
+      "torchrl": "0.4.0+b4f4daf",
+      "tensordict": "0.4.0+6dc8c68",
+      "mujoco": "3.2.3",
+      "numpy": "1.23.3"
+    },
+    "aicore_peak_percent": 75,
+    "aicore_all_samples_mean_percent": 6.76595744680851,
+    "hbm_peak_mb": 5810
+  },
+  "checkpoint": {
+    "passed": true,
+    "parameters_exact_on_load": true,
+    "optimizer_and_scheduler_loaded": true,
+    "online_rows": 140,
+    "offline_rows": 224,
+    "actual_post_reload_updates": 1,
+    "metrics": {
+      "data/batch_R": 0.0,
+      "train/critic_qt": -0.1978885978460312,
+      "train/critic_loss": 0.0017226053168997169,
+      "train/encoder_grad_norm": 0.009226691909134388,
+      "train/critic_grad_norm": 0.06121032312512398,
+      "train/actor_loss_base": 0.09966205805540085,
+      "train/actor_loss_total": 0.09966205805540085,
+      "train/actor_grad_norm": 0.0011677551083266735
+    },
+    "physics_resume_boundary": "not tested mid-episode; resume requires new episodes"
+  },
+  "preservation": {
+    "algorithm_12_files_exact": true,
+    "strict_reward_and_success_classes_ast_exact": true,
+    "isolated_nstep_exact": true,
+    "algorithm_sha256": {
+      "resfit/rl_finetuning/config/rlpd.py": "4496a477ecc2f75f15c1e5386406c802c4e5625333f34be459644344cb3c7544",
+      "resfit/rl_finetuning/off_policy/common_utils/__init__.py": "5638887ff251f802408876a67459de47fba8251f655b904a111d97b45ee55d36",
+      "resfit/rl_finetuning/off_policy/common_utils/data_aug.py": "142282fdcfa34e79c64ff8055adb6863fdb8db90b7c45d1f75f73e1c59a55221",
+      "resfit/rl_finetuning/off_policy/common_utils/helper.py": "858dc746d32ee18916a02045e8db31b6e63eae8bf4b639db4a50aca2d56c13f9",
+      "resfit/rl_finetuning/off_policy/common_utils/utils.py": "a7291ba49003dd94e07a274da13a738fef59946124fafa918fa5d4322b6c4995",
+      "resfit/rl_finetuning/off_policy/networks/encoder.py": "2781be49a9d458a5456ec0e46a21019b9682ac0584e2acc17c4f2b2e8a994c30",
+      "resfit/rl_finetuning/off_policy/networks/min_vit.py": "c73c4de15031552106f6011c28e0bfbf390f0d8534859c3bff4502937957b6ba",
+      "resfit/rl_finetuning/off_policy/rl/__init__.py": "4a4ee366b442a8df9f6c9b975d52681d49c8d077bada100fe26050e4e5323ddb",
+      "resfit/rl_finetuning/off_policy/rl/actor.py": "9acad66c309c5f9c6bf8bad3c51cae1f4cb354bf235f8dd99d40005200c036c7",
+      "resfit/rl_finetuning/off_policy/rl/critic.py": "ed1a6616bfb02805126bc719d8fbae91d5a54e1dce7ad8f537b0dc29345c0d3f",
+      "resfit/rl_finetuning/off_policy/rl/q_agent.py": "0d0bdbf1717cfe32bd5ae955ef25967a243f78be355deea8312554ea73be4548",
+      "resfit/rl_finetuning/utils/rb_transforms.py": "772fd197d0d1e4bdd97fb3f8760569c615513f0fcd92a67aa465526e203bfea8"
+    },
+    "raw_assembly_sha256": "e12cf336e23b362d8c5317b6e195df472d32bb424a797ab1858e8aa20fabe752"
+  },
+  "source_base": "bef4907",
+  "existing_uncommitted_deletions_preserved": 183
+}

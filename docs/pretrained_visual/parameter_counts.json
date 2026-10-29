@@ -1,0 +1,10 @@
+{
+  "optimized_parameters_with_real_Adam_state": {
+    "actor_opt": 5200270,
+    "critic_opt": 21786634,
+    "encoder_opt": 49536
+  },
+  "total_optimized": 27036440,
+  "executed_frozen_prefix_parameters": 2049216,
+  "note": "Official actor_target/critic_target retain their requires_grad flags but are not optimizer groups; updated by official target averaging. No flags/algorithm changed."
+}

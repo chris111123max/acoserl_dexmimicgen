@@ -50,3 +50,24 @@ def load_single_reference(path):
             original_subtask_signals={k:v[()] for k,v in f.get('task_events/original_subtask_term_signals',{}).items()},
             cursors=cursors)
     return result
+
+@dataclass
+class SlidingReferenceWindow:
+    """Trailing L-point window. Endpoint initially zero; legal event cap is external."""
+    length: int
+    total_states: int
+    end: int = 0
+    floor: int = 0
+
+    def indices(self, legal_end):
+        stop = min(self.end, legal_end, self.total_states - 1)
+        start = max(self.floor, stop - self.length + 1)
+        return list(range(start, stop + 1)) if start <= stop else []
+
+    def tick(self, legal_end, frozen=False):
+        if not frozen:
+            self.end = max(self.end, min(self.end + 1, legal_end, self.total_states - 1))
+
+    def event(self, index):
+        self.floor = max(self.floor, index)
+        self.end = max(self.end, self.floor)

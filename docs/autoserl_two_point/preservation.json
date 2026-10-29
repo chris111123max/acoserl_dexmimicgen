@@ -1,0 +1,19 @@
+{
+  "algorithm_12_files_exact": true,
+  "strict_reward_and_success_classes_ast_exact": true,
+  "isolated_nstep_exact": true,
+  "algorithm_sha256": {
+    "resfit/rl_finetuning/config/rlpd.py": "4496a477ecc2f75f15c1e5386406c802c4e5625333f34be459644344cb3c7544",
+    "resfit/rl_finetuning/off_policy/common_utils/__init__.py": "5638887ff251f802408876a67459de47fba8251f655b904a111d97b45ee55d36",
+    "resfit/rl_finetuning/off_policy/common_utils/data_aug.py": "142282fdcfa34e79c64ff8055adb6863fdb8db90b7c45d1f75f73e1c59a55221",
+    "resfit/rl_finetuning/off_policy/common_utils/helper.py": "858dc746d32ee18916a02045e8db31b6e63eae8bf4b639db4a50aca2d56c13f9",
+    "resfit/rl_finetuning/off_policy/common_utils/utils.py": "a7291ba49003dd94e07a274da13a738fef59946124fafa918fa5d4322b6c4995",
+    "resfit/rl_finetuning/off_policy/networks/encoder.py": "2781be49a9d458a5456ec0e46a21019b9682ac0584e2acc17c4f2b2e8a994c30",
+    "resfit/rl_finetuning/off_policy/networks/min_vit.py": "c73c4de15031552106f6011c28e0bfbf390f0d8534859c3bff4502937957b6ba",
+    "resfit/rl_finetuning/off_policy/rl/__init__.py": "4a4ee366b442a8df9f6c9b975d52681d49c8d077bada100fe26050e4e5323ddb",
+    "resfit/rl_finetuning/off_policy/rl/actor.py": "9acad66c309c5f9c6bf8bad3c51cae1f4cb354bf235f8dd99d40005200c036c7",
+    "resfit/rl_finetuning/off_policy/rl/critic.py": "ed1a6616bfb02805126bc719d8fbae91d5a54e1dce7ad8f537b0dc29345c0d3f",
+    "resfit/rl_finetuning/off_policy/rl/q_agent.py": "0d0bdbf1717cfe32bd5ae955ef25967a243f78be355deea8312554ea73be4548",
+    "resfit/rl_finetuning/utils/rb_transforms.py": "772fd197d0d1e4bdd97fb3f8760569c615513f0fcd92a67aa465526e203bfea8"
+  }
+}

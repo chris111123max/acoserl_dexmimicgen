@@ -61,7 +61,7 @@ class AutoSERLWorker(gym.Env):
  def event(self,event,**extra):
   import resource
   row={'event':event,'time':time.time(),'env_id':self.env_id,'pid':os.getpid(),'rss_kb':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,**extra}
-  with self.log.open('a') as f:f.write(json.dumps(row,default=str)+'\n')
+  with self.log.open('a') as f:f.write(json.dumps(row,default=lambda x:x.tolist() if hasattr(x,'tolist') else str(x))+'\n')
  def obs(self,raw):return {k:v.numpy() for k,v in self.normalize(raw,self.standardizer).items()}
  def reset(self,*,seed=None,options=None):
   from acoserl.bimanual_autoserl import ActionOnly
@@ -107,7 +107,7 @@ class AutoSERLWorker(gym.Env):
  def checkpoint_state(self):
   return {**self.diagnostic(),'rng_numpy':np.random.get_state(),'rng_torch':self.torch.get_rng_state().tolist(),'rng_python':random.getstate(),'rng_gym':self.np_random.bit_generator.state,
    'clean_successes':self.bridge.manager.clean_successes,'auto_disabled':self.bridge.manager.auto_disabled,
-   'supervisor_snapshot':{'mode':self.bridge.manager.mode,'indices':self.bridge.manager.indices(),'cooldown':self.bridge.manager.cooldown,'steps':self.bridge.manager.steps,'events':self.bridge.manager.events}}
+   'supervisor_snapshot':{'mode':self.bridge.manager.mode,'indices':self.bridge.manager.indices(),'cooldown':self.bridge.manager.cooldown,'steps':self.bridge.manager.steps,'events':self.bridge.manager.events,'windows':[vars(w).copy() for w in self.bridge.manager.windows],'recovery_stage':self.bridge.manager.recovery_stage,'intervention_control_steps':self.bridge.manager.intervention_control_steps}}
  def collector_cut(self,reason):
   if not self.dead:
    self.dead=True;self.stats['episodes']+=1;self.stats['episode_length_sum']+=self.frame
@@ -140,9 +140,9 @@ class AutoSERLWorker(gym.Env):
   if executed:
    selected.update(policy_action=np.asarray(action).tolist(),executed_action=info['executed_action_normalized'].numpy().tolist(),executed_action_physical=info['executed_action_physical'].tolist())
   from acoserl.bimanual_autoserl import snapshot
-  task_metrics=snapshot(self.w.env)['official_metrics']
+  supervision_state=snapshot(self.w.env);task_metrics=supervision_state['official_metrics']
   payload={'env_id':self.env_id,'episode_id':self.episode,'frame':self.frame-1 if executed else self.frame,'executed':executed,
-   'physics_time_advanced':float(self.w.env.sim.data.time-before),'step_seconds':time.perf_counter()-start,'task_metrics':task_metrics,**selected}
+   'physics_time_advanced':float(self.w.env.sim.data.time-before),'step_seconds':time.perf_counter()-start,'task_metrics':task_metrics,'supervisor_objects':supervision_state['objects'],'supervisor_grasps':supervision_state['actual_grasps'],'eef_positions':[p['position'].tolist() for p in supervision_state['poses']],**selected}
   self.event('step',**{k:v for k,v in payload.items() if k!='env_id'},reward=float(reward),terminated=bool(term),truncated=bool(trunc))
   return self.last,float(reward),bool(term),bool(trunc),{'payload':json.dumps(payload,default=lambda x:x.tolist() if hasattr(x,'tolist') else str(x))}
  def release_guard(self):

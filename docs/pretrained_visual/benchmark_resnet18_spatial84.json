@@ -1,0 +1,204 @@
+{
+  "name": "resnet18_spatial84",
+  "passed": true,
+  "manifest": {
+    "name": "resnet18_spatial84",
+    "feature_shape_per_camera": [
+      81,
+      128
+    ],
+    "parameters_total": 93366058,
+    "parameters_trainable": 58297522,
+    "encoder_trainable": 49536,
+    "encoder_frozen": 35068536,
+    "load_evidence": [
+      {
+        "file": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/cache/pretrained_visual/resnet18-f37072fd.pth",
+        "sha256": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec",
+        "strict": true,
+        "keys": 102,
+        "all_tensors_exact": true,
+        "legacy_batchnorm_zero_counters": [
+          "bn1.num_batches_tracked",
+          "layer1.0.bn1.num_batches_tracked",
+          "layer1.0.bn2.num_batches_tracked",
+          "layer1.1.bn1.num_batches_tracked",
+          "layer1.1.bn2.num_batches_tracked",
+          "layer2.0.bn1.num_batches_tracked",
+          "layer2.0.bn2.num_batches_tracked",
+          "layer2.0.downsample.1.num_batches_tracked",
+          "layer2.1.bn1.num_batches_tracked",
+          "layer2.1.bn2.num_batches_tracked",
+          "layer3.0.bn1.num_batches_tracked",
+          "layer3.0.bn2.num_batches_tracked",
+          "layer3.0.downsample.1.num_batches_tracked",
+          "layer3.1.bn1.num_batches_tracked",
+          "layer3.1.bn2.num_batches_tracked",
+          "layer4.0.bn1.num_batches_tracked",
+          "layer4.0.bn2.num_batches_tracked",
+          "layer4.0.downsample.1.num_batches_tracked",
+          "layer4.1.bn1.num_batches_tracked",
+          "layer4.1.bn2.num_batches_tracked"
+        ],
+        "state_sha256": "b6e132d398763cadd5e66a4e994f5a5eb6cf7bd415eb7e8fae476475f749ffe2"
+      },
+      {
+        "file": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/cache/pretrained_visual/resnet18-f37072fd.pth",
+        "sha256": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec",
+        "strict": true,
+        "keys": 102,
+        "all_tensors_exact": true,
+        "legacy_batchnorm_zero_counters": [
+          "bn1.num_batches_tracked",
+          "layer1.0.bn1.num_batches_tracked",
+          "layer1.0.bn2.num_batches_tracked",
+          "layer1.1.bn1.num_batches_tracked",
+          "layer1.1.bn2.num_batches_tracked",
+          "layer2.0.bn1.num_batches_tracked",
+          "layer2.0.bn2.num_batches_tracked",
+          "layer2.0.downsample.1.num_batches_tracked",
+          "layer2.1.bn1.num_batches_tracked",
+          "layer2.1.bn2.num_batches_tracked",
+          "layer3.0.bn1.num_batches_tracked",
+          "layer3.0.bn2.num_batches_tracked",
+          "layer3.0.downsample.1.num_batches_tracked",
+          "layer3.1.bn1.num_batches_tracked",
+          "layer3.1.bn2.num_batches_tracked",
+          "layer4.0.bn1.num_batches_tracked",
+          "layer4.0.bn2.num_batches_tracked",
+          "layer4.0.downsample.1.num_batches_tracked",
+          "layer4.1.bn1.num_batches_tracked",
+          "layer4.1.bn2.num_batches_tracked"
+        ],
+        "state_sha256": "b6e132d398763cadd5e66a4e994f5a5eb6cf7bd415eb7e8fae476475f749ffe2"
+      },
+      {
+        "file": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/cache/pretrained_visual/resnet18-f37072fd.pth",
+        "sha256": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec",
+        "strict": true,
+        "keys": 102,
+        "all_tensors_exact": true,
+        "legacy_batchnorm_zero_counters": [
+          "bn1.num_batches_tracked",
+          "layer1.0.bn1.num_batches_tracked",
+          "layer1.0.bn2.num_batches_tracked",
+          "layer1.1.bn1.num_batches_tracked",
+          "layer1.1.bn2.num_batches_tracked",
+          "layer2.0.bn1.num_batches_tracked",
+          "layer2.0.bn2.num_batches_tracked",
+          "layer2.0.downsample.1.num_batches_tracked",
+          "layer2.1.bn1.num_batches_tracked",
+          "layer2.1.bn2.num_batches_tracked",
+          "layer3.0.bn1.num_batches_tracked",
+          "layer3.0.bn2.num_batches_tracked",
+          "layer3.0.downsample.1.num_batches_tracked",
+          "layer3.1.bn1.num_batches_tracked",
+          "layer3.1.bn2.num_batches_tracked",
+          "layer4.0.bn1.num_batches_tracked",
+          "layer4.0.bn2.num_batches_tracked",
+          "layer4.0.downsample.1.num_batches_tracked",
+          "layer4.1.bn1.num_batches_tracked",
+          "layer4.1.bn2.num_batches_tracked"
+        ],
+        "state_sha256": "b6e132d398763cadd5e66a4e994f5a5eb6cf7bd415eb7e8fae476475f749ffe2"
+      }
+    ],
+    "backbone_hashes": [
+      "b6e132d398763cadd5e66a4e994f5a5eb6cf7bd415eb7e8fae476475f749ffe2",
+      "b6e132d398763cadd5e66a4e994f5a5eb6cf7bd415eb7e8fae476475f749ffe2",
+      "b6e132d398763cadd5e66a4e994f5a5eb6cf7bd415eb7e8fae476475f749ffe2"
+    ]
+  },
+  "cpu_npu_max_abs": 0.001344636082649231,
+  "cpu_npu_relative_l2": 0.0008777159382589161,
+  "shape": [
+    2,
+    81,
+    128
+  ],
+  "spatial_variation": 0.01769302785396576,
+  "inference16_seconds": 0.01371345496736467,
+  "encoding_3x16_seconds": 0.008527601230889558,
+  "updates": [
+    {
+      "seconds": 1.8281181710772216,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": -0.4367026686668396,
+      "train/critic_loss": 0.21707332134246826,
+      "train/encoder_grad_norm": 0.2543719708919525,
+      "train/critic_grad_norm": 7.033989429473877,
+      "train/actor_loss_base": 1.370739459991455,
+      "train/actor_loss_total": 1.370739459991455,
+      "train/actor_grad_norm": 0.7372815012931824
+    },
+    {
+      "seconds": 0.3199823109898716,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": -0.3737407326698303,
+      "train/critic_loss": 1.264394760131836,
+      "train/encoder_grad_norm": 0.646330714225769,
+      "train/critic_grad_norm": 19.706483840942383,
+      "train/actor_loss_base": 1.2958297729492188,
+      "train/actor_loss_total": 1.2958297729492188,
+      "train/actor_grad_norm": 0.5606268048286438
+    },
+    {
+      "seconds": 0.30058901803568006,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": -0.40213990211486816,
+      "train/critic_loss": 0.9571323990821838,
+      "train/encoder_grad_norm": 0.5188977122306824,
+      "train/critic_grad_norm": 16.309368133544922,
+      "train/actor_loss_base": 0.8274269104003906,
+      "train/actor_loss_total": 0.8274269104003906,
+      "train/actor_grad_norm": 0.5172173380851746
+    },
+    {
+      "seconds": 0.3036802648566663,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": -0.12613412737846375,
+      "train/critic_loss": 0.569099485874176,
+      "train/encoder_grad_norm": 0.4172722399234772,
+      "train/critic_grad_norm": 12.691130638122559,
+      "train/actor_loss_base": 0.1445833146572113,
+      "train/actor_loss_total": 0.1445833146572113,
+      "train/actor_grad_norm": 0.4180501103401184
+    },
+    {
+      "seconds": 0.3057491260115057,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": -0.06245066225528717,
+      "train/critic_loss": 0.08977197110652924,
+      "train/encoder_grad_norm": 0.08603095263242722,
+      "train/critic_grad_norm": 2.340866804122925,
+      "train/actor_loss_base": -0.46536239981651306,
+      "train/actor_loss_total": -0.46536239981651306,
+      "train/actor_grad_norm": 0.21430206298828125
+    },
+    {
+      "seconds": 0.3047260500025004,
+      "data/batch_R": 0.007657031062990427,
+      "train/critic_qt": -0.26859593391418457,
+      "train/critic_loss": 0.5654925107955933,
+      "train/encoder_grad_norm": 0.378113329410553,
+      "train/critic_grad_norm": 12.107438087463379,
+      "train/actor_loss_base": -0.6697831153869629,
+      "train/actor_loss_total": -0.6697831153869629,
+      "train/actor_grad_norm": 0.21662473678588867
+    }
+  ],
+  "steady_update_seconds": 0.30368611472658813,
+  "changed_parameter_tensors": {
+    "actor.": 14,
+    "critic.": 15,
+    "encoders.": 6
+  },
+  "adapter_grad_norms": [
+    0.22213000059127808,
+    0.20951886475086212,
+    0.19287653267383575
+  ],
+  "backbones_unchanged": true,
+  "backbones_eval": true,
+  "peak_npu_allocated_bytes": 1598179840
+}

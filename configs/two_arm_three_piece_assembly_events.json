@@ -1,0 +1,41 @@
+{
+  "source_demo": "demo_0",
+  "annotation_status": "synchronization barriers unannotated",
+  "events": [],
+  "available_original_subtask_signals": {
+    "assemble_piece_1": {
+      "origin": "original datagen_info/subtask_term_signals",
+      "transition_indices": [
+        104
+      ]
+    },
+    "assemble_piece_2": {
+      "origin": "original datagen_info/subtask_term_signals",
+      "transition_indices": [
+        222
+      ]
+    },
+    "grasp_piece_1": {
+      "origin": "original datagen_info/subtask_term_signals",
+      "transition_indices": [
+        53,
+        154
+      ]
+    },
+    "grasp_piece_2": {
+      "origin": "original datagen_info/subtask_term_signals",
+      "transition_indices": [
+        65,
+        221
+      ]
+    }
+  },
+  "schema": {
+    "event_id": "string",
+    "reference_index_A": "int",
+    "reference_index_B": "int",
+    "barrier": "bool",
+    "coupled_contact": "bool",
+    "evidence": "string"
+  }
+}
