@@ -5,12 +5,25 @@ import torch
 from torchrl.data import ReplayBuffer,LazyTensorStorage,RandomSampler
 from acoserl.single_demo_rlpd import demo_arrays,scalers,normalize,transition,IMAGES,ROOT
 from acoserl.isolated_nstep import IsolatedNStep
+from acoserl.transition_semantics import boundary,STAGES,source_code
 
 def replay(capacity,batch_size):
  return ReplayBuffer(storage=LazyTensorStorage(capacity,device='cpu'),sampler=RandomSampler(),batch_size=batch_size,pin_memory=False)
-def raw_row(obs,action,nxt,reward,term,trunc,env,episode,frame,source=1):
+def raw_row(obs,action,nxt,reward,term,trunc,env,episode,frame,source=1,metadata=None):
  r=transition(obs,torch.as_tensor(action),nxt,float(reward),bool(term),bool(trunc),source,frame,episode)[0]
- r['env_id']=torch.tensor(env,dtype=torch.long);return r
+ r['env_id']=torch.tensor(env,dtype=torch.long)
+ m=metadata or {}
+ mode=m.get('auto_intervention',{}).get('mode','Normal')
+ progress=m.get('auto_intervention',{}).get('indices',[0,0])
+ stage=m.get('stage','unknown')
+ kind,boot=boundary(term,trunc,bool(m.get('success',term)),m.get('supervisor_stop_reason'))
+ for key,val in dict(action_source=6 if source==0 else source_code(mode),stage_code=STAGES.index(stage) if stage in STAGES else 0,takeover_id=m.get('takeover_id',0)).items():
+  r[key]=torch.tensor(val,dtype=torch.long)
+ r['reference_progress']=torch.tensor(progress,dtype=torch.long)
+ r['complete_physics']=torch.tensor(True)
+ r['next','bootstrap_allowed']=torch.tensor(bool(m.get('bootstrap_allowed',boot)))
+ r['next','boundary_kind']=torch.tensor(int(m.get('boundary_kind',kind)))
+ return r
 
 def offline(batch_size,gamma=.99):
  semantics=json.loads((ROOT/'docs/bimanual_autoserl/strict_semantics.json').read_text())

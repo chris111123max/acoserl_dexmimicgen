@@ -35,6 +35,9 @@ class TwoPointMixin:
         self.ref_grasps=self.trace['grasp'];self.reference_objects=['base','piece_1','piece_2']
         super().__init__(env,config,intervention_enabled)
 
+    def control_active(self):
+        return self.mode.startswith(('Recover_', 'Guide_')) and self.active is not None
+
     def reset(self,initial_progress=(0,0)):
         super().reset(initial_progress)
         self.cursors=[ReferenceCursor(self.n_states,int(i)) for i in initial_progress]
@@ -190,7 +193,7 @@ class TwoPointMixin:
                 allowed,reason=self.eligible(ai,state,contact,kind,target)
                 if allowed:self.start_recovery(ai,state,kind,target);break
                 self.last_decision['deferred'].append({'arm':ARMS[ai],'kind':kind,'reason':reason})
-        if self.mode.startswith('Recover_'):return self.recovery_action(state)
+        if self.control_active():return self.recovery_action(state)
         self.last_decision.update(mode='Normal',enabled=bool(enabled),execute=True,indices=self.indices(),executed_action=policy_action.tolist())
         return policy_action.copy(),self.last_decision
 
@@ -245,13 +248,13 @@ class TwoPointMixin:
         if self.completed[0] and self.protected_first is None:
             speed=np.asarray(self.env.sim.data.cvel[self.env.obj_body_id['piece_1']])
             if np.linalg.norm(speed[3:])<=self.cfg['placed_object_linear_speed_m_s'] and np.linalg.norm(speed[:3])<=self.cfg['placed_object_angular_speed_rad_s']:self.protected_first=copy.deepcopy(state['objects']['piece_1'])
-        frozen=self.active if self.mode.startswith('Recover_') else None
+        frozen=self.control_active()
         for ai,w in enumerate(self.windows):
             lo,hi,stage=self.legal_bounds(ai,state)
-            if frozen!=ai and lo>w.floor:w.event(lo)
-            w.tick(hi,frozen==ai);self.cursors[ai].index=max(self.cursors[ai].index,w.end)
+            if not frozen and lo>w.floor:w.event(lo)
+            w.tick(hi,frozen);self.cursors[ai].index=max(self.cursors[ai].index,w.end)
         result={'handback':False,'indices':self.indices(),'completed':self.completed.copy()}
-        if not self.mode.startswith('Recover_'):return result
+        if not self.control_active():return result
         self.age+=1;self.intervention_control_steps+=1
         ai=self.active;p=self.points['arms'][ARMS[ai]];failure,pe=self.retention(state)
         danger=self.physical_danger(state,self.contacts.read())
@@ -282,7 +285,7 @@ class TwoPointMixin:
                 if not self.plan:
                     if self.recovery_kind=='safety_recovery':self.recovery_stage='Replay_P0_P1';self.replay_index=p['p0']
                     else:self.handback(result,None)
-        if self.mode.startswith('Recover_') and self.age>=self.cfg['max_recovery_steps']:self.stop('recovery_timeout_no_safe_handback')
+        if self.control_active() and self.age>=self.cfg['max_recovery_steps']:self.stop('recovery_timeout_no_safe_handback')
         return result
 
     def handback(self,result,index):

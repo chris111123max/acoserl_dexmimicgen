@@ -1,0 +1,524 @@
+{
+  "formal_training_approved": false,
+  "physical": {
+    "physical_Recover_A_v3": {
+      "case": "Recover_A",
+      "behavior_controller": "scripted_qualification_only",
+      "passed": true,
+      "formal_training": false,
+      "supervised_segment_steps": 90,
+      "handback_policy_steps": 5,
+      "target_active_grasp": {
+        "base": false,
+        "piece_1": true,
+        "piece_2": false
+      },
+      "actual_steps": 225,
+      "online_rows": 225,
+      "dynamic_rows": 70,
+      "dynamic_stats": {
+        "accepted_segments": 1,
+        "accepted_rows": 70,
+        "rejected_segments": 0,
+        "rejected_rows": 0,
+        "rejected_partial_steps": 0
+      },
+      "modes": [
+        "Normal",
+        "Recover_A"
+      ],
+      "physical_writes": 0,
+      "decision_stats": {
+        "candidates": 1,
+        "starts": 1,
+        "handbacks": 1,
+        "refused": {},
+        "triggers": {
+          "A:safety_recovery": 1
+        }
+      },
+      "max_passive_error_m": 1.1205223959291877e-06,
+      "records_file": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/outputs/acoserl_foundation/physical_Recover_A_v3/worker/env00.jsonl",
+      "passive_object_max_position_m": 0.0
+    },
+    "physical_Recover_B_v4": {
+      "case": "Recover_B",
+      "behavior_controller": "scripted_qualification_only",
+      "passed": true,
+      "formal_training": false,
+      "supervised_segment_steps": 145,
+      "handback_policy_steps": 5,
+      "target_active_grasp": {
+        "base": false,
+        "piece_1": false,
+        "piece_2": true
+      },
+      "actual_steps": 308,
+      "online_rows": 308,
+      "dynamic_rows": 125,
+      "dynamic_stats": {
+        "accepted_segments": 1,
+        "accepted_rows": 125,
+        "rejected_segments": 0,
+        "rejected_rows": 0,
+        "rejected_partial_steps": 0
+      },
+      "modes": [
+        "Normal",
+        "Recover_B"
+      ],
+      "physical_writes": 0,
+      "decision_stats": {
+        "candidates": 1,
+        "starts": 1,
+        "handbacks": 1,
+        "refused": {},
+        "triggers": {
+          "B:safety_recovery": 1
+        }
+      },
+      "max_passive_error_m": 0.00012057956355821317,
+      "records_file": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/outputs/acoserl_foundation/physical_Recover_B_v4/worker/env00.jsonl",
+      "passive_object_max_position_m": 0.0002617638208161468
+    },
+    "physical_Guide_A_v4": {
+      "case": "Guide_A",
+      "behavior_controller": "scripted_qualification_only",
+      "passed": true,
+      "formal_training": false,
+      "requested_offset_position": [
+        -0.05838139995439133,
+        -0.18773405129606066,
+        0.9349848321646791
+      ],
+      "supervised_segment_steps": 42,
+      "handback_policy_steps": 5,
+      "target_active_grasp": {
+        "base": false,
+        "piece_1": false,
+        "piece_2": false
+      },
+      "actual_steps": 177,
+      "online_rows": 177,
+      "dynamic_rows": 42,
+      "dynamic_stats": {
+        "accepted_segments": 1,
+        "accepted_rows": 42,
+        "rejected_segments": 0,
+        "rejected_rows": 0,
+        "rejected_partial_steps": 0
+      },
+      "modes": [
+        "Guide_A",
+        "Normal"
+      ],
+      "physical_writes": 0,
+      "decision_stats": {
+        "candidates": 1,
+        "starts": 1,
+        "handbacks": 1,
+        "refused": {},
+        "triggers": {
+          "A:sliding": 1
+        }
+      },
+      "max_passive_error_m": 8.970029108267485e-07,
+      "records_file": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/outputs/acoserl_foundation/physical_Guide_A_v4/worker/env00.jsonl",
+      "passive_object_max_position_m": 0.0
+    },
+    "physical_Guide_B_v4": {
+      "case": "Guide_B",
+      "behavior_controller": "scripted_qualification_only",
+      "passed": true,
+      "formal_training": false,
+      "requested_offset_position": [
+        -0.17659263379821952,
+        0.18338421398313132,
+        0.994516716261635
+      ],
+      "supervised_segment_steps": 22,
+      "handback_policy_steps": 5,
+      "target_active_grasp": {
+        "base": false,
+        "piece_1": false,
+        "piece_2": false
+      },
+      "actual_steps": 165,
+      "online_rows": 165,
+      "dynamic_rows": 22,
+      "dynamic_stats": {
+        "accepted_segments": 1,
+        "accepted_rows": 22,
+        "rejected_segments": 0,
+        "rejected_rows": 0,
+        "rejected_partial_steps": 0
+      },
+      "modes": [
+        "Guide_B",
+        "Normal"
+      ],
+      "physical_writes": 0,
+      "decision_stats": {
+        "candidates": 1,
+        "starts": 1,
+        "handbacks": 1,
+        "refused": {},
+        "triggers": {
+          "B:sliding": 1
+        }
+      },
+      "max_passive_error_m": 8.230133018529346e-08,
+      "records_file": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/outputs/acoserl_foundation/physical_Guide_B_v4/worker/env00.jsonl",
+      "passive_object_max_position_m": 0.0
+    },
+    "physical_free_v4": {
+      "case": "free",
+      "behavior_controller": "scripted_qualification_only",
+      "passed": true,
+      "formal_training": false,
+      "actual_steps": 25,
+      "online_rows": 25,
+      "dynamic_rows": 0,
+      "dynamic_stats": {
+        "accepted_segments": 0,
+        "accepted_rows": 0,
+        "rejected_segments": 0,
+        "rejected_rows": 0,
+        "rejected_partial_steps": 0
+      },
+      "modes": [
+        "Normal"
+      ],
+      "physical_writes": 0,
+      "decision_stats": {
+        "candidates": 0,
+        "starts": 0,
+        "handbacks": 0,
+        "refused": {},
+        "triggers": {}
+      },
+      "max_passive_error_m": 0,
+      "records_file": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/outputs/acoserl_foundation/physical_free_v4/worker/env00.jsonl",
+      "passive_object_max_position_m": 0.0
+    },
+    "physical_risk_v5": {
+      "case": "risk",
+      "behavior_controller": "scripted_qualification_only",
+      "passed": true,
+      "formal_training": false,
+      "risk_detected_before_exit": true,
+      "supervised_segment_steps": 1,
+      "target_active_grasp": {
+        "base": false,
+        "piece_1": false,
+        "piece_2": false
+      },
+      "actual_steps": 101,
+      "online_rows": 101,
+      "dynamic_rows": 0,
+      "dynamic_stats": {
+        "accepted_segments": 0,
+        "accepted_rows": 0,
+        "rejected_segments": 0,
+        "rejected_rows": 0,
+        "rejected_partial_steps": 0
+      },
+      "modes": [
+        "Normal",
+        "Recover_A"
+      ],
+      "physical_writes": 0,
+      "decision_stats": {
+        "candidates": 1,
+        "starts": 1,
+        "handbacks": 0,
+        "refused": {},
+        "triggers": {
+          "A:workspace_risk": 1
+        }
+      },
+      "max_passive_error_m": 6.413704293373505e-06,
+      "records_file": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/outputs/acoserl_foundation/physical_risk_v5/worker/env00.jsonl",
+      "passive_object_max_position_m": 0.0
+    }
+  },
+  "data": {
+    "passed": true,
+    "interleaved_streams": 16,
+    "episodes": 48,
+    "checked_rows": 141,
+    "dynamic_continuity": true,
+    "rejected_failures_and_partial": true,
+    "restored_buffer_exact": true,
+    "pending_candidates_discarded_on_episode_reset": true,
+    "dynamic_capacity": 224,
+    "original_rows": 224,
+    "original_dynamic_demo_batch": [
+      64,
+      64
+    ],
+    "original_unchanged": true,
+    "formal_training": false,
+    "physical_validation": false
+  },
+  "contracts": {
+    "passed": true,
+    "upstream_n3_rows_exact": 8,
+    "assisted_success_does_not_disable": true,
+    "full_clean_successes_required": 5,
+    "advanced_config_cannot_bypass_gate": true,
+    "carry_stage_autonomy_disabled": true
+  },
+  "stages": {
+    "passed": true,
+    "checks": [
+      {
+        "state": 80,
+        "collaboration": {
+          "stage": "independent_carry",
+          "per_arm": [
+            "independent_carry",
+            "independent_carry"
+          ],
+          "coupled": false,
+          "contact_edges": [
+            [
+              "A",
+              "piece_1"
+            ],
+            [
+              "B",
+              "piece_2"
+            ],
+            [
+              "base",
+              "static"
+            ]
+          ]
+        },
+        "eligible": {
+          "A": [
+            false,
+            "held_object_long_return_not_validated"
+          ],
+          "B": [
+            false,
+            "held_object_long_return_not_validated"
+          ]
+        },
+        "completed": [
+          false,
+          false
+        ],
+        "indices": [
+          79,
+          79
+        ],
+        "metrics": {
+          "first_piece_assembled": false,
+          "task": false
+        }
+      },
+      {
+        "state": 170,
+        "collaboration": {
+          "stage": "independent_carry",
+          "per_arm": [
+            "release_completion",
+            "independent_carry"
+          ],
+          "coupled": false,
+          "contact_edges": [
+            [
+              "B",
+              "piece_2"
+            ],
+            [
+              "base",
+              "static"
+            ]
+          ]
+        },
+        "eligible": {
+          "A": [
+            false,
+            "completed_arm_must_not_rewind"
+          ],
+          "B": [
+            false,
+            "held_object_long_return_not_validated"
+          ]
+        },
+        "completed": [
+          true,
+          false
+        ],
+        "indices": [
+          169,
+          169
+        ],
+        "metrics": {
+          "first_piece_assembled": true,
+          "task": false
+        }
+      },
+      {
+        "state": 214,
+        "collaboration": {
+          "stage": "second_assembly_contact",
+          "per_arm": [
+            "release_completion",
+            "second_assembly_contact"
+          ],
+          "coupled": false,
+          "contact_edges": [
+            [
+              "B",
+              "piece_2"
+            ],
+            [
+              "base",
+              "piece_1"
+            ],
+            [
+              "base",
+              "piece_2"
+            ],
+            [
+              "base",
+              "static"
+            ],
+            [
+              "piece_1",
+              "piece_2"
+            ],
+            [
+              "piece_1",
+              "static"
+            ]
+          ]
+        },
+        "eligible": {
+          "A": [
+            false,
+            "completed_arm_must_not_rewind"
+          ],
+          "B": [
+            false,
+            "held_object_long_return_not_validated"
+          ]
+        },
+        "completed": [
+          true,
+          false
+        ],
+        "indices": [
+          213,
+          213
+        ],
+        "metrics": {
+          "first_piece_assembled": true,
+          "task": false
+        }
+      },
+      {
+        "state": 224,
+        "collaboration": {
+          "stage": "release_completion",
+          "per_arm": [
+            "release_completion",
+            "release_completion"
+          ],
+          "coupled": false,
+          "contact_edges": [
+            [
+              "base",
+              "piece_2"
+            ],
+            [
+              "base",
+              "static"
+            ]
+          ]
+        },
+        "eligible": {
+          "A": [
+            false,
+            "completed_arm_must_not_rewind"
+          ],
+          "B": [
+            false,
+            "completed_arm_must_not_rewind"
+          ]
+        },
+        "completed": [
+          true,
+          true
+        ],
+        "indices": [
+          223,
+          220
+        ],
+        "metrics": {
+          "first_piece_assembled": true,
+          "task": true
+        }
+      }
+    ],
+    "actual_control_steps": 224,
+    "physical_writes": 0,
+    "strict_success": true,
+    "final_progress": [
+      223,
+      220
+    ]
+  },
+  "previous_run": {
+    "run": "outputs/ascend16/pretrained_visual_20261028_172019",
+    "counts": {
+      "step_records": 64080,
+      "executed": 60960
+    },
+    "modes": {
+      "Normal": 55549,
+      "Recover_B": 4591,
+      "Recover_A": 820,
+      "Safe_Stop": 3120
+    },
+    "refused": {
+      "B:passive_hold_entry_not_quasistatic": 25867,
+      "A:passive_hold_entry_not_quasistatic": 34580,
+      "A:assembly_barrier:robot_contacts_nonheld_task_object": 114,
+      "B:assembly_barrier:robot_contacts_nonheld_task_object": 143,
+      "A:target_object_not_at_validated_pick_pose": 14,
+      "B:target_object_not_at_validated_pick_pose": 15
+    },
+    "stop_reasons": {
+      "passive_pose_changed": 163,
+      "workspace_exit_A": 2042,
+      "workspace_exit_B": 195,
+      "physics_substep_safety:robot_force_limit": 255,
+      "open_gripper_unplanned_object_contact_A": 623,
+      "wall_clock_limit": 16,
+      "recovery_timeout_no_safe_handback": 5,
+      "robot_environment_collision": 1,
+      "open_gripper_unplanned_object_contact_B": 5,
+      "None": 1
+    },
+    "true_task_metrics": {},
+    "warning": "counts are control-step occurrences, not independent trials"
+  },
+  "safety_thresholds_unchanged": true,
+  "physical_buffer_reload": {
+    "passed": true,
+    "restored_physical_rows": {
+      "physical_Recover_A_v3": 70,
+      "physical_Recover_B_v4": 125,
+      "physical_Guide_A_v4": 42,
+      "physical_Guide_B_v4": 22,
+      "physical_risk_v5": 0
+    },
+    "all_tensor_fields_exact": true,
+    "pending_risk_fragment_discarded": true
+  }
+}

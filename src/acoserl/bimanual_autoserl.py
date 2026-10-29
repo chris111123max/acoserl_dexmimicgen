@@ -276,6 +276,8 @@ class LegacyBimanualAutoSERL:
 
 from acoserl.two_point_supervisor import TwoPointMixin
 
-class BimanualAutoSERL(TwoPointMixin,LegacyBimanualAutoSERL):
+from acoserl.intervention_manager import InterventionManagerMixin
+
+class BimanualAutoSERL(InterventionManagerMixin,TwoPointMixin,LegacyBimanualAutoSERL):
  """Section-3.3 windows and two-point recovery; inherit verified OSC/hold gates."""
  pass

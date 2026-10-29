@@ -1,0 +1,25 @@
+{
+  "version": "acoserl_foundation_v1",
+  "method": "full_acoserl",
+  "sliding_enabled": true,
+  "safety_recovery_enabled": true,
+  "predict_workspace_risk": true,
+  "risk_margin_m": 0.01,
+  "cooldown_steps": 4,
+  "autonomy_enabled": true,
+  "stage_clean_completions": 5,
+  "full_clean_successes": 5,
+  "dynamic_demo_enabled": true,
+  "dynamic_capacity": 5000,
+  "original_demo_fraction": 0.5,
+  "carry_local": {
+    "enabled": false,
+    "validated": false,
+    "reason": "current manager has no qualified held-object controller"
+  },
+  "joint": {
+    "enabled": false,
+    "validated": false,
+    "reason": "no independently validated joint contact controller"
+  }
+}

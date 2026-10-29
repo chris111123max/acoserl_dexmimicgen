@@ -1,6 +1,7 @@
 """Explicit-reset, one-environment integration and versioned strict task semantics."""
 import numpy as np
 import torch
+from acoserl.transition_semantics import boundary,Boundary
 from resfit.dexmg.environments.dexmg import RobosuiteGymWrapper
 from acoserl.bimanual_autoserl import BimanualAutoSERL,strict_geometry,DEFAULT,SafetyStop
 
@@ -75,11 +76,14 @@ class InterventionBridge:
    obs,reward,term,trunc,info=self.env.step(inverse)
   except SafetyStop as error:
    self.manager.stop('physics_substep_safety:'+str(error))
-   raise UnsafePartialStep({'mode':'Safe_Stop','reason':self.manager.stop_reason,
+   raise UnsafePartialStep({**decision,'interrupted_mode':decision['mode'],'mode':'Safe_Stop','reason':self.manager.stop_reason,
     'partial_physics_step':True,'physical_time':float(self.env.env.sim.data.time),
     'qpos_partial':self.env.env.sim.data.qpos.tolist(),'proposed_action':inverse.tolist()}) from error
   after=self.manager.after_step()
-  if self.manager.mode=='Safe_Stop' and not term:trunc=True
+  kind,bootstrap=boundary(term,trunc,info['success'],self.manager.stop_reason)
+  if self.manager.mode=='Safe_Stop' and not info['success']:
+   term=kind==Boundary.PHYSICAL_FAILURE;trunc=not term
+  info.update(boundary_kind=int(kind),bootstrap_allowed=bootstrap)
   info.update({'auto_intervention':decision,'recovery_result':after,
    'policy_action_normalized':policy.numpy(),'policy_action_physical':physical,
    'executed_action_physical':inverse,'executed_action_normalized':executed_normalized,

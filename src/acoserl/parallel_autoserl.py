@@ -26,6 +26,7 @@ class WorkerFactory:
  directory:str
  intervention_enabled:bool=True
  resume:dict=None
+ manager_config:dict=None
  def __call__(self):
   if multiprocessing.current_process().name=='MainProcess':return SpaceOnly()
   return AutoSERLWorker(self)
@@ -40,22 +41,26 @@ class AutoSERLWorker(gym.Env):
   torch.set_num_threads(1);torch.manual_seed(cfg.seed);random.seed(cfg.seed)
   assert 'torch_npu' not in sys.modules,'worker initialized NPU plugin'
   from acoserl.autoserl_env import StrictAssemblyEnv,InterventionBridge
+  from acoserl.bimanual_autoserl import DEFAULT
   from acoserl.single_demo_rlpd import normalize
   from resfit.rl_finetuning.utils.normalization import StateStandardizer,ActionScaler
   self.torch=torch;self.normalize=normalize;self.cfg=cfg;self.env_id=cfg.env_id;self.directory=Path(cfg.directory)
   self.directory.mkdir(parents=True,exist_ok=True);self.log=self.directory/f'env{self.env_id:02d}.jsonl'
-  self.stats={'env_id':self.env_id,'pid':os.getpid(),'seed':cfg.seed,'episodes':0,'resets':0,'real_steps':0,'proposals':0,'interventions':0,'recoveries':0,'safe_stops':0,'reasons':{},'episode_length_sum':0,'episode_length_histogram':{}}
+  self.stats={'env_id':self.env_id,'pid':os.getpid(),'seed':cfg.seed,'episodes':0,'resets':0,'real_steps':0,'proposals':0,'interventions':0,'recoveries':0,'safe_stops':0,'reasons':{},'episode_length_sum':0,'episode_length_histogram':{},'assisted_successes':0,'autonomous_successes':0,'intervention_steps':0}
   self.event('construct_start');np.random.seed(cfg.seed)
   self.w=StrictAssemblyEnv(camera_size=84,env_id=self.env_id)
   s=cfg.normalization;self.standardizer=StateStandardizer(torch.tensor(s['state_mean']),torch.tensor(s['state_std_population']),min_std=.1)
   self.scaler=ActionScaler(torch.tensor(s['effective_action_min']),torch.tensor(s['effective_action_max']),action_scale=0,min_range_per_dim=.1)
-  self.bridge=InterventionBridge(self.w,self.scaler,intervention_enabled=cfg.intervention_enabled)
+  self.bridge=InterventionBridge(self.w,self.scaler,intervention_enabled=cfg.intervention_enabled,config={**DEFAULT,'manager':cfg.manager_config or {}})
   self.action_space=gym.spaces.Box(-1,1,(14,),np.float32);self.observation_space=spaces()
   self.episode=-1;self.frame=0;self.dead=True;self.forced=False;self.runner=None
   if cfg.resume:
    for key in self.stats:
     if key not in ['pid','env_id','seed'] and key in cfg.resume:self.stats[key]=copy.deepcopy(cfg.resume[key])
    self.episode=int(cfg.resume['episode_id'])
+   self.bridge.manager.autonomy=copy.deepcopy(cfg.resume.get('stage_autonomy',{}))
+   self.bridge.manager.clean_full_episodes=int(cfg.resume.get('clean_full_episodes',0))
+   self.bridge.manager.takeover_sequence=int(cfg.resume.get('takeover_sequence',0))
    self.bridge.manager.clean_successes=int(cfg.resume.get('clean_successes',0));self.bridge.manager.auto_disabled=bool(cfg.resume.get('auto_disabled',False))
   self.event('construct_done')
  def event(self,event,**extra):
@@ -106,6 +111,9 @@ class AutoSERLWorker(gym.Env):
   if self.env_id in ids:self.forced=True
  def checkpoint_state(self):
   return {**self.diagnostic(),'rng_numpy':np.random.get_state(),'rng_torch':self.torch.get_rng_state().tolist(),'rng_python':random.getstate(),'rng_gym':self.np_random.bit_generator.state,
+   'stage_autonomy':copy.deepcopy(self.bridge.manager.autonomy),
+   'clean_full_episodes':self.bridge.manager.clean_full_episodes,
+   'takeover_sequence':self.bridge.manager.takeover_sequence,
    'clean_successes':self.bridge.manager.clean_successes,'auto_disabled':self.bridge.manager.auto_disabled,
    'supervisor_snapshot':{'mode':self.bridge.manager.mode,'indices':self.bridge.manager.indices(),'cooldown':self.bridge.manager.cooldown,'steps':self.bridge.manager.steps,'events':self.bridge.manager.events,'windows':[vars(w).copy() for w in self.bridge.manager.windows],'recovery_stage':self.bridge.manager.recovery_stage,'intervention_control_steps':self.bridge.manager.intervention_control_steps}}
  def collector_cut(self,reason):
@@ -120,29 +128,44 @@ class AutoSERLWorker(gym.Env):
   assert not self.dead,'explicit reset required';self.stats['proposals']+=1;start=time.perf_counter();before=self.w.env.sim.data.time
   executed=False;reward=0.;term=False;trunc=False;info={}
   try:
-   if self.forced:raise SafeStopBeforeStep({'reason':'pressure_test_explicit_collector_cut'})
+   if self.forced:raise SafeStopBeforeStep({'reason':'pressure_test_explicit_collector_cut','collector_cut':True})
    raw,reward,term,trunc,info=self.bridge.step(action);executed=True
    self.last=self.obs(raw);self.frame+=1;self.stats['real_steps']+=1
    mode=info['auto_intervention']['mode'];after=info['recovery_result']
-   if mode.startswith('Recover_') and info['auto_intervention'].get('recovery_step')==1:self.stats['interventions']+=1
+   if mode.startswith(('Recover_','Guide_')):self.stats['intervention_steps']+=1
+   if mode.startswith(('Recover_','Guide_')) and info['auto_intervention'].get('recovery_step')==1:self.stats['interventions']+=1
    if after.get('handback'):self.stats['recoveries']+=1
   except SafeStopBeforeStep as error:
-   trunc=True;info={'auto_intervention':error.decision,'supervisor_stop_reason':error.decision.get('reason'),'partial_physics_step':error.decision.get('partial_physics_step',False)}
+   trunc=True;info={'auto_intervention':error.decision,'supervisor_stop_reason':error.decision.get('reason'),'partial_physics_step':error.decision.get('partial_physics_step',False),'collector_cut':error.decision.get('collector_cut',False)}
   if term or trunc:
    self.dead=True;self.stats['episodes']+=1;self.stats['episode_length_sum']+=self.frame
    hist=self.stats['episode_length_histogram'];hist[str(self.frame)]=hist.get(str(self.frame),0)+1
    reason=info.get('supervisor_stop_reason')
    if reason:
     self.stats['safe_stops']+=1;self.stats['reasons'][reason]=self.stats['reasons'].get(reason,0)+1
-   self.bridge.manager.episode_result(bool(term),full_policy_episode=True)
+   outcome=self.bridge.manager.episode_result(bool(info.get('success',False)),full_policy_episode=True)
+   self.stats['assisted_successes']+=int(outcome['assisted_success'])
+   self.stats['autonomous_successes']+=int(outcome['autonomous_success'])
+   self.event('intervention_episode',episode=self.episode,**outcome,decisions=self.bridge.manager.decision_stats)
    self.event('episode_end',episode=self.episode,length=self.frame,terminated=bool(term),truncated=bool(trunc),reason=reason,stats=self.diagnostic())
-  selected={k:info.get(k) for k in ['auto_intervention','recovery_result','supervisor_stop_reason','partial_physics_step']}
+  selected={k:info.get(k) for k in ['auto_intervention','recovery_result','supervisor_stop_reason','partial_physics_step','success']}
+  selected['policy_action']=np.asarray(action).tolist()
   if executed:
    selected.update(policy_action=np.asarray(action).tolist(),executed_action=info['executed_action_normalized'].numpy().tolist(),executed_action_physical=info['executed_action_physical'].tolist())
   from acoserl.bimanual_autoserl import snapshot
   supervision_state=snapshot(self.w.env);task_metrics=supervision_state['official_metrics']
-  payload={'env_id':self.env_id,'episode_id':self.episode,'frame':self.frame-1 if executed else self.frame,'executed':executed,
-   'physics_time_advanced':float(self.w.env.sim.data.time-before),'step_seconds':time.perf_counter()-start,'task_metrics':task_metrics,'supervisor_objects':supervision_state['objects'],'supervisor_grasps':supervision_state['actual_grasps'],'eef_positions':[p['position'].tolist() for p in supervision_state['poses']],**selected}
+  from acoserl.transition_semantics import boundary
+  kind,bootstrap=boundary(term,trunc,bool(info.get('success',False)),info.get('supervisor_stop_reason'),executed,info.get('partial_physics_step',False))
+  if info.get('collector_cut'):kind,bootstrap=6,True
+  decision=info.get('auto_intervention',{})
+  payload={'stage':decision.get('stage','unknown'),'takeover_id':decision.get('takeover_id',0),
+   'action_source':decision.get('mode','Normal') if executed else 'Rejected',
+   'complete_physics':executed,'boundary_kind':int(kind),'bootstrap_allowed':bootstrap,
+   'env_id':self.env_id,'episode_id':self.episode,'frame':self.frame-1 if executed else self.frame,'executed':executed,
+   'physics_time_advanced':float(self.w.env.sim.data.time-before),'step_seconds':time.perf_counter()-start,'task_metrics':task_metrics,'supervisor_objects':supervision_state['objects'],'supervisor_grasps':supervision_state['actual_grasps'],'eef_positions':[p['position'].tolist() for p in supervision_state['poses']],
+   'eef_rotations':[p['rotation'].tolist() for p in supervision_state['poses']],
+   'gripper_commands':[r.gripper['right'].current_action.tolist() for r in self.w.env.robots],
+   'supervisor_contacts':self.bridge.manager.contacts.read(),**selected}
   self.event('step',**{k:v for k,v in payload.items() if k!='env_id'},reward=float(reward),terminated=bool(term),truncated=bool(trunc))
   return self.last,float(reward),bool(term),bool(trunc),{'payload':json.dumps(payload,default=lambda x:x.tolist() if hasattr(x,'tolist') else str(x))}
  def release_guard(self):
@@ -154,12 +177,12 @@ class AutoSERLWorker(gym.Env):
   if hasattr(self,'w'):self.w.close()
 
 class FourByFour:
- def __init__(self,seed,normalization,directory,enabled=True,resume_workers=None):
+ def __init__(self,seed,normalization,directory,enabled=True,resume_workers=None,manager_config=None):
   self.groups=[];self.directory=Path(directory);self.directory.mkdir(parents=True,exist_ok=False);self.startup=self.directory/'startup.jsonl'
   try:
    for group in range(4):
     start=time.time();self.record('batch_start',group=group,ids=list(range(4*group,4*group+4)))
-    factories=[WorkerFactory(i,seed+i*1009,normalization,str(self.directory),enabled,None if resume_workers is None else resume_workers[i]) for i in range(4*group,4*group+4)]
+    factories=[WorkerFactory(i,seed+i*1009,normalization,str(self.directory),enabled,None if resume_workers is None else resume_workers[i],manager_config) for i in range(4*group,4*group+4)]
     v=gym.vector.AsyncVectorEnv(factories,shared_memory=True,context='spawn',autoreset_mode=gym.vector.AutoresetMode.DISABLED)
     self.groups.append(v);obs,infos=v.reset()
     diagnostics=v.call('diagnostic');assert len(diagnostics)==4 and all(not d['npu_plugin_loaded'] and d['resets']>=1 for d in diagnostics)

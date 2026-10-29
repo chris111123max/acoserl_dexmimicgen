@@ -18,7 +18,7 @@ class IsolatedNStep:
   out['next','original_reward']=rows[0]['next','reward'].clone()
   out['gamma']=torch.tensor(self.gamma**len(rows),dtype=torch.float32)
   out['steps_to_next_obs']=torch.tensor(len(rows),dtype=torch.long)
-  out['nonterminal']=~last['next','terminated'].clone()
+  out['nonterminal']=last['next','bootstrap_allowed'].clone() if ('next','bootstrap_allowed') in last.keys(True) else ~last['next','terminated'].clone()
   q.popleft();return out
  def append(self,row):
   assert not row.batch_size
@@ -39,13 +39,20 @@ class IsolatedNStep:
    while q:result.append(self._emit(q))
   elif len(q)>self.n:result.append(self._emit(q))
   return result
- def truncate(self,env):
-  """Close pending actual rows at a collector cut; never fabricate an action."""
+ def close(self,env,bootstrap=True,terminated=False,boundary_kind=6):
+  """Close only existing complete rows; no action or observation is fabricated."""
   q=self.queues.get(env,deque());result=[]
   if q:
    self.closed.add(env)
-   assert not bool(q[-1]['next','terminated'])
-   q[-1]['next','done'].fill_(True);q[-1]['next','truncated'].fill_(True)
+   if not bool(q[-1]['next','done']):
+    q[-1]['next','done'].fill_(True)
+    q[-1]['next','terminated'].fill_(terminated)
+    q[-1]['next','truncated'].fill_(not terminated)
+    if ('next','bootstrap_allowed') in q[-1].keys(True):
+     q[-1]['next','bootstrap_allowed'].fill_(bootstrap)
+     q[-1]['next','boundary_kind'].fill_(boundary_kind)
    while q:result.append(self._emit(q))
   return result
+ def truncate(self,env):
+  return self.close(env,bootstrap=True)
  def pending(self):return sum(len(q) for q in self.queues.values())
