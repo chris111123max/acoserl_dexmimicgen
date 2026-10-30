@@ -333,8 +333,10 @@ class V3Mixin:
             return self._protected(action,decision,policy)
         guarded=self.handoff_phase in ("Handoff_Ready","Policy_Guarded")
         if guarded:
+            # The first Actor step after reaching a Guide target completes
+            # the ORIGINAL takeover. Do not let the other arm start a new
+            # Guide before that handback is actually recorded.
             self.mode="Normal";self.local=None
-            self.cfg["intervention_enabled"]=True
         # A safely retainable gripper suggestion must not suppress all contact
         # stagnation/recovery checks. Preserve the original proposal separately.
         proposed=policy.copy();retained=[];original_risks=None
@@ -344,7 +346,15 @@ class V3Mixin:
             if candidates and all(original_risks[i]["categories"]==["unplanned_grasp_release"] for i in candidates):
                 if len(candidates)==1 or (self.contact_assessment(state)["category"]=="Independent" and all(self.grasp_streak[i]>=10 for i in candidates)):
                     for i in candidates:proposed[7*i+6]=1.;retained.append(i)
-        action,decision=super().choose(proposed)
+        if guarded:
+            original_enabled=self.cfg["intervention_enabled"]
+            self.cfg["intervention_enabled"]=False
+            try:
+                action,decision=super().choose(proposed)
+            finally:
+                self.cfg["intervention_enabled"]=original_enabled
+        else:
+            action,decision=super().choose(proposed)
         decision["policy_action"]=policy.tolist()
         if original_risks is not None:decision["policy_risks_original"]=original_risks
         if action is not None and retained and decision["mode"]=="Normal":

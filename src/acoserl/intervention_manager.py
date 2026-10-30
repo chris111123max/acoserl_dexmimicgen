@@ -150,9 +150,13 @@ class InterventionManagerMixin:
         self.takeover_sequence += 1
         self.takeover_id = self.takeover_sequence
         self.decision_stats["starts"] += 1
-        # The passive hold also replaces the policy: neither arm is autonomous.
+        # Guide only owns the drifting arm. Qualified P0/P1 Recovery
+        # owns its active arm and the static Hold arm.
         stages = self.collaboration(state, self.contacts.read())["per_arm"]
-        self.episode_touched.update((arm, stage) for arm, stage in zip(ARMS, stages))
+        if kind == "sliding":
+            self.episode_touched.add((ARMS[ai], stages[ai]))
+        else:
+            self.episode_touched.update((arm, stage) for arm, stage in zip(ARMS, stages))
 
     def _annotate(self, action, decision, state, contact):
         coop = self.collaboration(state, contact)
