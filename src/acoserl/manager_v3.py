@@ -331,7 +331,8 @@ class V3Mixin:
                 indices=self.indices(),stage="second_assembly_contact" if self.handoff_local.contact_mode else "independent_carry",
                 recovery_stage="Recovery_Stabilizing")
             return self._protected(action,decision,policy)
-        guarded=self.handoff_phase in ("Handoff_Ready","Policy_Guarded")
+        guarded_first=self.handoff_phase=="Handoff_Ready"
+        guarded=guarded_first or self.handoff_phase=="Policy_Guarded"
         if guarded:
             # The first Actor step after reaching a Guide target completes
             # the ORIGINAL takeover. Do not let the other arm start a new
@@ -346,7 +347,37 @@ class V3Mixin:
             if candidates and all(original_risks[i]["categories"]==["unplanned_grasp_release"] for i in candidates):
                 if len(candidates)==1 or (self.contact_assessment(state)["category"]=="Independent" and all(self.grasp_streak[i]>=10 for i in candidates)):
                     for i in candidates:proposed[7*i+6]=1.;retained.append(i)
+        guarded_projections=[]
+        guarded_risks=None
         if guarded:
+            # Suppress NEW task takeovers, not the pre-action safety shield.
+            # Otherwise an unsafe Actor proposal would bypass V2's risk
+            # projection during Handoff_Ready/Policy_Guarded.
+            risk_state=snapshot(self.env)
+            guarded_risks=self.action_risks(proposed,risk_state)
+            unsafe=[ai for ai,r in enumerate(guarded_risks) if r['risk']]
+            if unsafe:
+                safe,reason=self._project_independent_risks(
+                    proposed,risk_state,guarded_risks,unsafe)
+                if safe is None:
+                    self.steps+=1
+                    self.last_decision=dict(
+                        policy_action=policy.tolist(),policy_risks=guarded_risks,
+                        handoff_phase=self.handoff_phase,handoff_risk_refusal=reason)
+                    self.stop('guarded_actor_risk:'+reason)
+                    return self.refuse()
+                proposed=safe
+                guarded_projections=unsafe
+            # Validate the complete command again after gripper retention and
+            # independent corrections. Physical substep checks remain active.
+            remaining=self.action_risks(proposed,risk_state)
+            if any(r['risk'] for r in remaining):
+                self.steps+=1
+                self.last_decision=dict(
+                    policy_action=policy.tolist(),policy_risks=guarded_risks,
+                    remaining_risks=remaining,handoff_phase=self.handoff_phase)
+                self.stop('guarded_actor_residual_risk')
+                return self.refuse()
             original_enabled=self.cfg["intervention_enabled"]
             self.cfg["intervention_enabled"]=False
             try:
@@ -357,7 +388,17 @@ class V3Mixin:
             action,decision=super().choose(proposed)
         decision["policy_action"]=policy.tolist()
         if original_risks is not None:decision["policy_risks_original"]=original_risks
-        if action is not None and retained and decision["mode"]=="Normal":
+        if action is not None and guarded and (retained or guarded_projections) and decision["mode"]=="Normal":
+            # These are SafetyProjection dimensions, not Guide/Recovery
+            # expertise, and the original takeover id must survive handback.
+            affected=sorted(set(retained)|set(guarded_projections))
+            self.projected=True;self.projected_arms=affected
+            decision.update(
+                mode="Constrained_"+(ARMS[affected[0]] if len(affected)==1 else "Joint"),
+                takeover_id=self.takeover_id,
+                projection_reason="guarded_actor_independent_risk_correction",
+                policy_risks_original=guarded_risks)
+        elif action is not None and retained and decision["mode"]=="Normal":
             self.projected=True;self.projected_arms=retained
             self.takeover_sequence+=1
             decision.update(mode="Constrained_"+(ARMS[retained[0]] if len(retained)==1 else "Joint"),
@@ -370,7 +411,10 @@ class V3Mixin:
                 self.handoff_phase="Recovering"
             elif action is not None:
                 self.mode="Policy_Guarded"
-                decision["handoff_first_proposal"]=self.handoff_phase=="Handoff_Ready"
+                # Compare the phase captured BEFORE switching ownership.
+                # Comparing the already-updated state was always False and
+                # prevented quality_handoff_confirmed from ever being true.
+                decision["handoff_first_proposal"]=guarded_first
         return self._protected(action,decision,policy)
 
     def v3_checkpoint_state(self):

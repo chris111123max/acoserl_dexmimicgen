@@ -139,12 +139,22 @@ class V2Mixin:
             if categories=={'unplanned_grasp_release'}:
                 corrected[7*ai+6]=1.
                 continue
-            if (assessment['category']!='Independent' or
-                    any(any(g.values()) for g in state['actual_grasps'].values()) or
-                    not categories or not categories.issubset(
-                        {'workspace','open_gripper_unplanned_approach'}) or
-                    risk.get('gripper_contact',{}).get('command_reversal')):
-                return None,'independent_risk_projection_not_qualified'
+            refusals=[]
+            if assessment['category']!='Independent':
+                refusals.append('contact_mode='+str(assessment['category']))
+            holding=[arm for arm in ARMS
+                     if any(state['actual_grasps'][arm].values())]
+            if holding:refusals.append('existing_grasps='+','.join(holding))
+            if not categories or not categories.issubset(
+                    {'workspace','open_gripper_unplanned_approach'}):
+                refusals.append('unsupported_categories='+','.join(sorted(categories)))
+            if risk.get('gripper_contact',{}).get('command_reversal'):
+                refusals.append('near_contact_gripper_reversal')
+            if refusals:
+                # Keep the same fail-closed gate but expose WHICH physical
+                # qualification was violated. Never silently weaken this test.
+                return None,('independent_risk_projection_not_qualified:'
+                             +ARMS[ai]+':'+'|'.join(refusals))
             position=np.asarray(state['poses'][ai]['position'])
             lower=self.positions[:,ai].min(0)-self.cfg['free_workspace_margin_m']
             upper=self.positions[:,ai].max(0)+self.cfg['free_workspace_margin_m']
@@ -203,7 +213,12 @@ class V2Mixin:
                     policy,state,early_risks,[other])
                 if proposal is None:
                     self.steps+=1;self.last_decision=dict(
-                        policy_action=policy.tolist(),policy_risks=early_risks)
+                        policy_action=policy.tolist(),policy_risks=early_risks,
+                        guide_risk_refusal_context=dict(
+                            guided_arm=ARMS[self.active],policy_arm=ARMS[other],
+                            contact_category=self.contact_assessment(state)['category'],
+                            actual_grasps=state['actual_grasps'],
+                            projection_reason=reason))
                     self.stop('guide_passive_policy_risk:'+reason)
                     return self.refuse()
             final,decision=super().choose(proposal)
