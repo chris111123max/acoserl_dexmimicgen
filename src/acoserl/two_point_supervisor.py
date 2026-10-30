@@ -111,7 +111,7 @@ class TwoPointMixin:
             if oe['position_m']>self.cfg['assembled_object_drift_m'] or oe['rotation_rad']>self.cfg['assembled_object_rotation_drift_rad']:return 'completed_piece1_displaced'
         return None
 
-    def window_measure(self,ai,state):
+    def window_measure(self,ai,state,record_history=True):
         lo,hi,stage=self.legal_bounds(ai,state);w=self.windows[ai]
         if lo>w.floor:w.event(lo)
         ids=w.indices(hi)
@@ -129,7 +129,8 @@ class TwoPointMixin:
                 if np.linalg.norm(relative-rel)<=self.cfg['object_window_position_m'] and Rotation.from_matrix(relative_rotation@rotation.T).magnitude()<=self.cfg['object_window_rotation_rad']:legal.append(j)
             ids=legal
         distances=np.linalg.norm(self.positions[:,ai]-state['poses'][ai]['position'],axis=1)
-        cpoint=int(np.argmin(distances));self.history[ai].append(cpoint)
+        cpoint=int(np.argmin(distances))
+        if record_history:self.history[ai].append(cpoint)
         pipoint=min(ids,key=lambda j:float(distances[j])) if ids else None
         h=self.history[ai];p=self.points['arms'][ARMS[ai]]
         stagnant=len(h)>self.cfg['stagnation_window'] and np.linalg.norm(self.positions[h[-1],ai]-self.positions[h[0],ai])<self.cfg['exit_position_m'] and p['p0']<=cpoint<=p['p1']
@@ -149,6 +150,17 @@ class TwoPointMixin:
         if oe['position_m']>.003 or oe['rotation_rad']>.035:return False,'target_object_not_at_validated_pick_pose'
         entry=self.passive_hold_entry(ai,state);self.last_decision['passive_hold_entry']=entry
         if not entry['allowed']:return False,entry['reason']
+        # Free pregrasp captures were observed to drift 2.13mm when the local
+        # damping screen estimated only 1.57mm. Add a full control interval
+        # here; keep the separately qualified carry/braking controller intact.
+        extra=max(0.,1./float(self.env.control_freq)-entry['physics_latency_s'])
+        pos=entry['predicted_peak_position_m']+entry['linear_speed_m_s']*extra
+        rot=entry['predicted_peak_rotation_rad']+entry['angular_speed_rad_s']*extra
+        held=[o for o,h in state['actual_grasps'][ARMS[1-ai]].items() if h]
+        bounds={o:pos+float(np.linalg.norm(np.asarray(state['objects'][o]['position'])-state['poses'][1-ai]['position']))*rot for o in held}
+        okay=pos<=self.cfg['passive_position_drift_m'] and rot<=self.cfg['passive_rotation_drift_rad'] and all(v<=self.cfg['passive_object_position_drift_m'] for v in bounds.values()) and (not held or rot<=self.cfg['passive_object_rotation_drift_rad'])
+        entry.update(pregrasp_control_interval_allowed=bool(okay),pregrasp_position_bound_m=float(pos),pregrasp_rotation_bound_rad=float(rot),pregrasp_object_bounds_m=bounds)
+        if not okay:return False,'pregrasp_passive_hold_not_quasistatic'
         if target>=p['first_contact']:return False,'sliding_target_crosses_contact_barrier'
         current=state['poses'][ai]['position'];goal=self.pose(ai,target)['position']
         height=max(current[2],goal[2],float(self.trace['object_positions'][0,:,2].max())+.10)
@@ -249,10 +261,11 @@ class TwoPointMixin:
             speed=np.asarray(self.env.sim.data.cvel[self.env.obj_body_id['piece_1']])
             if np.linalg.norm(speed[3:])<=self.cfg['placed_object_linear_speed_m_s'] and np.linalg.norm(speed[:3])<=self.cfg['placed_object_angular_speed_rad_s']:self.protected_first=copy.deepcopy(state['objects']['piece_1'])
         frozen=self.control_active()
+        projected=set(getattr(self,"projected_arms",[])) if getattr(self,"projected",False) else set()
         for ai,w in enumerate(self.windows):
             lo,hi,stage=self.legal_bounds(ai,state)
             if not frozen and lo>w.floor:w.event(lo)
-            w.tick(hi,frozen);self.cursors[ai].index=max(self.cursors[ai].index,w.end)
+            w.tick(hi,frozen or ai in projected);self.cursors[ai].index=max(self.cursors[ai].index,w.end)
         result={'handback':False,'indices':self.indices(),'completed':self.completed.copy()}
         if not self.control_active():return result
         self.age+=1;self.intervention_control_steps+=1

@@ -1,0 +1,105 @@
+{
+  "level_A_system_integrated": true,
+  "level_B_formal_running": true,
+  "level_C_task_learned": false,
+  "verified_utc": "2026-10-30T05:44:28.347379+00:00",
+  "implementation_commit": "91f9e545b6ce4f364ca872b50497d8bc265fa070",
+  "branch": "codex/autoserl-baseline",
+  "tag": "autoserl_baseline_formal_20261030_133346",
+  "learner_pid": 112316,
+  "startup_checks": {
+    "correct_project_pid_and_command": true,
+    "accepted_source_unchanged": true,
+    "sixteen_workers_ready_alive": true,
+    "true_NPU_context": true,
+    "fresh_actor_critic_online": true,
+    "original224_only_initial_demo": true,
+    "real_interactions_and_updates_growing": true,
+    "online_replay_growing": true,
+    "finite_updates_correct_dynamic_sources": true,
+    "persistent_config_logs_no_initial_deadlock": true
+  },
+  "output": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/outputs/ascend16/autoserl_baseline_formal_20261030_133346",
+  "snapshot_before": {
+    "actual_interactions": 1120,
+    "actor_updates": 96,
+    "critic_updates": 96,
+    "online_rows": 1072
+  },
+  "snapshot_after": {
+    "actual_interactions": 1280,
+    "valid_real_steps": 1280,
+    "warmup_real_steps": 1024,
+    "actor_updates": 256,
+    "critic_updates": 256,
+    "online_rows": 1232,
+    "dynamic_demo_rows": 0,
+    "actual_steps_s": 3.7243702925761304,
+    "updates_s": 0.7448740585152261
+  },
+  "collection_health": {
+    "valid_steps": 1280,
+    "proposals": 1280,
+    "nonzero_motion_steps": 1280,
+    "policy_motion_steps": 1008,
+    "projection_steps": 272,
+    "task_intervention_steps": 0,
+    "safe_handbacks": 0,
+    "ends": 1,
+    "short_ends": 0,
+    "grasps": {
+      "A": 0,
+      "B": 0
+    },
+    "first_assembly": 0,
+    "full_success": 0,
+    "reasons": {
+      "workspace_exit_A": 1
+    },
+    "stages": {
+      "approach_pregrasp": 1280
+    }
+  },
+  "npu": {
+    "aicore_percent": 98,
+    "hbm_used_mb": 5164,
+    "hbm_total_mb": 65536
+  },
+  "worker_pids": [
+    112643,
+    112644,
+    112645,
+    112646,
+    113893,
+    113894,
+    113895,
+    113896,
+    115144,
+    115145,
+    115146,
+    115147,
+    116411,
+    116412,
+    116413,
+    116414
+  ],
+  "fresh_initialization": {
+    "fresh_rl": true,
+    "fresh_online_replay": true,
+    "online_rows": 0,
+    "offline_rows": 224,
+    "actor_hash": "4b60c2775a1187a5102a7d30df3ab407b35af26b38a01f0c45cf861995fb5cc6",
+    "critic_hash": "48270bf7e1e18a63f4257d9ff1697678f6bc0bf9624bf094648335bb08066d2a"
+  },
+  "maximum_actual_interactions": 500000,
+  "wall_limit_seconds": 36000,
+  "formal_checkpoint_due_at": 25000,
+  "formal_evaluation_due_at": 50000,
+  "formal_interventions_so_far": 0,
+  "formal_dynamic_rows_so_far": 0,
+  "automation_delete": {
+    "id": "aco-serl-v3",
+    "status": "not_found",
+    "no_duplicate_created": true
+  }
+}

@@ -80,6 +80,14 @@ class InterventionBridge:
     'partial_physics_step':True,'physical_time':float(self.env.env.sim.data.time),
     'qpos_partial':self.env.env.sim.data.qpos.tolist(),'proposed_action':inverse.tolist()}) from error
   after=self.manager.after_step()
+  proposal=np.asarray(decision.get('intervention_action_proposed',final),dtype=np.float32)
+  intervention_normalized=self.scaler.scale(torch.from_numpy(proposal)).numpy()
+  info['intervention_action_normalized']=intervention_normalized
+  info['task_quality']=after.get('task_quality',{})
+  info['strict_task_success']=bool(info['success'])
+  info['success']=bool(info['success'] and self.manager.stop_reason is None)
+  # Keep the existing safe strict-success definition consistent with sparse reward.
+  reward=float(info['success'])
   kind,bootstrap=boundary(term,trunc,info['success'],self.manager.stop_reason)
   if self.manager.mode=='Safe_Stop' and not info['success']:
    term=kind==Boundary.PHYSICAL_FAILURE;trunc=not term

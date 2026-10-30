@@ -1,0 +1,744 @@
+{
+  "version": "bounded_empirical_passive_hold_v3r3",
+  "passed": true,
+  "selected_physical_cases": 30,
+  "calibration_cases": 18,
+  "independent_validation_cases": 12,
+  "sources": [
+    "outputs/acoserl_v3/hold_calibration_v1",
+    "outputs/acoserl_v3/hold_carry_rotation_v2",
+    "outputs/acoserl_v3/hold_late_carry_b_v1"
+  ],
+  "control_hz": 20,
+  "physics_dt_s": 0.002,
+  "domains": {
+    "free:A": {
+      "passed": true,
+      "horizon_controls": 80,
+      "position_error_bound_m": 0.00018572071013918005,
+      "rotation_error_bound_rad": 0.001298558772222561,
+      "object_position_error_bound_m": 0.0001,
+      "object_rotation_error_bound_rad": 0.001,
+      "max_linear_speed_m_s": 0.003592104978874169,
+      "max_angular_speed_rad_s": 0.0043237628497446,
+      "eef_min_m": [
+        [
+          -0.11072317522782171,
+          -0.26136355120562044,
+          1.017711635056973
+        ],
+        [
+          -0.10133184596615938,
+          0.2454291867886212,
+          1.0126110875923036
+        ]
+      ],
+      "eef_max_m": [
+        [
+          -0.10656687117505728,
+          -0.25698044613816384,
+          1.0225197106478927
+        ],
+        [
+          -0.09733184596615937,
+          0.2494291867886212,
+          1.0166110875923036
+        ]
+      ],
+      "rotations": [
+        [
+          [
+            0.020854637310576938,
+            0.9876768482310144,
+            0.1551113392730887
+          ],
+          [
+            0.9997751429611125,
+            -0.020006043537952403,
+            -0.007030059675566566
+          ],
+          [
+            -0.0038402629765119933,
+            0.15522307074144776,
+            -0.9878719809215483
+          ]
+        ],
+        [
+          [
+            0.031513238300385174,
+            0.987867150242356,
+            0.1520704089685653
+          ],
+          [
+            0.9994848200822243,
+            -0.03207184108284704,
+            0.0012212431197414358
+          ],
+          [
+            0.006083603950295446,
+            0.15195358002232184,
+            -0.9883689084958981
+          ]
+        ]
+      ],
+      "rotation_domain_rad": 0.01,
+      "actual_grasps": {
+        "A": {
+          "base": false,
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "base": false,
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "first_piece_assembled": false,
+      "relative_grasp_positions": {},
+      "relative_grasp_rotations": {},
+      "requires_independent_active": true,
+      "calibration_paths": [
+        "outputs/acoserl_v3/hold_calibration_v1/case_00/result.json",
+        "outputs/acoserl_v3/hold_calibration_v1/case_02/result.json",
+        "outputs/acoserl_v3/hold_calibration_v1/case_01/result.json"
+      ],
+      "validation": [
+        {
+          "path": "outputs/acoserl_v3/hold_calibration_v1/case_03/result.json",
+          "passed": true,
+          "position_upper_m": 0.0002167737309760119,
+          "object_upper_m": 0.0001,
+          "object_rotation_upper_rad": 0.0010702515090205995
+        },
+        {
+          "path": "outputs/acoserl_v3/hold_calibration_v1/case_04/result.json",
+          "passed": true,
+          "position_upper_m": 0.00028147652798683916,
+          "object_upper_m": 0.0001,
+          "object_rotation_upper_rad": 0.001080459231996563
+        }
+      ]
+    },
+    "free:B": {
+      "passed": true,
+      "horizon_controls": 80,
+      "position_error_bound_m": 0.00018268434736249105,
+      "rotation_error_bound_rad": 0.0013167060738776628,
+      "object_position_error_bound_m": 0.0001,
+      "object_rotation_error_bound_rad": 0.001,
+      "max_linear_speed_m_s": 0.003463650313735424,
+      "max_angular_speed_rad_s": 0.004728693551014815,
+      "eef_min_m": [
+        [
+          -0.1105735084265638,
+          -0.2613533924538541,
+          1.0177126749697274
+        ],
+        [
+          -0.10149124378500043,
+          0.24542161250821298,
+          1.0126109341159142
+        ]
+      ],
+      "eef_max_m": [
+        [
+          -0.1065735084265638,
+          -0.2573533924538541,
+          1.0217126749697274
+        ],
+        [
+          -0.09732961963265836,
+          0.2497994655304502,
+          1.017396903561896
+        ]
+      ],
+      "rotations": [
+        [
+          [
+            0.020854637310576938,
+            0.9876768482310144,
+            0.1551113392730887
+          ],
+          [
+            0.9997751429611125,
+            -0.020006043537952403,
+            -0.007030059675566566
+          ],
+          [
+            -0.0038402629765119933,
+            0.15522307074144776,
+            -0.9878719809215483
+          ]
+        ],
+        [
+          [
+            0.031513238300385174,
+            0.987867150242356,
+            0.1520704089685653
+          ],
+          [
+            0.9994848200822243,
+            -0.03207184108284704,
+            0.0012212431197414358
+          ],
+          [
+            0.006083603950295446,
+            0.15195358002232184,
+            -0.9883689084958981
+          ]
+        ]
+      ],
+      "rotation_domain_rad": 0.01,
+      "actual_grasps": {
+        "A": {
+          "base": false,
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "base": false,
+          "piece_1": false,
+          "piece_2": false
+        }
+      },
+      "first_piece_assembled": false,
+      "relative_grasp_positions": {},
+      "relative_grasp_rotations": {},
+      "requires_independent_active": true,
+      "calibration_paths": [
+        "outputs/acoserl_v3/hold_calibration_v1/case_05/result.json",
+        "outputs/acoserl_v3/hold_calibration_v1/case_06/result.json",
+        "outputs/acoserl_v3/hold_calibration_v1/case_07/result.json"
+      ],
+      "validation": [
+        {
+          "path": "outputs/acoserl_v3/hold_calibration_v1/case_08/result.json",
+          "passed": true,
+          "position_upper_m": 0.000213214375168614,
+          "object_upper_m": 0.0001,
+          "object_rotation_upper_rad": 0.0010663715034808442
+        },
+        {
+          "path": "outputs/acoserl_v3/hold_calibration_v1/case_09/result.json",
+          "passed": true,
+          "position_upper_m": 0.00028304393282690314,
+          "object_upper_m": 0.0001,
+          "object_rotation_upper_rad": 0.0010950472356390604
+        }
+      ]
+    },
+    "carry:A": {
+      "passed": true,
+      "horizon_controls": 80,
+      "position_error_bound_m": 0.00021385541802284097,
+      "rotation_error_bound_rad": 0.0013541222083245197,
+      "object_position_error_bound_m": 0.00038880750262665467,
+      "object_rotation_error_bound_rad": 0.008703799089525368,
+      "max_linear_speed_m_s": 0.004645968657758648,
+      "max_angular_speed_rad_s": 0.0044319952216018985,
+      "eef_min_m": [
+        [
+          -0.022476371384440037,
+          -0.14460571581692533,
+          0.9521595319868171
+        ],
+        [
+          -0.13912321138316272,
+          0.22981972662574238,
+          1.0132305897666254
+        ]
+      ],
+      "eef_max_m": [
+        [
+          -0.018428436843951762,
+          -0.14024268915504226,
+          0.9570973340847226
+        ],
+        [
+          -0.13512321138316272,
+          0.23381972662574238,
+          1.0172305897666254
+        ]
+      ],
+      "rotations": [
+        [
+          [
+            0.017420747943820262,
+            0.9941579044302962,
+            0.10652032012643343
+          ],
+          [
+            0.9947495285599348,
+            -0.027978668715835927,
+            0.0984406904012496
+          ],
+          [
+            0.10084588722830025,
+            0.10424612777292729,
+            -0.9894255160816732
+          ]
+        ],
+        [
+          [
+            -0.12300186874443833,
+            0.9916516715079648,
+            -0.038697579780041694
+          ],
+          [
+            0.9911094486548149,
+            0.12075476523263137,
+            -0.055860070361202316
+          ],
+          [
+            -0.050720814982828905,
+            -0.04522443000269659,
+            -0.9976884031892955
+          ]
+        ]
+      ],
+      "rotation_domain_rad": 0.01,
+      "actual_grasps": {
+        "A": {
+          "base": false,
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "base": false,
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "first_piece_assembled": false,
+      "relative_grasp_positions": {
+        "piece_1": [
+          -0.00036800604101723885,
+          -0.0034750907585327996,
+          0.027609838682497268
+        ]
+      },
+      "relative_grasp_rotations": {
+        "piece_1": [
+          [
+            0.9999709173648365,
+            0.0007099188742235913,
+            0.007593447156446649
+          ],
+          [
+            -4.720799636401115e-05,
+            -0.9950629101056245,
+            0.09924617223615906
+          ],
+          [
+            0.007626414356091973,
+            -0.0992436443673664,
+            -0.9950339375401982
+          ]
+        ]
+      },
+      "requires_independent_active": true,
+      "calibration_paths": [
+        "outputs/acoserl_v3/hold_carry_rotation_v2/case_00/result.json",
+        "outputs/acoserl_v3/hold_carry_rotation_v2/case_01/result.json",
+        "outputs/acoserl_v3/hold_carry_rotation_v2/case_02/result.json"
+      ],
+      "validation": [
+        {
+          "path": "outputs/acoserl_v3/hold_carry_rotation_v2/case_03/result.json",
+          "passed": true,
+          "position_upper_m": 0.0002280106684912781,
+          "object_upper_m": 0.0004059928794346962,
+          "object_rotation_upper_rad": 0.008812678514781779
+        },
+        {
+          "path": "outputs/acoserl_v3/hold_carry_rotation_v2/case_04/result.json",
+          "passed": true,
+          "position_upper_m": 0.000297477418881414,
+          "object_upper_m": 0.0004759416891403028,
+          "object_rotation_upper_rad": 0.008830000185104318
+        }
+      ]
+    },
+    "carry:B": {
+      "passed": true,
+      "horizon_controls": 16,
+      "position_error_bound_m": 0.0001071489045311893,
+      "rotation_error_bound_rad": 0.002080418713619061,
+      "object_position_error_bound_m": 0.0007320100502822206,
+      "object_rotation_error_bound_rad": 0.02746965321813623,
+      "max_linear_speed_m_s": 0.007103826009522684,
+      "max_angular_speed_rad_s": 0.01617854275779697,
+      "eef_min_m": [
+        [
+          -0.02247637138486902,
+          -0.14460571581692533,
+          0.9521595319868171
+        ],
+        [
+          -0.13917203331381492,
+          0.22981972662574238,
+          1.0132305897666254
+        ]
+      ],
+      "eef_max_m": [
+        [
+          -0.01847637137613515,
+          -0.1406057154777452,
+          0.9561595320419803
+        ],
+        [
+          -0.13511720805050345,
+          0.23423125172742518,
+          1.0181133221478327
+        ]
+      ],
+      "rotations": [
+        [
+          [
+            0.017420747943820262,
+            0.9941579044302962,
+            0.10652032012643343
+          ],
+          [
+            0.9947495285599348,
+            -0.027978668715835927,
+            0.0984406904012496
+          ],
+          [
+            0.10084588722830025,
+            0.10424612777292729,
+            -0.9894255160816732
+          ]
+        ],
+        [
+          [
+            -0.12300186874443833,
+            0.9916516715079648,
+            -0.038697579780041694
+          ],
+          [
+            0.9911094486548149,
+            0.12075476523263137,
+            -0.055860070361202316
+          ],
+          [
+            -0.050720814982828905,
+            -0.04522443000269659,
+            -0.9976884031892955
+          ]
+        ]
+      ],
+      "rotation_domain_rad": 0.01,
+      "actual_grasps": {
+        "A": {
+          "base": false,
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "base": false,
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "first_piece_assembled": false,
+      "relative_grasp_positions": {
+        "piece_2": [
+          0.0024958377829481264,
+          -0.004069400976986288,
+          0.06515411241008354
+        ]
+      },
+      "relative_grasp_rotations": {
+        "piece_2": [
+          [
+            0.9948535980439593,
+            0.09858427877415923,
+            -0.023397829761851126
+          ],
+          [
+            0.09924005226030251,
+            -0.9946481461950161,
+            0.028748518191163076
+          ],
+          [
+            -0.020438456065910212,
+            -0.03092256860925462,
+            -0.999312796007459
+          ]
+        ]
+      },
+      "requires_independent_active": true,
+      "calibration_paths": [
+        "outputs/acoserl_v3/hold_carry_rotation_v2/case_05/result.json",
+        "outputs/acoserl_v3/hold_carry_rotation_v2/case_06/result.json",
+        "outputs/acoserl_v3/hold_carry_rotation_v2/case_07/result.json"
+      ],
+      "validation": [
+        {
+          "path": "outputs/acoserl_v3/hold_carry_rotation_v2/case_08/result.json",
+          "passed": true,
+          "position_upper_m": 0.0002335613599038252,
+          "object_upper_m": 0.000890093173639018,
+          "object_rotation_upper_rad": 0.027954442224813268
+        },
+        {
+          "path": "outputs/acoserl_v3/hold_carry_rotation_v2/case_09/result.json",
+          "passed": true,
+          "position_upper_m": 0.00022564141505145466,
+          "object_upper_m": 0.0008818832057507744,
+          "object_rotation_upper_rad": 0.02795000415782632
+        }
+      ]
+    },
+    "contact:A": {
+      "passed": true,
+      "horizon_controls": 80,
+      "position_error_bound_m": 0.0001061920988253342,
+      "rotation_error_bound_rad": 0.0010096989494029714,
+      "object_position_error_bound_m": 0.0001,
+      "object_rotation_error_bound_rad": 0.001,
+      "max_linear_speed_m_s": 0.0036139244621804594,
+      "max_angular_speed_rad_s": 0.003844151189777045,
+      "eef_min_m": [
+        [
+          -0.036162103887161644,
+          -0.26576728769538377,
+          0.9899899446927788
+        ],
+        [
+          0.012875129088872823,
+          -0.003926941305627568,
+          0.9837456448757044
+        ]
+      ],
+      "eef_max_m": [
+        [
+          -0.03208219950966648,
+          -0.2614347945792628,
+          0.9948403044841596
+        ],
+        [
+          0.016875129195511627,
+          7.305869911017511e-05,
+          0.987745645201701
+        ]
+      ],
+      "rotations": [
+        [
+          [
+            -0.33930670534970414,
+            0.9399163846902568,
+            0.03779086523913014
+          ],
+          [
+            0.938121453359175,
+            0.33515355500491223,
+            0.08717931701289323
+          ],
+          [
+            0.06927552563491852,
+            0.06503294825211585,
+            -0.9954755733766848
+          ]
+        ],
+        [
+          [
+            0.0205564786317788,
+            0.9992599070747521,
+            -0.03251260216002739
+          ],
+          [
+            0.9988388259896044,
+            -0.019108881605552783,
+            0.044224996772083004
+          ],
+          [
+            0.043570986699488536,
+            -0.03338395957252469,
+            -0.9984924037574298
+          ]
+        ]
+      ],
+      "rotation_domain_rad": 0.01,
+      "actual_grasps": {
+        "A": {
+          "base": false,
+          "piece_1": false,
+          "piece_2": false
+        },
+        "B": {
+          "base": false,
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "first_piece_assembled": true,
+      "relative_grasp_positions": {},
+      "relative_grasp_rotations": {},
+      "requires_independent_active": false,
+      "calibration_paths": [
+        "outputs/acoserl_v3/hold_calibration_v1/case_20/result.json",
+        "outputs/acoserl_v3/hold_calibration_v1/case_21/result.json",
+        "outputs/acoserl_v3/hold_calibration_v1/case_22/result.json"
+      ],
+      "validation": [
+        {
+          "path": "outputs/acoserl_v3/hold_calibration_v1/case_23/result.json",
+          "passed": true,
+          "position_upper_m": 0.00014421335828877308,
+          "object_upper_m": 0.0001,
+          "object_rotation_upper_rad": 0.001058525203561529
+        },
+        {
+          "path": "outputs/acoserl_v3/hold_calibration_v1/case_24/result.json",
+          "passed": true,
+          "position_upper_m": 0.00020125769223346596,
+          "object_upper_m": 0.0001,
+          "object_rotation_upper_rad": 0.001065919601108924
+        }
+      ]
+    },
+    "carry_late:B": {
+      "passed": true,
+      "horizon_controls": 16,
+      "position_error_bound_m": 0.00030312485018570417,
+      "rotation_error_bound_rad": 0.0014459301603208616,
+      "object_position_error_bound_m": 0.00042461176694855027,
+      "object_rotation_error_bound_rad": 0.013142926985432023,
+      "max_linear_speed_m_s": 0.0032987851133737937,
+      "max_angular_speed_rad_s": 0.0017481459362833638,
+      "eef_min_m": [
+        [
+          -0.025240228980547882,
+          -0.14448638475890432,
+          0.952280311908156
+        ],
+        [
+          -0.13898660246108926,
+          0.2298023480409655,
+          1.013275649999387
+        ]
+      ],
+      "eef_max_m": [
+        [
+          -0.02124022898054788,
+          -0.14048638475890432,
+          0.956280311908156
+        ],
+        [
+          -0.134906857034145,
+          0.23417343503502688,
+          1.018119568460599
+        ]
+      ],
+      "rotations": [
+        [
+          [
+            0.01840236541903271,
+            0.9943390542812702,
+            0.10464797216387038
+          ],
+          [
+            0.9948268074603406,
+            -0.028668077341675775,
+            0.0974564748992845
+          ],
+          [
+            0.09990483524458445,
+            0.1023131783914345,
+            -0.9897227073388747
+          ]
+        ],
+        [
+          [
+            -0.12297806508124864,
+            0.991513382508095,
+            -0.04216168659132537
+          ],
+          [
+            0.9911409202002129,
+            0.120562663139266,
+            -0.05571642990572781
+          ],
+          [
+            -0.050160460659210176,
+            -0.0486400715883607,
+            -0.9975560493638098
+          ]
+        ]
+      ],
+      "rotation_domain_rad": 0.01,
+      "actual_grasps": {
+        "A": {
+          "base": false,
+          "piece_1": true,
+          "piece_2": false
+        },
+        "B": {
+          "base": false,
+          "piece_1": false,
+          "piece_2": true
+        }
+      },
+      "first_piece_assembled": false,
+      "relative_grasp_positions": {
+        "piece_2": [
+          0.0012557734065103887,
+          -0.004073491825601179,
+          0.06524910181134869
+        ]
+      },
+      "relative_grasp_rotations": {
+        "piece_2": [
+          [
+            0.9988915904602358,
+            0.04583644219706219,
+            -0.010705656193460497
+          ],
+          [
+            0.046127540522282365,
+            -0.9985219346502597,
+            0.02874362586146613
+          ],
+          [
+            -0.009372326988661658,
+            -0.029205591742235387,
+            -0.9995294857570735
+          ]
+        ]
+      },
+      "requires_independent_active": true,
+      "calibration_paths": [
+        "outputs/acoserl_v3/hold_late_carry_b_v1/case_02/result.json",
+        "outputs/acoserl_v3/hold_late_carry_b_v1/case_00/result.json",
+        "outputs/acoserl_v3/hold_late_carry_b_v1/case_01/result.json"
+      ],
+      "validation": [
+        {
+          "path": "outputs/acoserl_v3/hold_late_carry_b_v1/case_03/result.json",
+          "passed": true,
+          "position_upper_m": 0.00033797140360423934,
+          "object_upper_m": 0.0004642532290163288,
+          "object_rotation_upper_rad": 0.013216256814514703
+        },
+        {
+          "path": "outputs/acoserl_v3/hold_late_carry_b_v1/case_04/result.json",
+          "passed": true,
+          "position_upper_m": 0.0004163797131938676,
+          "object_upper_m": 0.0005401921472869428,
+          "object_rotation_upper_rad": 0.013178491757942206
+        }
+      ]
+    }
+  },
+  "position_reserve_m": 0.0001,
+  "rotation_reserve_rad": 0.001,
+  "scope": "Empirical passive pose/grasp/speed envelope; active independence must be measured. No universal guarantee.",
+  "source_sha256": {
+    "outputs/acoserl_v3/hold_calibration_v1/summary.json": "ba1612afb09131e6c24ef860deac96af8b37f2aa5dd3ccfcb0cb3850cdfdd5b6",
+    "outputs/acoserl_v3/hold_carry_rotation_v2/summary.json": "8b543e9d2f807780e4edf1a0a5519b63403bdbc2549bfb8bc21eed35d84d902b",
+    "outputs/acoserl_v3/hold_late_carry_b_v1/summary.json": "0663c222a88e876b031a01dba1b66957f072ff5a8a6461fe7bfdb82125aa32f1"
+  }
+}

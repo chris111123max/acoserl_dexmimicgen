@@ -1,0 +1,1866 @@
+{
+  "collector_protocol": "acoserl_v2",
+  "passed": false,
+  "formal_training_approved": false,
+  "start_authorized_after_all_issues_resolved": true,
+  "resolution_complete": false,
+  "selected_utd": 1,
+  "selected_visual": "resnet18_spatial84",
+  "pretrained_validation_passed": true,
+  "reason": "Contact recovery failed physical acceptance; Actor handback still needs action shielding and no assembly progress was learned. No formal long training launched.",
+  "implementation_commits": [
+    "5ec667f3c937a11234cef7fa7b6ebd97822af37c",
+    "43073293d4d2448538a479ef2b04edff54975fd4"
+  ],
+  "official_reference": "238271246e39ef0cf7e06a94392c4b2d184a9af2",
+  "p0_contracts": {
+    "passed": true,
+    "admission_modes": 2,
+    "sampling_combinations": [
+      {
+        "mode": "official",
+        "quota": 64,
+        "positive_min": 0,
+        "actual": {
+          "original": 64,
+          "dynamic": 64,
+          "positive": 1,
+          "forced_positive": 0,
+          "positive_oversampling": false,
+          "repeated_samples_are_not_new_experience": true
+        }
+      },
+      {
+        "mode": "official",
+        "quota": 64,
+        "positive_min": 2,
+        "actual": {
+          "original": 64,
+          "dynamic": 64,
+          "positive": 3,
+          "forced_positive": 2,
+          "positive_oversampling": true,
+          "repeated_samples_are_not_new_experience": true
+        }
+      },
+      {
+        "mode": "official",
+        "quota": 64,
+        "positive_min": 4,
+        "actual": {
+          "original": 64,
+          "dynamic": 64,
+          "positive": 5,
+          "forced_positive": 4,
+          "positive_oversampling": true,
+          "repeated_samples_are_not_new_experience": true
+        }
+      },
+      {
+        "mode": "official",
+        "quota": 96,
+        "positive_min": 0,
+        "actual": {
+          "original": 96,
+          "dynamic": 32,
+          "positive": 2,
+          "forced_positive": 0,
+          "positive_oversampling": false,
+          "repeated_samples_are_not_new_experience": true
+        }
+      },
+      {
+        "mode": "official",
+        "quota": 96,
+        "positive_min": 2,
+        "actual": {
+          "original": 96,
+          "dynamic": 32,
+          "positive": 4,
+          "forced_positive": 2,
+          "positive_oversampling": true,
+          "repeated_samples_are_not_new_experience": true
+        }
+      },
+      {
+        "mode": "official",
+        "quota": 96,
+        "positive_min": 4,
+        "actual": {
+          "original": 96,
+          "dynamic": 32,
+          "positive": 6,
+          "forced_positive": 4,
+          "positive_oversampling": true,
+          "repeated_samples_are_not_new_experience": true
+        }
+      },
+      {
+        "mode": "official",
+        "quota": 128,
+        "positive_min": 0,
+        "actual": {
+          "original": 128,
+          "dynamic": 0,
+          "positive": 2,
+          "forced_positive": 0,
+          "positive_oversampling": false,
+          "repeated_samples_are_not_new_experience": true
+        }
+      },
+      {
+        "mode": "official",
+        "quota": 128,
+        "positive_min": 2,
+        "actual": {
+          "original": 128,
+          "dynamic": 0,
+          "positive": 4,
+          "forced_positive": 2,
+          "positive_oversampling": true,
+          "repeated_samples_are_not_new_experience": true
+        }
+      },
+      {
+        "mode": "official",
+        "quota": 128,
+        "positive_min": 4,
+        "actual": {
+          "original": 128,
+          "dynamic": 0,
+          "positive": 6,
+          "forced_positive": 4,
+          "positive_oversampling": true,
+          "repeated_samples_are_not_new_experience": true
+        }
+      },
+      {
+        "mode": "safe_handback",
+        "quota": 64,
+        "positive_min": 0,
+        "actual": {
+          "original": 64,
+          "dynamic": 64,
+          "positive": 1,
+          "forced_positive": 0,
+          "positive_oversampling": false,
+          "repeated_samples_are_not_new_experience": true
+        }
+      },
+      {
+        "mode": "safe_handback",
+        "quota": 64,
+        "positive_min": 2,
+        "actual": {
+          "original": 64,
+          "dynamic": 64,
+          "positive": 3,
+          "forced_positive": 2,
+          "positive_oversampling": true,
+          "repeated_samples_are_not_new_experience": true
+        }
+      },
+      {
+        "mode": "safe_handback",
+        "quota": 64,
+        "positive_min": 4,
+        "actual": {
+          "original": 64,
+          "dynamic": 64,
+          "positive": 5,
+          "forced_positive": 4,
+          "positive_oversampling": true,
+          "repeated_samples_are_not_new_experience": true
+        }
+      },
+      {
+        "mode": "safe_handback",
+        "quota": 96,
+        "positive_min": 0,
+        "actual": {
+          "original": 96,
+          "dynamic": 32,
+          "positive": 2,
+          "forced_positive": 0,
+          "positive_oversampling": false,
+          "repeated_samples_are_not_new_experience": true
+        }
+      },
+      {
+        "mode": "safe_handback",
+        "quota": 96,
+        "positive_min": 2,
+        "actual": {
+          "original": 96,
+          "dynamic": 32,
+          "positive": 4,
+          "forced_positive": 2,
+          "positive_oversampling": true,
+          "repeated_samples_are_not_new_experience": true
+        }
+      },
+      {
+        "mode": "safe_handback",
+        "quota": 96,
+        "positive_min": 4,
+        "actual": {
+          "original": 96,
+          "dynamic": 32,
+          "positive": 6,
+          "forced_positive": 4,
+          "positive_oversampling": true,
+          "repeated_samples_are_not_new_experience": true
+        }
+      },
+      {
+        "mode": "safe_handback",
+        "quota": 128,
+        "positive_min": 0,
+        "actual": {
+          "original": 128,
+          "dynamic": 0,
+          "positive": 2,
+          "forced_positive": 0,
+          "positive_oversampling": false,
+          "repeated_samples_are_not_new_experience": true
+        }
+      },
+      {
+        "mode": "safe_handback",
+        "quota": 128,
+        "positive_min": 2,
+        "actual": {
+          "original": 128,
+          "dynamic": 0,
+          "positive": 4,
+          "forced_positive": 2,
+          "positive_oversampling": true,
+          "repeated_samples_are_not_new_experience": true
+        }
+      },
+      {
+        "mode": "safe_handback",
+        "quota": 128,
+        "positive_min": 4,
+        "actual": {
+          "original": 128,
+          "dynamic": 0,
+          "positive": 6,
+          "forced_positive": 4,
+          "positive_oversampling": true,
+          "repeated_samples_are_not_new_experience": true
+        }
+      }
+    ],
+    "original_rows": 224,
+    "original_positive_rows": 3,
+    "checkpoint_sampling_exact": true,
+    "no_intervention_gap_crossing": true,
+    "shared_policy_capability": true
+  },
+  "physical": {
+    "Carry_A": {
+      "trials": 12,
+      "passed": 12,
+      "recovery_step_range": [
+        5,
+        6
+      ],
+      "passive_eef_peak_m": 0.0002447921562371655,
+      "passive_object_peak_m": 0.00026535291300285366,
+      "actor_steps": 60,
+      "actor_unmodified_steps": 0,
+      "source_paths": [
+        "outputs/acoserl_v2/local_physics_v3/Carry_A_0.json",
+        "outputs/acoserl_v2/local_physics_v3/Carry_A_1.json",
+        "outputs/acoserl_v2/local_physics_v3/Carry_A_2.json",
+        "outputs/acoserl_v2/local_physics_v3/Carry_A_3.json",
+        "outputs/acoserl_v2/local_physics_v3/Carry_A_4.json",
+        "outputs/acoserl_v2/local_physics_v3/Carry_A_5.json",
+        "outputs/acoserl_v2/hold_domain_v1/Carry_A_0.json",
+        "outputs/acoserl_v2/hold_domain_v1/Carry_A_1.json",
+        "outputs/acoserl_v2/hold_domain_v1/Carry_A_2.json",
+        "outputs/acoserl_v2/hold_domain_v1/Carry_A_3.json",
+        "outputs/acoserl_v2/hold_domain_v1/Carry_A_4.json",
+        "outputs/acoserl_v2/hold_domain_v1/Carry_A_5.json"
+      ]
+    },
+    "Carry_B": {
+      "trials": 12,
+      "passed": 12,
+      "recovery_step_range": [
+        5,
+        6
+      ],
+      "passive_eef_peak_m": 0.00016258967041333876,
+      "passive_object_peak_m": 0.00017258677860370347,
+      "actor_steps": 60,
+      "actor_unmodified_steps": 0,
+      "source_paths": [
+        "outputs/acoserl_v2/local_physics_v3/Carry_B_0.json",
+        "outputs/acoserl_v2/local_physics_v3/Carry_B_1.json",
+        "outputs/acoserl_v2/local_physics_v3/Carry_B_2.json",
+        "outputs/acoserl_v2/local_physics_v3/Carry_B_3.json",
+        "outputs/acoserl_v2/local_physics_v3/Carry_B_4.json",
+        "outputs/acoserl_v2/local_physics_v3/Carry_B_5.json",
+        "outputs/acoserl_v2/hold_domain_v1/Carry_B_0.json",
+        "outputs/acoserl_v2/hold_domain_v1/Carry_B_1.json",
+        "outputs/acoserl_v2/hold_domain_v1/Carry_B_2.json",
+        "outputs/acoserl_v2/hold_domain_v1/Carry_B_3.json",
+        "outputs/acoserl_v2/hold_domain_v1/Carry_B_4.json",
+        "outputs/acoserl_v2/hold_domain_v1/Carry_B_5.json"
+      ]
+    },
+    "Brake_B": {
+      "trials": 12,
+      "passed": 12,
+      "brake_steps": [
+        3
+      ],
+      "recovery_step_range": [
+        8,
+        9
+      ],
+      "passive_eef_peak_m": 0.0013820852577350604,
+      "passive_object_peak_m": 0.0013823229590543317,
+      "speed_interval": [
+        0.063793366044585,
+        0.07302364785331766
+      ]
+    }
+  },
+  "joint": {
+    "passed": false,
+    "controller_sha256": "5d563f55df5ed8c24f1d41495a528cb3d27c3f6b97613922040a982d35e6675c",
+    "mode": "B second-insertion vertical 3mm unload; A completed and held static",
+    "trials": 12,
+    "passed_trials": 11,
+    "failed_cases": [
+      "outputs/acoserl_v2/local_physics_v3/Contact_B_6.json"
+    ],
+    "reason": "requires all 12 complete physical+Actor handback trials; no general coupled recovery"
+  },
+  "contact_validation": {
+    "demonstration": {
+      "passed": true,
+      "physical_writes": 0,
+      "reason": null
+    },
+    "robot_collision": {
+      "passed": true,
+      "physical_writes": 0,
+      "reason": "robot_environment_collision"
+    },
+    "unknown_coupling": {
+      "passed": true,
+      "physical_writes": 0,
+      "reason": "unqualified_dynamic_contact_chain"
+    }
+  },
+  "risk_validation": {
+    "workspace_A": true,
+    "workspace_B": true,
+    "both_workspace": true,
+    "open_gripper_A": true,
+    "passive_dynamic": true
+  },
+  "pregrasp_hold_replay": {
+    "passed": true,
+    "cases": [
+      {
+        "source": "env07",
+        "reproduced_prefix_position_error_m": 0.0,
+        "old_predicted_m": 0.001574458809700472,
+        "old_measured_m": 0.002131420158645533,
+        "new_pregrasp_position_bound_m": 0.003933402497137459,
+        "mode": "Normal",
+        "physical_writes": 0
+      },
+      {
+        "source": "env00",
+        "reproduced_prefix_position_error_m": 0.0,
+        "old_predicted_m": 0.0013699226755757511,
+        "old_measured_m": 0.0030365156396384174,
+        "new_pregrasp_position_bound_m": 0.0034224187001881605,
+        "mode": "Normal",
+        "physical_writes": 0
+      }
+    ]
+  },
+  "bounded_training_effective_steps": 768,
+  "bounded_training_critic_updates": 768,
+  "bounded_training_actor_updates": 768,
+  "bounded_runs": [
+    {
+      "tag": "v2_bound_20261029b_full_official",
+      "status": "completed",
+      "error": null,
+      "method": "full_acoserl",
+      "admission": "official",
+      "source_commit": "5ec667f3c937a11234cef7fa7b6ebd97822af37c",
+      "counters": {
+        "actual_interactions": 512,
+        "valid_real_steps": 512,
+        "partial_action_attempts": 0,
+        "warmup_real_steps": 0,
+        "critic_updates": 512,
+        "actor_updates": 512,
+        "proposals": 512,
+        "evaluation_interactions": 44,
+        "evaluation_seconds": 157.83027323614806,
+        "global_capability": {
+          "stage_counts": {
+            "A:approach_pregrasp": 0,
+            "B:approach_pregrasp": 0
+          },
+          "clean_full": 0,
+          "disable": false,
+          "episodes": 13,
+          "stage_metrics": {
+            "A:approach_pregrasp": {
+              "stage_entered": 13,
+              "stage_progressed": 13,
+              "stage_completed": 0,
+              "stage_stably_completed": 0,
+              "stage_policy_completed": 0,
+              "stage_intervention_assisted": 13
+            },
+            "B:approach_pregrasp": {
+              "stage_entered": 13,
+              "stage_progressed": 13,
+              "stage_completed": 0,
+              "stage_stably_completed": 0,
+              "stage_policy_completed": 0,
+              "stage_intervention_assisted": 13
+            }
+          }
+        },
+        "pending_update_budget": 0
+      },
+      "online_rows": 512,
+      "offline_rows": 224,
+      "dynamic_demo_rows": 25,
+      "dynamic_demo_stats": {
+        "accepted_segments": 23,
+        "accepted_rows": 25,
+        "rejected_segments": 0,
+        "rejected_rows": 0,
+        "rejected_partial_steps": 0,
+        "duplicates": 0,
+        "sampled_batches": 512,
+        "sampled_original": 51168,
+        "sampled_dynamic": 14368,
+        "sampled_positive": 1656,
+        "stage_rows": {
+          "1": 25
+        }
+      },
+      "valid_steps_s": 1.049600395157702,
+      "updates_s": 1.049600395157702,
+      "utd_effective": 1.0,
+      "wall_seconds": 802.1841087341309,
+      "training_seconds": 487.8046943980735,
+      "timing_seconds": {
+        "inference": 2.3731962244492024,
+        "step": 90.76741244993173,
+        "reset": 4.41313917725347,
+        "sample": 44.07091980543919,
+        "transfer": 3.0803529692348093,
+        "update": 163.35514667769894
+      },
+      "initial_actor_hash": "4b60c2775a1187a5102a7d30df3ab407b35af26b38a01f0c45cf861995fb5cc6",
+      "initial_critic_hash": "48270bf7e1e18a63f4257d9ff1697678f6bc0bf9624bf094648335bb08066d2a",
+      "all_sixteen_ready": true,
+      "startup_events": [
+        {
+          "event": "batch_start",
+          "time": 1793284775.7901587,
+          "group": 0,
+          "ids": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "event": "batch_ready",
+          "time": 1793284837.0071661,
+          "group": 0,
+          "ids": null
+        },
+        {
+          "event": "batch_start",
+          "time": 1793284837.0083604,
+          "group": 1,
+          "ids": [
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        {
+          "event": "batch_ready",
+          "time": 1793284888.628643,
+          "group": 1,
+          "ids": null
+        },
+        {
+          "event": "batch_start",
+          "time": 1793284888.6306207,
+          "group": 2,
+          "ids": [
+            8,
+            9,
+            10,
+            11
+          ]
+        },
+        {
+          "event": "batch_ready",
+          "time": 1793284942.2073905,
+          "group": 2,
+          "ids": null
+        },
+        {
+          "event": "batch_start",
+          "time": 1793284942.208618,
+          "group": 3,
+          "ids": [
+            12,
+            13,
+            14,
+            15
+          ]
+        },
+        {
+          "event": "batch_ready",
+          "time": 1793284996.669466,
+          "group": 3,
+          "ids": null
+        },
+        {
+          "event": "all_sixteen_ready",
+          "time": 1793284996.678193,
+          "group": null,
+          "ids": null
+        }
+      ],
+      "workers": [
+        {
+          "env_id": 0,
+          "pid": 6737,
+          "seed": 20261027,
+          "episodes": 2,
+          "resets": 2,
+          "real_steps": 32,
+          "proposals": 32,
+          "interventions": 2,
+          "recoveries": 1,
+          "safe_stops": 1,
+          "reasons": {
+            "passive_pose_changed": 1
+          },
+          "episode_length_sum": 32,
+          "episode_length_histogram": {
+            "5": 1,
+            "27": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 2,
+          "episode_id": 1,
+          "frame": 27,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 1,
+          "pid": 6738,
+          "seed": 20262036,
+          "episodes": 2,
+          "resets": 2,
+          "real_steps": 32,
+          "proposals": 32,
+          "interventions": 1,
+          "recoveries": 0,
+          "safe_stops": 1,
+          "reasons": {
+            "passive_pose_changed": 1
+          },
+          "episode_length_sum": 32,
+          "episode_length_histogram": {
+            "5": 1,
+            "27": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 1,
+          "episode_id": 1,
+          "frame": 27,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 2,
+          "pid": 6739,
+          "seed": 20263045,
+          "episodes": 1,
+          "resets": 1,
+          "real_steps": 32,
+          "proposals": 32,
+          "interventions": 0,
+          "recoveries": 0,
+          "safe_stops": 0,
+          "reasons": {},
+          "episode_length_sum": 32,
+          "episode_length_histogram": {
+            "32": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 0,
+          "episode_id": 0,
+          "frame": 32,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 3,
+          "pid": 6740,
+          "seed": 20264054,
+          "episodes": 2,
+          "resets": 2,
+          "real_steps": 32,
+          "proposals": 32,
+          "interventions": 2,
+          "recoveries": 1,
+          "safe_stops": 1,
+          "reasons": {
+            "passive_pose_changed": 1
+          },
+          "episode_length_sum": 32,
+          "episode_length_histogram": {
+            "6": 1,
+            "26": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 3,
+          "episode_id": 1,
+          "frame": 26,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 4,
+          "pid": 8086,
+          "seed": 20265063,
+          "episodes": 2,
+          "resets": 2,
+          "real_steps": 32,
+          "proposals": 32,
+          "interventions": 1,
+          "recoveries": 0,
+          "safe_stops": 1,
+          "reasons": {
+            "passive_pose_changed": 1
+          },
+          "episode_length_sum": 32,
+          "episode_length_histogram": {
+            "5": 1,
+            "27": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 1,
+          "episode_id": 1,
+          "frame": 27,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 5,
+          "pid": 8087,
+          "seed": 20266072,
+          "episodes": 2,
+          "resets": 2,
+          "real_steps": 32,
+          "proposals": 32,
+          "interventions": 1,
+          "recoveries": 0,
+          "safe_stops": 1,
+          "reasons": {
+            "passive_pose_changed": 1
+          },
+          "episode_length_sum": 32,
+          "episode_length_histogram": {
+            "5": 1,
+            "27": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 1,
+          "episode_id": 1,
+          "frame": 27,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 6,
+          "pid": 8088,
+          "seed": 20267081,
+          "episodes": 2,
+          "resets": 2,
+          "real_steps": 32,
+          "proposals": 32,
+          "interventions": 2,
+          "recoveries": 1,
+          "safe_stops": 1,
+          "reasons": {
+            "passive_pose_changed": 1
+          },
+          "episode_length_sum": 32,
+          "episode_length_histogram": {
+            "5": 1,
+            "27": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 2,
+          "episode_id": 1,
+          "frame": 27,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 7,
+          "pid": 8089,
+          "seed": 20268090,
+          "episodes": 2,
+          "resets": 2,
+          "real_steps": 32,
+          "proposals": 32,
+          "interventions": 3,
+          "recoveries": 2,
+          "safe_stops": 1,
+          "reasons": {
+            "passive_pose_changed": 1
+          },
+          "episode_length_sum": 32,
+          "episode_length_histogram": {
+            "5": 1,
+            "27": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 3,
+          "episode_id": 1,
+          "frame": 27,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 8,
+          "pid": 9381,
+          "seed": 20269099,
+          "episodes": 2,
+          "resets": 2,
+          "real_steps": 32,
+          "proposals": 32,
+          "interventions": 2,
+          "recoveries": 1,
+          "safe_stops": 1,
+          "reasons": {
+            "passive_pose_changed": 1
+          },
+          "episode_length_sum": 32,
+          "episode_length_histogram": {
+            "5": 1,
+            "27": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 2,
+          "episode_id": 1,
+          "frame": 27,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 9,
+          "pid": 9382,
+          "seed": 20270108,
+          "episodes": 1,
+          "resets": 1,
+          "real_steps": 32,
+          "proposals": 32,
+          "interventions": 0,
+          "recoveries": 0,
+          "safe_stops": 0,
+          "reasons": {},
+          "episode_length_sum": 32,
+          "episode_length_histogram": {
+            "32": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 0,
+          "episode_id": 0,
+          "frame": 32,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 10,
+          "pid": 9383,
+          "seed": 20271117,
+          "episodes": 2,
+          "resets": 2,
+          "real_steps": 32,
+          "proposals": 32,
+          "interventions": 2,
+          "recoveries": 1,
+          "safe_stops": 1,
+          "reasons": {
+            "passive_pose_changed": 1
+          },
+          "episode_length_sum": 32,
+          "episode_length_histogram": {
+            "5": 1,
+            "27": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 2,
+          "episode_id": 1,
+          "frame": 27,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 11,
+          "pid": 9384,
+          "seed": 20272126,
+          "episodes": 2,
+          "resets": 2,
+          "real_steps": 32,
+          "proposals": 32,
+          "interventions": 2,
+          "recoveries": 1,
+          "safe_stops": 1,
+          "reasons": {
+            "passive_pose_changed": 1
+          },
+          "episode_length_sum": 32,
+          "episode_length_histogram": {
+            "5": 1,
+            "27": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 2,
+          "episode_id": 1,
+          "frame": 27,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 12,
+          "pid": 10701,
+          "seed": 20273135,
+          "episodes": 2,
+          "resets": 2,
+          "real_steps": 32,
+          "proposals": 32,
+          "interventions": 1,
+          "recoveries": 0,
+          "safe_stops": 1,
+          "reasons": {
+            "passive_pose_changed": 1
+          },
+          "episode_length_sum": 32,
+          "episode_length_histogram": {
+            "5": 1,
+            "27": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 1,
+          "episode_id": 1,
+          "frame": 27,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 13,
+          "pid": 10702,
+          "seed": 20274144,
+          "episodes": 1,
+          "resets": 1,
+          "real_steps": 32,
+          "proposals": 32,
+          "interventions": 0,
+          "recoveries": 0,
+          "safe_stops": 0,
+          "reasons": {},
+          "episode_length_sum": 32,
+          "episode_length_histogram": {
+            "32": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 0,
+          "episode_id": 0,
+          "frame": 32,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 14,
+          "pid": 10703,
+          "seed": 20275153,
+          "episodes": 2,
+          "resets": 2,
+          "real_steps": 32,
+          "proposals": 32,
+          "interventions": 3,
+          "recoveries": 2,
+          "safe_stops": 1,
+          "reasons": {
+            "passive_pose_changed": 1
+          },
+          "episode_length_sum": 32,
+          "episode_length_histogram": {
+            "5": 1,
+            "27": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 3,
+          "episode_id": 1,
+          "frame": 27,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 15,
+          "pid": 10704,
+          "seed": 20276162,
+          "episodes": 2,
+          "resets": 2,
+          "real_steps": 32,
+          "proposals": 32,
+          "interventions": 1,
+          "recoveries": 0,
+          "safe_stops": 1,
+          "reasons": {
+            "passive_pose_changed": 1
+          },
+          "episode_length_sum": 32,
+          "episode_length_histogram": {
+            "6": 1,
+            "26": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 2,
+          "episode_id": 1,
+          "frame": 26,
+          "dead": true,
+          "npu_plugin_loaded": false
+        }
+      ],
+      "actual_action_sources": {
+        "Policy": 487,
+        "Guide_B": 15,
+        "Constrained_B": 10
+      },
+      "distinct_takeovers": 23,
+      "safe_handbacks": 10,
+      "handback_then_actor_steps": 2,
+      "stop_reasons": {
+        "passive_pose_changed": 13
+      },
+      "restoration_checks": {
+        "parameters_exact": true,
+        "optimizers_exact": true,
+        "replays_exact": true,
+        "sampling_exact": true,
+        "rng_restored": true,
+        "pending": 0,
+        "optimizer_continuation_update": true
+      },
+      "visual_audit": {
+        "frozen_backbones_unchanged": true,
+        "backbones_eval": true,
+        "adapter_grad_norms": [
+          0.0010649967007339,
+          0.0008827476995065808,
+          0.000995154376141727
+        ],
+        "changed_tensors": {
+          "actor.": 14,
+          "critic.": 15,
+          "encoders.": 6
+        }
+      },
+      "npu": {
+        "samples": 118,
+        "utilization_mean": 20.35593220338983,
+        "utilization_peak": 99,
+        "hbm_peak_mb": 5165,
+        "allocated_peak_bytes": 1599214080
+      },
+      "gradient_norm_ranges": {
+        "train/encoder_grad_norm": [
+          0.0006814853986725211,
+          0.6999897360801697
+        ],
+        "train/actor_grad_norm": [
+          0.007465246133506298,
+          1.4514949321746826
+        ],
+        "train/critic_grad_norm": [
+          0.016986742615699768,
+          19.44508171081543
+        ]
+      },
+      "evaluations": [
+        {
+          "training_step": 512,
+          "intervention_enabled": false,
+          "episodes": [
+            {
+              "episode": 0,
+              "length": 22,
+              "success": false,
+              "completed": true,
+              "task_metrics": {
+                "first_piece_assembled": false,
+                "task": false
+              },
+              "stop_reason": "workspace_exit_B",
+              "boundary_kind": 3
+            },
+            {
+              "episode": 1,
+              "length": 22,
+              "success": false,
+              "completed": true,
+              "task_metrics": {
+                "first_piece_assembled": false,
+                "task": false
+              },
+              "stop_reason": "workspace_exit_B",
+              "boundary_kind": 3
+            }
+          ],
+          "requested_episodes": 2,
+          "complete": true,
+          "success_rate": 0.0,
+          "actual_evaluation_interactions": 44,
+          "seconds": 157.83027323614806
+        }
+      ],
+      "complete_logged_transitions": 512,
+      "partial_attempts": 0,
+      "mean_worker_step_seconds": 2.5802893094037245,
+      "intervention_steps": 25,
+      "checkpoint": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/outputs/ascend16/v2_bound_20261029b_full_official/checkpoints/final",
+      "last_loop_effective_steps_s": 1.6456144504807027
+    },
+    {
+      "tag": "v2_bound_20261029c_full_official",
+      "status": "completed",
+      "error": null,
+      "method": "full_acoserl",
+      "admission": "official",
+      "source_commit": "43073293d4d2448538a479ef2b04edff54975fd4",
+      "counters": {
+        "actual_interactions": 256,
+        "valid_real_steps": 256,
+        "partial_action_attempts": 0,
+        "warmup_real_steps": 0,
+        "critic_updates": 256,
+        "actor_updates": 256,
+        "proposals": 256,
+        "evaluation_interactions": 26,
+        "evaluation_seconds": 109.35928863286972,
+        "global_capability": {
+          "stage_counts": {
+            "A:approach_pregrasp": 0,
+            "B:approach_pregrasp": 0
+          },
+          "clean_full": 0,
+          "disable": false,
+          "episodes": 16,
+          "stage_metrics": {
+            "A:approach_pregrasp": {
+              "stage_entered": 16,
+              "stage_progressed": 16,
+              "stage_completed": 0,
+              "stage_stably_completed": 0,
+              "stage_policy_completed": 0,
+              "stage_intervention_assisted": 0
+            },
+            "B:approach_pregrasp": {
+              "stage_entered": 16,
+              "stage_progressed": 16,
+              "stage_completed": 0,
+              "stage_stably_completed": 0,
+              "stage_policy_completed": 0,
+              "stage_intervention_assisted": 0
+            }
+          }
+        },
+        "pending_update_budget": 0
+      },
+      "online_rows": 256,
+      "offline_rows": 224,
+      "dynamic_demo_rows": 0,
+      "dynamic_demo_stats": {
+        "accepted_segments": 0,
+        "accepted_rows": 0,
+        "rejected_segments": 0,
+        "rejected_rows": 0,
+        "rejected_partial_steps": 0,
+        "duplicates": 0,
+        "sampled_batches": 256,
+        "sampled_original": 32768,
+        "sampled_dynamic": 0,
+        "sampled_positive": 935,
+        "stage_rows": {}
+      },
+      "valid_steps_s": 0.9340751839545751,
+      "updates_s": 0.9340751839545751,
+      "utd_effective": 1.0,
+      "wall_seconds": 527.5221729278564,
+      "training_seconds": 274.0678741899319,
+      "timing_seconds": {
+        "inference": 1.8206257931888103,
+        "step": 43.879148421343416,
+        "reset": 0.0037114566657692194,
+        "sample": 21.730351047124714,
+        "transfer": 1.861112023005262,
+        "update": 83.21144133037888
+      },
+      "initial_actor_hash": "4b60c2775a1187a5102a7d30df3ab407b35af26b38a01f0c45cf861995fb5cc6",
+      "initial_critic_hash": "48270bf7e1e18a63f4257d9ff1697678f6bc0bf9624bf094648335bb08066d2a",
+      "all_sixteen_ready": true,
+      "startup_events": [
+        {
+          "event": "batch_start",
+          "time": 1793285953.5187182,
+          "group": 0,
+          "ids": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "event": "batch_ready",
+          "time": 1793286008.3167245,
+          "group": 0,
+          "ids": null
+        },
+        {
+          "event": "batch_start",
+          "time": 1793286008.3178647,
+          "group": 1,
+          "ids": [
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        {
+          "event": "batch_ready",
+          "time": 1793286061.374933,
+          "group": 1,
+          "ids": null
+        },
+        {
+          "event": "batch_start",
+          "time": 1793286061.3766892,
+          "group": 2,
+          "ids": [
+            8,
+            9,
+            10,
+            11
+          ]
+        },
+        {
+          "event": "batch_ready",
+          "time": 1793286114.8380358,
+          "group": 2,
+          "ids": null
+        },
+        {
+          "event": "batch_start",
+          "time": 1793286114.8393433,
+          "group": 3,
+          "ids": [
+            12,
+            13,
+            14,
+            15
+          ]
+        },
+        {
+          "event": "batch_ready",
+          "time": 1793286169.8028758,
+          "group": 3,
+          "ids": null
+        },
+        {
+          "event": "all_sixteen_ready",
+          "time": 1793286169.8070529,
+          "group": null,
+          "ids": null
+        }
+      ],
+      "workers": [
+        {
+          "env_id": 0,
+          "pid": 16411,
+          "seed": 20261027,
+          "episodes": 1,
+          "resets": 1,
+          "real_steps": 16,
+          "proposals": 16,
+          "interventions": 0,
+          "recoveries": 0,
+          "safe_stops": 0,
+          "reasons": {},
+          "episode_length_sum": 16,
+          "episode_length_histogram": {
+            "16": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 0,
+          "episode_id": 0,
+          "frame": 16,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 1,
+          "pid": 16412,
+          "seed": 20262036,
+          "episodes": 1,
+          "resets": 1,
+          "real_steps": 16,
+          "proposals": 16,
+          "interventions": 0,
+          "recoveries": 0,
+          "safe_stops": 0,
+          "reasons": {},
+          "episode_length_sum": 16,
+          "episode_length_histogram": {
+            "16": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 0,
+          "episode_id": 0,
+          "frame": 16,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 2,
+          "pid": 16413,
+          "seed": 20263045,
+          "episodes": 1,
+          "resets": 1,
+          "real_steps": 16,
+          "proposals": 16,
+          "interventions": 0,
+          "recoveries": 0,
+          "safe_stops": 0,
+          "reasons": {},
+          "episode_length_sum": 16,
+          "episode_length_histogram": {
+            "16": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 0,
+          "episode_id": 0,
+          "frame": 16,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 3,
+          "pid": 16414,
+          "seed": 20264054,
+          "episodes": 1,
+          "resets": 1,
+          "real_steps": 16,
+          "proposals": 16,
+          "interventions": 0,
+          "recoveries": 0,
+          "safe_stops": 0,
+          "reasons": {},
+          "episode_length_sum": 16,
+          "episode_length_histogram": {
+            "16": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 0,
+          "episode_id": 0,
+          "frame": 16,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 4,
+          "pid": 17738,
+          "seed": 20265063,
+          "episodes": 1,
+          "resets": 1,
+          "real_steps": 16,
+          "proposals": 16,
+          "interventions": 0,
+          "recoveries": 0,
+          "safe_stops": 0,
+          "reasons": {},
+          "episode_length_sum": 16,
+          "episode_length_histogram": {
+            "16": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 0,
+          "episode_id": 0,
+          "frame": 16,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 5,
+          "pid": 17739,
+          "seed": 20266072,
+          "episodes": 1,
+          "resets": 1,
+          "real_steps": 16,
+          "proposals": 16,
+          "interventions": 0,
+          "recoveries": 0,
+          "safe_stops": 0,
+          "reasons": {},
+          "episode_length_sum": 16,
+          "episode_length_histogram": {
+            "16": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 0,
+          "episode_id": 0,
+          "frame": 16,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 6,
+          "pid": 17740,
+          "seed": 20267081,
+          "episodes": 1,
+          "resets": 1,
+          "real_steps": 16,
+          "proposals": 16,
+          "interventions": 0,
+          "recoveries": 0,
+          "safe_stops": 0,
+          "reasons": {},
+          "episode_length_sum": 16,
+          "episode_length_histogram": {
+            "16": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 0,
+          "episode_id": 0,
+          "frame": 16,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 7,
+          "pid": 17741,
+          "seed": 20268090,
+          "episodes": 1,
+          "resets": 1,
+          "real_steps": 16,
+          "proposals": 16,
+          "interventions": 0,
+          "recoveries": 0,
+          "safe_stops": 0,
+          "reasons": {},
+          "episode_length_sum": 16,
+          "episode_length_histogram": {
+            "16": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 0,
+          "episode_id": 0,
+          "frame": 16,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 8,
+          "pid": 19042,
+          "seed": 20269099,
+          "episodes": 1,
+          "resets": 1,
+          "real_steps": 16,
+          "proposals": 16,
+          "interventions": 0,
+          "recoveries": 0,
+          "safe_stops": 0,
+          "reasons": {},
+          "episode_length_sum": 16,
+          "episode_length_histogram": {
+            "16": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 0,
+          "episode_id": 0,
+          "frame": 16,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 9,
+          "pid": 19043,
+          "seed": 20270108,
+          "episodes": 1,
+          "resets": 1,
+          "real_steps": 16,
+          "proposals": 16,
+          "interventions": 0,
+          "recoveries": 0,
+          "safe_stops": 0,
+          "reasons": {},
+          "episode_length_sum": 16,
+          "episode_length_histogram": {
+            "16": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 0,
+          "episode_id": 0,
+          "frame": 16,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 10,
+          "pid": 19044,
+          "seed": 20271117,
+          "episodes": 1,
+          "resets": 1,
+          "real_steps": 16,
+          "proposals": 16,
+          "interventions": 0,
+          "recoveries": 0,
+          "safe_stops": 0,
+          "reasons": {},
+          "episode_length_sum": 16,
+          "episode_length_histogram": {
+            "16": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 0,
+          "episode_id": 0,
+          "frame": 16,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 11,
+          "pid": 19045,
+          "seed": 20272126,
+          "episodes": 1,
+          "resets": 1,
+          "real_steps": 16,
+          "proposals": 16,
+          "interventions": 0,
+          "recoveries": 0,
+          "safe_stops": 0,
+          "reasons": {},
+          "episode_length_sum": 16,
+          "episode_length_histogram": {
+            "16": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 0,
+          "episode_id": 0,
+          "frame": 16,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 12,
+          "pid": 20368,
+          "seed": 20273135,
+          "episodes": 1,
+          "resets": 1,
+          "real_steps": 16,
+          "proposals": 16,
+          "interventions": 0,
+          "recoveries": 0,
+          "safe_stops": 0,
+          "reasons": {},
+          "episode_length_sum": 16,
+          "episode_length_histogram": {
+            "16": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 0,
+          "episode_id": 0,
+          "frame": 16,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 13,
+          "pid": 20369,
+          "seed": 20274144,
+          "episodes": 1,
+          "resets": 1,
+          "real_steps": 16,
+          "proposals": 16,
+          "interventions": 0,
+          "recoveries": 0,
+          "safe_stops": 0,
+          "reasons": {},
+          "episode_length_sum": 16,
+          "episode_length_histogram": {
+            "16": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 0,
+          "episode_id": 0,
+          "frame": 16,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 14,
+          "pid": 20370,
+          "seed": 20275153,
+          "episodes": 1,
+          "resets": 1,
+          "real_steps": 16,
+          "proposals": 16,
+          "interventions": 0,
+          "recoveries": 0,
+          "safe_stops": 0,
+          "reasons": {},
+          "episode_length_sum": 16,
+          "episode_length_histogram": {
+            "16": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 0,
+          "episode_id": 0,
+          "frame": 16,
+          "dead": true,
+          "npu_plugin_loaded": false
+        },
+        {
+          "env_id": 15,
+          "pid": 20371,
+          "seed": 20276162,
+          "episodes": 1,
+          "resets": 1,
+          "real_steps": 16,
+          "proposals": 16,
+          "interventions": 0,
+          "recoveries": 0,
+          "safe_stops": 0,
+          "reasons": {},
+          "episode_length_sum": 16,
+          "episode_length_histogram": {
+            "16": 1
+          },
+          "assisted_successes": 0,
+          "autonomous_successes": 0,
+          "intervention_steps": 0,
+          "episode_id": 0,
+          "frame": 16,
+          "dead": true,
+          "npu_plugin_loaded": false
+        }
+      ],
+      "actual_action_sources": {
+        "Policy": 256
+      },
+      "distinct_takeovers": 0,
+      "safe_handbacks": 0,
+      "handback_then_actor_steps": 0,
+      "stop_reasons": {},
+      "restoration_checks": {
+        "parameters_exact": true,
+        "optimizers_exact": true,
+        "replays_exact": true,
+        "sampling_exact": true,
+        "rng_restored": true,
+        "pending": 0,
+        "optimizer_continuation_update": true
+      },
+      "visual_audit": {
+        "frozen_backbones_unchanged": true,
+        "backbones_eval": true,
+        "adapter_grad_norms": [
+          0.0015139031456783414,
+          0.0015732398023828864,
+          0.0013364350888878107
+        ],
+        "changed_tensors": {
+          "actor.": 14,
+          "critic.": 15,
+          "encoders.": 6
+        }
+      },
+      "npu": {
+        "samples": 82,
+        "utilization_mean": 15.292682926829269,
+        "utilization_peak": 98,
+        "hbm_peak_mb": 5165,
+        "allocated_peak_bytes": 1599214080
+      },
+      "gradient_norm_ranges": {
+        "train/encoder_grad_norm": [
+          0.0014519061660394073,
+          0.6999899744987488
+        ],
+        "train/actor_grad_norm": [
+          0.0050719790160655975,
+          1.4514946937561035
+        ],
+        "train/critic_grad_norm": [
+          0.02165762148797512,
+          19.445083618164062
+        ]
+      },
+      "evaluations": [
+        {
+          "training_step": 256,
+          "intervention_enabled": false,
+          "episodes": [
+            {
+              "episode": 0,
+              "length": 13,
+              "success": false,
+              "completed": true,
+              "task_metrics": {
+                "first_piece_assembled": false,
+                "task": false
+              },
+              "stop_reason": "workspace_exit_A",
+              "boundary_kind": 3
+            },
+            {
+              "episode": 1,
+              "length": 13,
+              "success": false,
+              "completed": true,
+              "task_metrics": {
+                "first_piece_assembled": false,
+                "task": false
+              },
+              "stop_reason": "workspace_exit_A",
+              "boundary_kind": 3
+            }
+          ],
+          "requested_episodes": 2,
+          "complete": true,
+          "success_rate": 0.0,
+          "actual_evaluation_interactions": 26,
+          "seconds": 109.35928863286972
+        }
+      ],
+      "complete_logged_transitions": 256,
+      "partial_attempts": 0,
+      "mean_worker_step_seconds": 2.6190284266376693,
+      "intervention_steps": 0,
+      "checkpoint": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/outputs/ascend16/v2_bound_20261029c_full_official/checkpoints/final",
+      "last_loop_effective_steps_s": 1.6622863370573908
+    }
+  ],
+  "actor_physical_collection": {
+    "optimizer_updates": 0,
+    "real_steps": 92,
+    "partial_attempts": 0,
+    "handbacks": 52,
+    "post_handback_actor_steps": 47,
+    "post_handback_unmodified_policy_steps": 0,
+    "checkpoint": "outputs/ascend16/v2_bound_20261029c_full_official/checkpoints/final",
+    "rows_are_real": true,
+    "passed": true,
+    "official": {
+      "rows": 52,
+      "stats": {
+        "accepted_segments": 52,
+        "accepted_rows": 52,
+        "rejected_segments": 0,
+        "rejected_rows": 0,
+        "rejected_partial_steps": 0,
+        "duplicates": 0,
+        "sampled_batches": 1,
+        "sampled_original": 96,
+        "sampled_dynamic": 32,
+        "sampled_positive": 4,
+        "stage_rows": {
+          "1": 52
+        }
+      },
+      "sampling": {
+        "original": 96,
+        "dynamic": 32,
+        "positive": 4,
+        "forced_positive": 2,
+        "positive_oversampling": true,
+        "repeated_samples_are_not_new_experience": true
+      }
+    },
+    "safe_handback": {
+      "rows": 52,
+      "stats": {
+        "accepted_segments": 52,
+        "accepted_rows": 52,
+        "rejected_segments": 0,
+        "rejected_rows": 0,
+        "rejected_partial_steps": 0,
+        "duplicates": 0,
+        "sampled_batches": 1,
+        "sampled_original": 96,
+        "sampled_dynamic": 32,
+        "sampled_positive": 4,
+        "stage_rows": {
+          "1": 52
+        }
+      },
+      "sampling": {
+        "original": 96,
+        "dynamic": 32,
+        "positive": 4,
+        "forced_positive": 2,
+        "positive_oversampling": true,
+        "repeated_samples_are_not_new_experience": true
+      }
+    },
+    "online_rows": 92
+  },
+  "actor_collection_is_not_gradient_training": true,
+  "actor_collection_handback_scope": "Constrained action projections; not long recovery or unshielded policy mastery",
+  "method_paths": {
+    "plain_rlpd": {
+      "passed": true,
+      "modes": [
+        "Normal"
+      ],
+      "handback": false,
+      "actual_steps": 102,
+      "physical_writes": 0
+    },
+    "independent_window": {
+      "passed": true,
+      "modes": [
+        "Normal"
+      ],
+      "handback": false,
+      "actual_steps": 102,
+      "physical_writes": 0
+    },
+    "window_recovery": {
+      "passed": true,
+      "modes": [
+        "Normal",
+        "Recover_A"
+      ],
+      "handback": true,
+      "actual_steps": 189,
+      "physical_writes": 0
+    },
+    "full_acoserl": {
+      "passed": true,
+      "modes": [
+        "Normal",
+        "Recover_A"
+      ],
+      "handback": true,
+      "actual_steps": 189,
+      "physical_writes": 0
+    }
+  },
+  "evaluation_trajectory_hashes": {
+    "v2_bound_20261029b_full_official": {
+      "0": "6007a4f8d9342f7a35f1a321cee34376b72982bb83a75d12c776959b1dea0386",
+      "1": "6007a4f8d9342f7a35f1a321cee34376b72982bb83a75d12c776959b1dea0386"
+    },
+    "v2_bound_20261029c_full_official": {
+      "0": "4627ecefe4069b13622aee8c7f016128a8f4559c13f19415585d709df73fb4d2",
+      "1": "4627ecefe4069b13622aee8c7f016128a8f4559c13f19415585d709df73fb4d2"
+    }
+  },
+  "evaluation_initial_distribution": "canonical demo initial state; two episodes per checkpoint are deterministic repeats, not diverse initial conditions",
+  "modified_files": [
+    "configs/bimanual_autoserl/manager.json",
+    "configs/bimanual_autoserl/methods_v2/full_acoserl.json",
+    "configs/bimanual_autoserl/methods_v2/independent_window.json",
+    "configs/bimanual_autoserl/methods_v2/plain_rlpd.json",
+    "configs/bimanual_autoserl/methods_v2/window_recovery.json",
+    "configs/bimanual_autoserl/qualification_v2.json",
+    "docs/acoserl_foundation/ACCEPTANCE_V2.json",
+    "docs/acoserl_foundation/IMPLEMENTATION_V2_ZH.md",
+    "docs/acoserl_foundation/VALIDATION_V2_ZH.md",
+    "scripts/acoserl_v2/actor_stream.py",
+    "scripts/acoserl_v2/brake_actor.py",
+    "scripts/acoserl_v2/brake_probe.py",
+    "scripts/acoserl_v2/collect_results.py",
+    "scripts/acoserl_v2/contact_trace.py",
+    "scripts/acoserl_v2/method_paths.py",
+    "scripts/acoserl_v2/passive_hold_latency.py",
+    "scripts/acoserl_v2/physical_hold_domain.py",
+    "scripts/acoserl_v2/physical_local.py",
+    "scripts/acoserl_v2/publish_qualification.py",
+    "scripts/acoserl_v2/risk_physics.py",
+    "scripts/acoserl_v2/run_integration_suite.sh",
+    "scripts/acoserl_v2/upstream_oracle.py",
+    "scripts/acoserl_v2/validate_p0.py",
+    "scripts/acoserl_v2/write_evidence.py",
+    "scripts/ascend16/train.py",
+    "src/acoserl/ascend_checkpoint.py",
+    "src/acoserl/autoserl_env.py",
+    "src/acoserl/bimanual_autoserl.py",
+    "src/acoserl/contact_modes.py",
+    "src/acoserl/dynamic_demo.py",
+    "src/acoserl/global_capability.py",
+    "src/acoserl/intervention_manager.py",
+    "src/acoserl/local_recovery.py",
+    "src/acoserl/manager_v2.py",
+    "src/acoserl/parallel_autoserl.py",
+    "src/acoserl/transition_semantics.py",
+    "src/acoserl/two_point_supervisor.py"
+  ]
+}

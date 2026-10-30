@@ -1,0 +1,497 @@
+{
+  "passed": true,
+  "entries": [
+    {
+      "name": "P0_A_passive_B_s1",
+      "source": "outputs/autoserl_two_point/accepted_A_s1.json",
+      "passive_arm": "B",
+      "pose": {
+        "position": [
+          -0.10879944395920743,
+          0.1715768546483329,
+          1.0129274437411042
+        ],
+        "rotation": [
+          [
+            -0.12834337594848744,
+            0.9898243591473949,
+            -0.06144685417977512
+          ],
+          [
+            0.9915504635906821,
+            0.12689539990417764,
+            -0.026930199335666097
+          ],
+          [
+            -0.018858844165141084,
+            -0.06438396944585027,
+            -0.9977469862019864
+          ]
+        ]
+      },
+      "grasps": {
+        "base": false,
+        "piece_1": false,
+        "piece_2": false
+      },
+      "objects": {
+        "base": {
+          "position": [
+            -1.1439085112383248e-17,
+            1.1340224617162198e-16,
+            0.8189863379319957
+          ],
+          "quaternion_wxyz": [
+            1.0,
+            3.5864968473062074e-16,
+            3.4401980806475463e-18,
+            5.642622890050287e-29
+          ]
+        },
+        "piece_1": {
+          "position": [
+            -0.06308531630598607,
+            -0.209950627646012,
+            0.850975714870821
+          ],
+          "quaternion_wxyz": [
+            0.7071054825112363,
+            1.1433619109540653e-16,
+            1.05301710576376e-16,
+            0.7071080798594735
+          ]
+        },
+        "piece_2": {
+          "position": [
+            -0.21427237185439774,
+            0.17542908658717057,
+            0.8799635805058731
+          ],
+          "quaternion_wxyz": [
+            0.7071054825112363,
+            7.954343906681635e-17,
+            8.327554080720427e-17,
+            0.7071080798594735
+          ]
+        }
+      },
+      "observed_peak_eef_m": 1.1259455582530443e-06,
+      "max_linear_speed_m_s": 1e-05,
+      "max_angular_speed_rad_s": 0.0001
+    },
+    {
+      "name": "P0_A_passive_B_s2",
+      "source": "outputs/autoserl_two_point/accepted_A_s2.json",
+      "passive_arm": "B",
+      "pose": {
+        "position": [
+          -0.10879944395231787,
+          0.171576854580184,
+          1.012927443764036
+        ],
+        "rotation": [
+          [
+            -0.1283433759757708,
+            0.9898243591451966,
+            -0.06144685415821045
+          ],
+          [
+            0.9915504635861249,
+            0.12689539992847634,
+            -0.026930199388982397
+          ],
+          [
+            -0.01885884421909901,
+            -0.0643839694317653,
+            -0.9977469862018761
+          ]
+        ]
+      },
+      "grasps": {
+        "base": false,
+        "piece_1": false,
+        "piece_2": false
+      },
+      "objects": {
+        "base": {
+          "position": [
+            1.2943248902075993e-13,
+            1.4121109702553314e-14,
+            0.8189863379319957
+          ],
+          "quaternion_wxyz": [
+            1.0,
+            2.1066624286321884e-16,
+            1.5251518366674065e-16,
+            1.510885124321958e-24
+          ]
+        },
+        "piece_1": {
+          "position": [
+            -0.06308531630567019,
+            -0.20995062764725894,
+            0.8509757148708208
+          ],
+          "quaternion_wxyz": [
+            0.7071054825112363,
+            5.473691797169935e-17,
+            1.0053789470637132e-16,
+            0.7071080798594735
+          ]
+        },
+        "piece_2": {
+          "position": [
+            -0.21427237185407463,
+            0.1754290865838722,
+            0.8799635805058731
+          ],
+          "quaternion_wxyz": [
+            0.7071054825112363,
+            7.811722630750648e-17,
+            8.174516165689393e-17,
+            0.7071080798594735
+          ]
+        }
+      },
+      "observed_peak_eef_m": 1.125945604010353e-06,
+      "max_linear_speed_m_s": 1e-05,
+      "max_angular_speed_rad_s": 0.0001
+    },
+    {
+      "name": "P0_A_passive_B_s3",
+      "source": "outputs/autoserl_two_point/accepted_A_s3.json",
+      "passive_arm": "B",
+      "pose": {
+        "position": [
+          -0.10879944395768455,
+          0.17157685464812564,
+          1.012927443739503
+        ],
+        "rotation": [
+          [
+            -0.1283433759484407,
+            0.9898243591471704,
+            -0.061446854183498247
+          ],
+          [
+            0.9915504635907012,
+            0.12689539990407273,
+            -0.02693019933547333
+          ],
+          [
+            -0.018858844164478215,
+            -0.06438396944951709,
+            -0.9977469862017629
+          ]
+        ]
+      },
+      "grasps": {
+        "base": false,
+        "piece_1": false,
+        "piece_2": false
+      },
+      "objects": {
+        "base": {
+          "position": [
+            -6.1622917755173335e-18,
+            1.1732968505098123e-16,
+            0.8189863379319957
+          ],
+          "quaternion_wxyz": [
+            1.0,
+            3.551650856123125e-16,
+            3.4069727013630454e-18,
+            4.436100919564993e-29
+          ]
+        },
+        "piece_1": {
+          "position": [
+            -0.06308531630598607,
+            -0.209950627646012,
+            0.850975714870821
+          ],
+          "quaternion_wxyz": [
+            0.7071054825112363,
+            1.0470831827838813e-16,
+            1.0791471660926984e-16,
+            0.7071080798594735
+          ]
+        },
+        "piece_2": {
+          "position": [
+            -0.21427237185439774,
+            0.17542908658717057,
+            0.8799635805058731
+          ],
+          "quaternion_wxyz": [
+            0.7071054825112363,
+            8.442749400736514e-17,
+            8.682568673901596e-17,
+            0.7071080798594735
+          ]
+        }
+      },
+      "observed_peak_eef_m": 1.1311243000130794e-06,
+      "max_linear_speed_m_s": 1e-05,
+      "max_angular_speed_rad_s": 0.0001
+    },
+    {
+      "name": "P0_B_passive_A_s1",
+      "source": "outputs/autoserl_two_point/accepted_B_s1.json",
+      "passive_arm": "A",
+      "pose": {
+        "position": [
+          -0.06571925268480953,
+          -0.19975984120581045,
+          0.8889458212700214
+        ],
+        "rotation": [
+          [
+            -0.014430171462395636,
+            0.9950838432950315,
+            0.09797915576667914
+          ],
+          [
+            0.9990917697268091,
+            0.010420132819188221,
+            0.04131654022518484
+          ],
+          [
+            0.040092465822330045,
+            0.09848637289095273,
+            -0.9943304423274317
+          ]
+        ]
+      },
+      "grasps": {
+        "base": false,
+        "piece_1": true,
+        "piece_2": false
+      },
+      "objects": {
+        "base": {
+          "position": [
+            1.1570569546864912e-16,
+            1.3481177256743466e-16,
+            0.8189863379319957
+          ],
+          "quaternion_wxyz": [
+            1.0,
+            3.586711438221738e-16,
+            8.342515215916133e-19,
+            -4.49277576789429e-29
+          ]
+        },
+        "piece_1": {
+          "position": [
+            -0.06663210363584189,
+            -0.19872593463765645,
+            0.8611377815649778
+          ],
+          "quaternion_wxyz": [
+            0.7008368465399797,
+            0.014119029400691653,
+            -0.013980546768309189,
+            0.7130448175624998
+          ]
+        },
+        "piece_2": {
+          "position": [
+            -0.21427237185439774,
+            0.17542908658717057,
+            0.8799635805058731
+          ],
+          "quaternion_wxyz": [
+            0.7071054825112363,
+            7.81238388014916e-17,
+            7.870881765524941e-17,
+            0.7071080798594735
+          ]
+        }
+      },
+      "observed_peak_eef_m": 0.00012057970433235877,
+      "max_linear_speed_m_s": 1e-05,
+      "max_angular_speed_rad_s": 0.0001
+    },
+    {
+      "name": "P0_B_passive_A_s2",
+      "source": "outputs/autoserl_two_point/accepted_B_s2.json",
+      "passive_arm": "A",
+      "pose": {
+        "position": [
+          -0.06571925266661954,
+          -0.19975984121475435,
+          0.8889458212799025
+        ],
+        "rotation": [
+          [
+            -0.01443017127099498,
+            0.9950838432898804,
+            0.09797915584718671
+          ],
+          [
+            0.9990917697305371,
+            0.010420132627907435,
+            0.041316540183285344
+          ],
+          [
+            0.04009246579832633,
+            0.09848637296323978,
+            -0.9943304423212399
+          ]
+        ]
+      },
+      "grasps": {
+        "base": false,
+        "piece_1": true,
+        "piece_2": false
+      },
+      "objects": {
+        "base": {
+          "position": [
+            7.697086275957001e-17,
+            1.8679879582746026e-16,
+            0.8189863379319957
+          ],
+          "quaternion_wxyz": [
+            1.0,
+            3.6375261603934176e-16,
+            -1.3299574796260156e-18,
+            3.9595852588616134e-28
+          ]
+        },
+        "piece_1": {
+          "position": [
+            -0.06663212659109627,
+            -0.1987259486731346,
+            0.8611377592109055
+          ],
+          "quaternion_wxyz": [
+            0.7008363669445319,
+            0.014119182784784771,
+            -0.013980095052750838,
+            0.7130452947659042
+          ]
+        },
+        "piece_2": {
+          "position": [
+            -0.21427237185439774,
+            0.17542908658717057,
+            0.8799635805058731
+          ],
+          "quaternion_wxyz": [
+            0.7071054825112363,
+            7.962105560197679e-17,
+            8.5479559328259e-17,
+            0.7071080798594735
+          ]
+        }
+      },
+      "observed_peak_eef_m": 0.0001205796910192859,
+      "max_linear_speed_m_s": 1e-05,
+      "max_angular_speed_rad_s": 0.0001
+    },
+    {
+      "name": "P0_B_passive_A_s3",
+      "source": "outputs/autoserl_two_point/accepted_B_s3.json",
+      "passive_arm": "A",
+      "pose": {
+        "position": [
+          -0.065719252616838,
+          -0.1997598412177821,
+          0.888945821308766
+        ],
+        "rotation": [
+          [
+            -0.014430171085107425,
+            0.9950838433226895,
+            0.09797915554135189
+          ],
+          [
+            0.999091769734228,
+            0.010420132458254837,
+            0.04131654013681971
+          ],
+          [
+            0.04009246577325392,
+            0.09848637264969365,
+            -0.9943304423533069
+          ]
+        ]
+      },
+      "grasps": {
+        "base": false,
+        "piece_1": true,
+        "piece_2": false
+      },
+      "objects": {
+        "base": {
+          "position": [
+            -3.4299808116992385e-17,
+            1.61308897638545e-16,
+            0.8189863379319957
+          ],
+          "quaternion_wxyz": [
+            1.0,
+            3.6095225219837427e-16,
+            1.7376387690699473e-18,
+            1.616553101704552e-28
+          ]
+        },
+        "piece_1": {
+          "position": [
+            -0.06663213067138435,
+            -0.1987259362140214,
+            0.8611377737337387
+          ],
+          "quaternion_wxyz": [
+            0.7008360670862478,
+            0.014119370563779604,
+            -0.013980250764811077,
+            0.7130455827186066
+          ]
+        },
+        "piece_2": {
+          "position": [
+            -0.21427237185439774,
+            0.17542908658717057,
+            0.8799635805058731
+          ],
+          "quaternion_wxyz": [
+            0.7071054825112363,
+            8.199294346872871e-17,
+            8.661896929223046e-17,
+            0.7071080798594735
+          ]
+        }
+      },
+      "observed_peak_eef_m": 0.0001206462442197715,
+      "max_linear_speed_m_s": 1e-05,
+      "max_angular_speed_rad_s": 0.0001
+    }
+  ],
+  "source_sha256": {
+    "src/acoserl/manager_v3.py": "427d13edeeabd653747a59ceacbdce9181bfce40f33f1dbf5da1a80ca65de02b",
+    "src/acoserl/progress_guard.py": "70e36baca5f1ecc57070e8e64c3b96362d7833672f6ebc921a4f2d54393c6ef2",
+    "src/acoserl/hold_envelope.py": "7a52a2243f4719a64dc7b9f9fe129ac0db9ff9fc026fef515a5b7372d78ef1b1",
+    "src/acoserl/local_recovery.py": "5d563f55df5ed8c24f1d41495a528cb3d27c3f6b97613922040a982d35e6675c",
+    "src/acoserl/manager_v2.py": "07e94c6a509769eb8853e678e1f53ea83e381c6a5b9f760a2f5405b006f5475c",
+    "src/acoserl/contact_modes.py": "204c800c5b1a51a0c026718b27bf3a9f6a3c59c706e7dcde8b2049682b873393",
+    "src/acoserl/two_point_supervisor.py": "6f0af00a9b29f0fc8990f50e6b1b5af7f4a05668d9c311238a8a794bca084608",
+    "src/acoserl/intervention_manager.py": "aa13768e5206771416a9960653a7456d7fa5ccc69bf2655b9b8acfdf25f41af0",
+    "src/acoserl/bimanual_autoserl.py": "cf67e73261f2677e45d70cae9fdf0c5e80d344843ea6baed61aebc2da03808f0",
+    "configs/bimanual_autoserl/v1.json": "841543748e2df98f0e13a77a26c0cf69f7f42c86481d0ff2a0b66814eb909295",
+    "configs/bimanual_autoserl/recovery_points.json": "b2586d922750242dc059d62fe2d9aee651cf2ff23c04e4ef59bd622c0b1a31d4",
+    "configs/bimanual_autoserl/hold_envelope_v3r3.json": "76548296b03e206b87d0836c5d8ce1c6d106564ec0d3215e9875f63d64219e8e",
+    "configs/bimanual_autoserl/reference_trace.npz": "d7e4239184edc2c6694312a9fe7bb24f71272d6a47e8c84ac33c9c0375c2b7e9",
+    "src/acoserl/pregrasp_hold.py": "85f9efab87665ec04c19e7ef0218f812984a50c809923f1512b20be2f1cad97c"
+  },
+  "note": "Historical task-specific passive hold geometry; new baseline physical validation required before production enable",
+  "evidence": [
+    "outputs/autoserl_baseline/pregrasp_baseline_v1/window_A/result.json",
+    "outputs/autoserl_baseline/pregrasp_baseline_v1/recovery_A/result.json",
+    "outputs/autoserl_baseline/pregrasp_baseline_v1/window_B/result.json",
+    "outputs/autoserl_baseline/pregrasp_baseline_v1/recovery_B/result.json"
+  ],
+  "scope_note": "Actual four pregrasp tests; subsequent contact/release guard changes are inactive before first assembly. Current production NPU integration separately required."
+}

@@ -172,7 +172,7 @@ class InterventionManagerMixin:
         if self.mode == "Safe_Stop":
             return self._annotate(*self.refuse(), state, contact)
         coop = self.collaboration(state, contact)
-        if coop["coupled"]:
+        if coop["coupled"] and not self.contact_assessment(state,contact)["allowed"]:
             self.request_joint("measured_contact_chain")
             return self._annotate(*self.refuse(), state, contact)
         risks = [self.predicted_risk(ai, policy_action, state) for ai in range(2)]
@@ -203,7 +203,7 @@ class InterventionManagerMixin:
                 arm = ARMS[ai]
                 triggers = self.decision_stats["triggers"]
                 triggers[arm + ":" + kind] = triggers.get(arm + ":" + kind, 0) + 1
-                if coop["coupled"]:
+                if coop["coupled"] and not self.contact_assessment(state,contact)["allowed"]:
                     self.record_refusal(arm, kind, "joint_recovery_not_physically_validated")
                     if priority == 0:
                         self.request_joint("predicted_unsafe_action")

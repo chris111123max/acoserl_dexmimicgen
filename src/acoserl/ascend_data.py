@@ -17,9 +17,25 @@ def raw_row(obs,action,nxt,reward,term,trunc,env,episode,frame,source=1,metadata
  progress=m.get('auto_intervention',{}).get('indices',[0,0])
  stage=m.get('stage','unknown')
  kind,boot=boundary(term,trunc,bool(m.get('success',term)),m.get('supervisor_stop_reason'))
- for key,val in dict(action_source=6 if source==0 else source_code(mode),stage_code=STAGES.index(stage) if stage in STAGES else 0,takeover_id=m.get('takeover_id',0)).items():
+ for key,val in dict(action_source=6 if source==0 else (12 if m.get('action_source')=='DiagnosticPreparation' else source_code(mode)),stage_code=STAGES.index(stage) if stage in STAGES else 0,takeover_id=m.get('takeover_id',0)).items():
   r[key]=torch.tensor(val,dtype=torch.long)
  r['reference_progress']=torch.tensor(progress,dtype=torch.long)
+ # Three distinct normalized actions share the executed action's coordinate domain.
+ # Missing quality evidence fails closed for dynamic expert admission.
+ policy=m.get('policy_action',action)
+ proposal=m.get('intervention_action_normalized',action)
+ r['policy_action_proposed']=torch.as_tensor(policy,dtype=torch.float32).clone()
+ r['intervention_action_proposed']=torch.as_tensor(proposal,dtype=torch.float32).clone()
+ quality=m.get('task_quality',{})
+ r['quality_validated']=torch.tensor(source==0 or bool(quality.get('eligible',False)))
+ r['quality_error_before']=torch.tensor(float(quality.get('error_before_m',0.)),dtype=torch.float32)
+ r['quality_error_after']=torch.tensor(float(quality.get('error_after_m',0.)),dtype=torch.float32)
+ r['quality_handoff_wait']=torch.tensor(bool(quality.get('handoff_wait',False)))
+ r['quality_handoff_confirmed']=torch.tensor(bool(quality.get('handoff_confirmed',False)))
+ from acoserl.action_provenance import describe
+ roles=describe(int(r['action_source']),r['policy_action_proposed'].numpy(),r['action'].numpy(),
+                m.get('auto_intervention',{}).get('active_arm'),bool(r['quality_validated']))
+ for key,value in roles.items():r[key]=torch.tensor(value,dtype=torch.long if key.endswith('sources') else torch.bool)
  r['complete_physics']=torch.tensor(True)
  r['next','bootstrap_allowed']=torch.tensor(bool(m.get('bootstrap_allowed',boot)))
  r['next','boundary_kind']=torch.tensor(int(m.get('boundary_kind',kind)))

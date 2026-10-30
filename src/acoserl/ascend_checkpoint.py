@@ -38,3 +38,32 @@ def load(directory,agent,on,off,normalization,dynamic=None):
  for env in list(assembler.queues):
   for row in assembler.truncate(env):on.add(row)
  return state,assembler
+
+def tree_digest(value):
+ import hashlib
+ from collections.abc import Mapping
+ h=hashlib.sha256()
+ def visit(x):
+  if isinstance(x,torch.Tensor):
+   a=x.detach().cpu().contiguous();h.update(str((a.dtype,tuple(a.shape))).encode());h.update(a.numpy().tobytes())
+  elif isinstance(x,Mapping) or hasattr(x,'items'):
+   for k,v in sorted(x.items(),key=lambda kv:str(kv[0])):h.update(repr(k).encode());visit(v)
+  elif isinstance(x,(list,tuple)):
+   for v in x:visit(v)
+  else:h.update(repr(x).encode())
+ visit(value);return h.hexdigest()
+
+def verify_roundtrip(directory,agent,on,off,normalization,dynamic):
+ model=torch.load(Path(directory)/'model.pt',map_location='cpu',weights_only=False)
+ names=list(model['optimizer_state_dict'])
+ before=dict(parameters=tree_digest(agent.state_dict()),optimizers=tree_digest({n:getattr(agent,n).state_dict() for n in names}),online=tree_digest(on[:]),offline=tree_digest(off[:]),dynamic=tree_digest(dynamic.buffer[:]) if dynamic is not None and len(dynamic.buffer) else None)
+ sample_before=torch.cat([on.sample(128).clone(),dynamic.sample_demo(off,128) if dynamic is not None else off.sample(128).clone()],0)
+ state,assembler=load(directory,agent,on,off,normalization,dynamic)
+ restore_rng(state['rng'])
+ after=dict(parameters=tree_digest(agent.state_dict()),optimizers=tree_digest({n:getattr(agent,n).state_dict() for n in names}),online=tree_digest(on[:]),offline=tree_digest(off[:]),dynamic=tree_digest(dynamic.buffer[:]) if dynamic is not None and len(dynamic.buffer) else None)
+ assert before==after,(before,after)
+ sample_after=torch.cat([on.sample(128).clone(),dynamic.sample_demo(off,128) if dynamic is not None else off.sample(128).clone()],0)
+ assert tree_digest(sample_before)==tree_digest(sample_after),'restored sampling mismatch'
+ # Return to the exact checkpoint sampling/RNG counters before real continuation.
+ state,assembler=load(directory,agent,on,off,normalization,dynamic);restore_rng(state['rng'])
+ return state,assembler,dict(parameters_exact=True,optimizers_exact=True,replays_exact=True,sampling_exact=True,rng_restored=True,pending=assembler.pending())

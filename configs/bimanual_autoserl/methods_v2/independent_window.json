@@ -1,0 +1,75 @@
+{
+  "method": "ResFiT RLPD + Bimanual AutoSERL V1",
+  "task": "TwoArmThreePieceAssembly",
+  "demo": "demo_0",
+  "offline_transitions": 224,
+  "device": "npu:0",
+  "num_envs": 16,
+  "startup_groups": [
+    4,
+    4,
+    4,
+    4
+  ],
+  "n_step": 3,
+  "gamma": 0.99,
+  "batch_size": 256,
+  "offline_fraction": 0.5,
+  "online_capacity": 50000,
+  "seed": 20261027,
+  "warmup_real_steps": 1024,
+  "stddev": 0.1,
+  "utd": 1,
+  "utd_selection": "user_fixed_1; no UTD throughput comparison",
+  "maximum_actual_interactions": 500000,
+  "wall_limit_seconds": 36000,
+  "checkpoint_interval": 25000,
+  "evaluation_interval": 50000,
+  "evaluation_episodes": 20,
+  "evaluation_extra_workers": 1,
+  "intervention_enabled": true,
+  "passive_hold_entry_gate_enabled": true,
+  "reset_protocol": "canonical demo_0 frame0 only, at explicit episode reset",
+  "initial_weights": "fresh random initialization; no smoke or acceptance checkpoint",
+  "resume_boundary": "learner/replay/RNG restore; pending real tails truncated, all workers start NEW episodes; no mid-episode physics restore",
+  "notes": "UTD is critic updates per valid real interaction after warmup; actor updated once per such interaction. No baseline or algorithm ablations.",
+  "visual_encoder": "resnet18_spatial84",
+  "manager_config": {
+    "version": "acoserl_v2",
+    "method": "independent_window",
+    "sliding_enabled": true,
+    "safety_recovery_enabled": false,
+    "predict_workspace_risk": false,
+    "risk_margin_m": 0.01,
+    "cooldown_steps": 4,
+    "autonomy_enabled": true,
+    "stage_clean_completions": 5,
+    "full_clean_successes": 5,
+    "dynamic_demo_enabled": false,
+    "dynamic_capacity": 5000,
+    "original_demo_fraction": 1.0,
+    "carry_local": {
+      "enabled": true,
+      "qualification": "configs/bimanual_autoserl/qualification_v2.json"
+    },
+    "joint": {
+      "enabled": false,
+      "qualification": "configs/bimanual_autoserl/qualification_v2.json"
+    },
+    "admission_mode": "official",
+    "original_quota": 128,
+    "positive_quota": 2,
+    "passive_brake": {
+      "enabled": true,
+      "qualification": "configs/bimanual_autoserl/qualification_v2.json"
+    },
+    "joint_grip_shield": {
+      "enabled": true,
+      "qualification": "configs/bimanual_autoserl/qualification_v2.json"
+    }
+  },
+  "initialization": "fresh random Actor/Critic/adapters; frozen current pretrained backbone; empty Online Replay",
+  "mode": "integration",
+  "integration_steps": 64,
+  "integration_seconds": 1200
+}

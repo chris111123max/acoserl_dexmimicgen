@@ -1,0 +1,159 @@
+{
+  "collector_protocol": "autoserl_baseline_v1",
+  "passed": true,
+  "formal_training_approved": true,
+  "selected_utd": 1,
+  "selected_visual": "resnet18_spatial84",
+  "pretrained_validation_passed": true,
+  "checks": {
+    "official_core_connected": {
+      "passed": true,
+      "paths": [
+        "docs/acoserl_foundation/AUTOSERL_BASELINE_IMPLEMENTATION_ZH.md",
+        "outputs/ascend16/autoserl_baseline_npu_v1/config.json"
+      ],
+      "detail": "Official2382712 mechanisms connected to baseline supervisor; actual Recover_A/B during NPU Actor collection"
+    },
+    "real_grasp_phases_verified": {
+      "passed": true,
+      "paths": [
+        "outputs/autoserl_baseline/demo_full_safety_v10/result.json",
+        "outputs/autoserl_baseline/normal_contact_evidence.json"
+      ],
+      "detail": {
+        "A_first_grasp_post_state": 53,
+        "A_first_contact_post_state": 52,
+        "B_first_grasp_post_state": 65,
+        "B_first_contact_post_state": 64,
+        "first_assembly_post_state": 104,
+        "strict_success_post_state": 224
+      }
+    },
+    "single_demo_strict_protocol_verified": {
+      "passed": true,
+      "paths": [
+        "outputs/ascend16/autoserl_baseline_npu_v1/integration_audit.json",
+        "outputs/autoserl_baseline/demo_full_safety_v10/result.json"
+      ],
+      "detail": "Only demo_0;224original rows; strict stable3 and actual gripper release"
+    },
+    "executed_actions_replay_verified": {
+      "passed": true,
+      "paths": [
+        "outputs/ascend16/autoserl_baseline_npu_v1/integration_audit.json",
+        "outputs/acoserl_v3/physical_demo_per_arm_baseline/result.json"
+      ],
+      "detail": "Live executed actions, per-arm expert masks, actual RGB n-step endpoints, explicit historical provenance rebuild"
+    },
+    "enabled_recovery_domains_verified": {
+      "passed": true,
+      "paths": [
+        "outputs/autoserl_baseline/pregrasp_baseline_v1/window_A/result.json",
+        "outputs/autoserl_baseline/pregrasp_baseline_v1/window_B/result.json",
+        "outputs/autoserl_baseline/pregrasp_baseline_v1/recovery_A/result.json",
+        "outputs/autoserl_baseline/pregrasp_baseline_v1/recovery_B/result.json",
+        "outputs/ascend16/autoserl_baseline_npu_v1/integration_audit.json"
+      ],
+      "detail": "Only measured static-passive, empty-active pregrasp Guide/Recover domains; no general contact/carry authorization"
+    },
+    "unverified_recovery_disabled": {
+      "passed": true,
+      "paths": [
+        "configs/bimanual_autoserl/baseline.json"
+      ],
+      "detail": "carry_local,joint,passive_brake disabled; legal Actor task motion remains enabled"
+    },
+    "legal_grasp_assembly_contact_verified": {
+      "passed": true,
+      "paths": [
+        "outputs/autoserl_baseline/demo_full_safety_v10/result.json",
+        "outputs/autoserl_baseline/normal_contact_evidence.json"
+      ],
+      "detail": "Accepted full canonical demo with0projection and0state writes; diagnostic bypass excluded"
+    },
+    "original_safety_limits_verified": {
+      "passed": true,
+      "paths": [
+        "configs/bimanual_autoserl/v1.json",
+        "outputs/autoserl_baseline/normal_contact_evidence.json"
+      ],
+      "detail": "Exact thresholds equal preservation commit;2ms monitor and immutable first-piece anchor; finite legal task support transfer"
+    },
+    "npu16_real_updates_verified": {
+      "passed": true,
+      "paths": [
+        "outputs/ascend16/autoserl_baseline_npu_v1/summary.json",
+        "outputs/ascend16/autoserl_baseline_npu_v1/visual_audit.json",
+        "outputs/ascend16/autoserl_baseline_npu_v1/integration_audit.json",
+        "outputs/ascend16/autoserl_baseline_npu_v1/workers/startup.jsonl"
+      ],
+      "detail": {
+        "valid_steps": 1578,
+        "updates": 1578
+      }
+    },
+    "checkpoint_reload_update_verified": {
+      "passed": true,
+      "paths": [
+        "outputs/ascend16/autoserl_baseline_npu_v1/checkpoint_reload.json",
+        "outputs/ascend16/autoserl_baseline_npu_v1/checkpoints/final/metadata.json"
+      ],
+      "detail": {
+        "parameters_exact": true,
+        "optimizers_exact": true,
+        "replays_exact": true,
+        "sampling_exact": true,
+        "rng_restored": true,
+        "pending": 0,
+        "optimizer_continuation_update": true
+      }
+    },
+    "no_systemic_collection_deadlock": {
+      "passed": true,
+      "paths": [
+        "outputs/ascend16/autoserl_baseline_npu_v1/integration_audit.json",
+        "outputs/ascend16/autoserl_baseline_npu_v1/learning_curve.jsonl"
+      ],
+      "detail": "All16 sample, real motion/Policy/Recover present, real safe handback; no claim of learned full-task success"
+    }
+  },
+  "tested_source_sha256": {
+    "configs/ascend16/formal.json": "5d274ed897748483d4165524f57114a8b91e8d3276e3ff62638a131834d2fac0",
+    "configs/bimanual_autoserl/baseline.json": "67a176c2e4082ce1232f5491c2daac38092742e4474b95e54c34c12703c8a022",
+    "configs/bimanual_autoserl/pregrasp_hold_baseline.json": "9f6a4a8febc3fb3d8bb7a3ae61eacd136fd43e45fa364022eaf6ae008caee6d6",
+    "configs/bimanual_autoserl/recovery_points.json": "b2586d922750242dc059d62fe2d9aee651cf2ff23c04e4ef59bd622c0b1a31d4",
+    "configs/bimanual_autoserl/reference_trace.npz": "d7e4239184edc2c6694312a9fe7bb24f71272d6a47e8c84ac33c9c0375c2b7e9",
+    "configs/bimanual_autoserl/v1.json": "841543748e2df98f0e13a77a26c0cf69f7f42c86481d0ff2a0b66814eb909295",
+    "scripts/ascend16/train.py": "9934406c5bc551ee08559c974e0c8d585434f9d627152b5eb2346a94d63d86c7",
+    "src/acoserl/action_provenance.py": "cda6ef49c8fb44b6455e1d35dc1a9d1f650fd59de73a84308cacef52c8410a23",
+    "src/acoserl/ascend_checkpoint.py": "6fb22facf1cede8c616e2201c6bc27c8dfc0a69d8b3c9e44c1a6200a642ef5a0",
+    "src/acoserl/ascend_data.py": "55426310e2172f06f62459a63ef4c66c280fdd74306169c60a1aa6e4e6bfdf1a",
+    "src/acoserl/autoserl_env.py": "92f7fe88ffa93dc480ed7b645d5326e9be9490e1787f04aeaed0985b47fe4b94",
+    "src/acoserl/baseline_gate.py": "394c0417d386512bc13adaa5d3bf2703a77dd7c219875b8f443d7644da2052a7",
+    "src/acoserl/bimanual_autoserl.py": "cf67e73261f2677e45d70cae9fdf0c5e80d344843ea6baed61aebc2da03808f0",
+    "src/acoserl/collection_health.py": "8b6d6891a064fcdeed04db1f34b8a0ce011c44f2bf33ddbe5a7fe54a2d66b71e",
+    "src/acoserl/contact_modes.py": "204c800c5b1a51a0c026718b27bf3a9f6a3c59c706e7dcde8b2049682b873393",
+    "src/acoserl/dynamic_demo.py": "b4d995367b807c155b078b8f406a45ff2a5aabf6755260bce7fd5f022a4183ae",
+    "src/acoserl/hold_envelope.py": "7a52a2243f4719a64dc7b9f9fe129ac0db9ff9fc026fef515a5b7372d78ef1b1",
+    "src/acoserl/intervention_manager.py": "aa13768e5206771416a9960653a7456d7fa5ccc69bf2655b9b8acfdf25f41af0",
+    "src/acoserl/isolated_nstep.py": "cc62e2700bf30c56bd4bde831ce752214630853e38842ef8a773af63396e503e",
+    "src/acoserl/local_recovery.py": "5d563f55df5ed8c24f1d41495a528cb3d27c3f6b97613922040a982d35e6675c",
+    "src/acoserl/manager_v2.py": "07e94c6a509769eb8853e678e1f53ea83e381c6a5b9f760a2f5405b006f5475c",
+    "src/acoserl/manager_v3.py": "427d13edeeabd653747a59ceacbdce9181bfce40f33f1dbf5da1a80ca65de02b",
+    "src/acoserl/parallel_autoserl.py": "ce2073629816b2aecd543756b2fe4c2f6ddac947b333ae21a675b7863250d146",
+    "src/acoserl/pregrasp_hold.py": "85f9efab87665ec04c19e7ef0218f812984a50c809923f1512b20be2f1cad97c",
+    "src/acoserl/progress_guard.py": "70e36baca5f1ecc57070e8e64c3b96362d7833672f6ebc921a4f2d54393c6ef2",
+    "src/acoserl/transition_semantics.py": "bf2c1c8829532a2de6d06451d640be8f794d78de55568f92d832c286e6270be3",
+    "src/acoserl/two_point_supervisor.py": "6f0af00a9b29f0fc8990f50e6b1b5af7f4a05668d9c311238a8a794bca084608",
+    "src/acoserl/v3_gate.py": "d134ff372b6e5ad4fa95c09ffaedb4b99a6e5a42a46d3f8ec192e86cb639ad83"
+  },
+  "source_commit": "7d0261d407158a25d3f54b3c705df6462d08ea52",
+  "integration": "outputs/ascend16/autoserl_baseline_npu_v1/",
+  "level_A_system_integrated": true,
+  "level_B_formal_running": true,
+  "level_C_task_learned": false,
+  "scope": "Necessary single-task baseline gates only; advanced12+4 not prerequisite",
+  "source_commit_note": "Parent HEAD during dirty-tree validation; tested_source_sha256 binds exact code sealed in the subsequent implementation commit. Formal run records that commit separately.",
+  "formal_startup_status": "docs/acoserl_foundation/AUTOSERL_BASELINE_FORMAL_STATUS.json",
+  "implementation_commit": "91f9e545b6ce4f364ca872b50497d8bc265fa070"
+}

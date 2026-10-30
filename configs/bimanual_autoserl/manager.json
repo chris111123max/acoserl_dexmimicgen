@@ -1,5 +1,5 @@
 {
-  "version": "acoserl_foundation_v1",
+  "version": "acoserl_v2",
   "method": "full_acoserl",
   "sliding_enabled": true,
   "safety_recovery_enabled": true,
@@ -11,15 +11,24 @@
   "full_clean_successes": 5,
   "dynamic_demo_enabled": true,
   "dynamic_capacity": 5000,
-  "original_demo_fraction": 0.5,
+  "original_demo_fraction": 0.75,
   "carry_local": {
-    "enabled": false,
-    "validated": false,
-    "reason": "current manager has no qualified held-object controller"
+    "enabled": true,
+    "qualification": "configs/bimanual_autoserl/qualification_v2.json"
   },
   "joint": {
     "enabled": false,
-    "validated": false,
-    "reason": "no independently validated joint contact controller"
+    "qualification": "configs/bimanual_autoserl/qualification_v2.json"
+  },
+  "admission_mode": "official",
+  "original_quota": 96,
+  "positive_quota": 2,
+  "passive_brake": {
+    "enabled": true,
+    "qualification": "configs/bimanual_autoserl/qualification_v2.json"
+  },
+  "joint_grip_shield": {
+    "enabled": true,
+    "qualification": "configs/bimanual_autoserl/qualification_v2.json"
   }
 }

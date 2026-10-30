@@ -9,6 +9,19 @@ class ActionSource(IntEnum):
     Recover_B = 4
     Recover_Joint = 5
     OriginalDemo = 6
+    Recover_Carry_A = 7
+    Recover_Carry_B = 8
+    Constrained_A = 9
+    Constrained_B = 10
+    Constrained_Joint = 11
+    DiagnosticPreparation = 12
+
+TASK_INTERVENTION_SOURCES = frozenset((1,2,3,4,5,7,8))
+SAFETY_PROJECTION_SOURCES = frozenset((9,10,11))
+
+def source_family(code):
+    code=int(code)
+    return "SafetyProjection" if code in SAFETY_PROJECTION_SOURCES else ActionSource(code).name
 
 class Boundary(IntEnum):
     NONE = 0
@@ -34,13 +47,13 @@ def boundary(terminated=False, truncated=False, success=False,
         return Boundary.PARTIAL_PHYSICS, False
     if not executed:
         return Boundary.ACTION_REFUSED, False
+    if safety_reason:
+        if safety_reason.startswith(("recovery_timeout", "guide_handback_", "predicted_unsafe_action", "unqualified_dynamic", "object_contact_relative_pose", "simultaneous_high_confidence", "no_legal_projected_action")):
+            return Boundary.SUPERVISOR_STOP, False
+        return Boundary.PHYSICAL_FAILURE, False
     if success:
         assert terminated and not truncated
         return Boundary.SUCCESS, False
-    if safety_reason:
-        if safety_reason.startswith(("recovery_timeout", "guide_handback_", "predicted_unsafe_action")):
-            return Boundary.SUPERVISOR_STOP, False
-        return Boundary.PHYSICAL_FAILURE, False
     if terminated:
         return Boundary.PHYSICAL_FAILURE, False
     if truncated:

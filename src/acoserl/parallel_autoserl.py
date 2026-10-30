@@ -53,11 +53,12 @@ class AutoSERLWorker(gym.Env):
   self.scaler=ActionScaler(torch.tensor(s['effective_action_min']),torch.tensor(s['effective_action_max']),action_scale=0,min_range_per_dim=.1)
   self.bridge=InterventionBridge(self.w,self.scaler,intervention_enabled=cfg.intervention_enabled,config={**DEFAULT,'manager':cfg.manager_config or {}})
   self.action_space=gym.spaces.Box(-1,1,(14,),np.float32);self.observation_space=spaces()
-  self.episode=-1;self.frame=0;self.dead=True;self.forced=False;self.runner=None
+  self.preparing=False;self.prepared_episode=False;self.episode=-1;self.frame=0;self.dead=True;self.forced=False;self.runner=None
   if cfg.resume:
    for key in self.stats:
     if key not in ['pid','env_id','seed'] and key in cfg.resume:self.stats[key]=copy.deepcopy(cfg.resume[key])
    self.episode=int(cfg.resume['episode_id'])
+   self.bridge.manager.set_global_capability(cfg.resume.get('global_capability',{}))
    self.bridge.manager.autonomy=copy.deepcopy(cfg.resume.get('stage_autonomy',{}))
    self.bridge.manager.clean_full_episodes=int(cfg.resume.get('clean_full_episodes',0))
    self.bridge.manager.takeover_sequence=int(cfg.resume.get('takeover_sequence',0))
@@ -99,14 +100,17 @@ class AutoSERLWorker(gym.Env):
   self.w.protocol.reset();self.w.episode_steps=0
   self.guard_restore=[(self.w.env.sim,k,getattr(self.w.env.sim,k)) for k in ['set_state','set_state_from_flattened','reset']]+[(self.w.env,k,getattr(self.w.env,k)) for k in ['reset','reset_from_xml_string']]
   self.runner=ActionOnly(self.w.env);self.w.action_runner=self.runner
-  self.runner.safety=lambda c:'robot_force_limit' if c['max_robot_contact_force_N']>80 else 'dynamic_A_B_chain' if c['dynamic_A_B_coupled'] else None
-  self.bridge.manager.reset();self.frame=0;self.dead=False;self.forced=False;self.stats['resets']+=1
+  self.runner.safety=self.bridge.manager.substep_safety
+  self.prepared_episode=False;self.bridge.manager.reset();self.frame=0;self.dead=False;self.forced=False;self.stats['resets']+=1
+  self.previous_eef_positions=np.asarray([p['position'] for p in self.bridge.manager.initial_snapshot['poses']])
   self.last=self.obs(self.w._process_obs(self.w.env._get_observations(force_update=True)))
   if not hasattr(self,'canonical_observation'):self.canonical_observation={k:v.copy() for k,v in self.last.items()}
   else:
    for k,v in self.last.items():assert np.array_equal(v,self.canonical_observation[k]),'canonical observation differs: '+k
   self.event('reset_ready',episode=self.episode,seed=chosen,npu_plugin_loaded='torch_npu' in sys.modules,reset_protocol='canonical_demo0_frame0_only')
   return self.last,{'env_id':self.env_id,'episode_id':self.episode,'pid':os.getpid(),'npu_plugin_loaded':False}
+ def apply_capability(self,value):
+  self.bridge.manager.set_global_capability(value)
  def force_stop(self,ids):
   if self.env_id in ids:self.forced=True
  def checkpoint_state(self):
@@ -115,24 +119,29 @@ class AutoSERLWorker(gym.Env):
    'clean_full_episodes':self.bridge.manager.clean_full_episodes,
    'takeover_sequence':self.bridge.manager.takeover_sequence,
    'clean_successes':self.bridge.manager.clean_successes,'auto_disabled':self.bridge.manager.auto_disabled,
+   'local_recovery_context':self.bridge.manager.local.checkpoint_state() if self.bridge.manager.local is not None else None,
+   'v3_context':self.bridge.manager.v3_checkpoint_state(),
+   'global_capability':copy.deepcopy(self.bridge.manager.global_capability),
    'supervisor_snapshot':{'mode':self.bridge.manager.mode,'indices':self.bridge.manager.indices(),'cooldown':self.bridge.manager.cooldown,'steps':self.bridge.manager.steps,'events':self.bridge.manager.events,'windows':[vars(w).copy() for w in self.bridge.manager.windows],'recovery_stage':self.bridge.manager.recovery_stage,'intervention_control_steps':self.bridge.manager.intervention_control_steps}}
  def collector_cut(self,reason):
   if not self.dead:
    self.dead=True;self.stats['episodes']+=1;self.stats['episode_length_sum']+=self.frame
    hist=self.stats['episode_length_histogram'];hist[str(self.frame)]=hist.get(str(self.frame),0)+1
-   self.bridge.manager.episode_result(False,full_policy_episode=True)
+   outcome=self.bridge.manager.episode_result(False,full_policy_episode=not self.prepared_episode)
    self.event('episode_end',episode=self.episode,length=self.frame,terminated=False,truncated=True,reason=reason)
+   return dict(env_id=self.env_id,episode_id=self.episode,episode_outcome=outcome,collector_cut=True)
  def diagnostic(self):return {**copy.deepcopy(self.stats),'episode_id':self.episode,'frame':self.frame,'dead':self.dead,'npu_plugin_loaded':'torch_npu' in sys.modules}
  def step(self,action):
   from acoserl.autoserl_env import SafeStopBeforeStep
   assert not self.dead,'explicit reset required';self.stats['proposals']+=1;start=time.perf_counter();before=self.w.env.sim.data.time
-  executed=False;reward=0.;term=False;trunc=False;info={}
+  executed=False;reward=0.;term=False;trunc=False;info={};risk_state=self.last['observation.state'].tolist()
   try:
    if self.forced:raise SafeStopBeforeStep({'reason':'pressure_test_explicit_collector_cut','collector_cut':True})
    raw,reward,term,trunc,info=self.bridge.step(action);executed=True
    self.last=self.obs(raw);self.frame+=1;self.stats['real_steps']+=1
    mode=info['auto_intervention']['mode'];after=info['recovery_result']
-   if mode.startswith(('Recover_','Guide_')):self.stats['intervention_steps']+=1
+   if mode.startswith(('Recover_','Guide_','Constrained_')):self.stats['intervention_steps']+=1
+   if mode.startswith('Constrained_'):self.stats['interventions']+=1
    if mode.startswith(('Recover_','Guide_')) and info['auto_intervention'].get('recovery_step')==1:self.stats['interventions']+=1
    if after.get('handback'):self.stats['recoveries']+=1
   except SafeStopBeforeStep as error:
@@ -143,13 +152,14 @@ class AutoSERLWorker(gym.Env):
    reason=info.get('supervisor_stop_reason')
    if reason:
     self.stats['safe_stops']+=1;self.stats['reasons'][reason]=self.stats['reasons'].get(reason,0)+1
-   outcome=self.bridge.manager.episode_result(bool(info.get('success',False)),full_policy_episode=True)
+   outcome=self.bridge.manager.episode_result(bool(info.get('success',False)),full_policy_episode=not self.prepared_episode)
    self.stats['assisted_successes']+=int(outcome['assisted_success'])
    self.stats['autonomous_successes']+=int(outcome['autonomous_success'])
-   self.event('intervention_episode',episode=self.episode,**outcome,decisions=self.bridge.manager.decision_stats)
+   self.event('intervention_episode',episode=self.episode,**outcome,decisions=self.bridge.manager.decision_stats,v3_stats=copy.deepcopy(self.bridge.manager.v3_stats))
    self.event('episode_end',episode=self.episode,length=self.frame,terminated=bool(term),truncated=bool(trunc),reason=reason,stats=self.diagnostic())
-  selected={k:info.get(k) for k in ['auto_intervention','recovery_result','supervisor_stop_reason','partial_physics_step','success']}
+  selected={k:info.get(k) for k in ['auto_intervention','recovery_result','supervisor_stop_reason','partial_physics_step','success','strict_task_success','intervention_action_normalized','task_quality']}
   selected['policy_action']=np.asarray(action).tolist()
+  if self.preparing and executed:selected['diagnostic_preparation']=True
   if executed:
    selected.update(policy_action=np.asarray(action).tolist(),executed_action=info['executed_action_normalized'].numpy().tolist(),executed_action_physical=info['executed_action_physical'].tolist())
   from acoserl.bimanual_autoserl import snapshot
@@ -159,15 +169,67 @@ class AutoSERLWorker(gym.Env):
   if info.get('collector_cut'):kind,bootstrap=6,True
   decision=info.get('auto_intervention',{})
   payload={'stage':decision.get('stage','unknown'),'takeover_id':decision.get('takeover_id',0),
-   'action_source':decision.get('mode','Normal') if executed else 'Rejected',
+   'action_source':('Policy' if decision.get('mode','Normal')=='Normal' else decision['mode']) if executed else 'Rejected',
    'complete_physics':executed,'boundary_kind':int(kind),'bootstrap_allowed':bootstrap,
    'env_id':self.env_id,'episode_id':self.episode,'frame':self.frame-1 if executed else self.frame,'executed':executed,
    'physics_time_advanced':float(self.w.env.sim.data.time-before),'step_seconds':time.perf_counter()-start,'task_metrics':task_metrics,'supervisor_objects':supervision_state['objects'],'supervisor_grasps':supervision_state['actual_grasps'],'eef_positions':[p['position'].tolist() for p in supervision_state['poses']],
    'eef_rotations':[p['rotation'].tolist() for p in supervision_state['poses']],
    'gripper_commands':[r.gripper['right'].current_action.tolist() for r in self.w.env.robots],
-   'supervisor_contacts':self.bridge.manager.contacts.read(),**selected}
+   'supervisor_contacts':self.bridge.manager.contacts.read(),'episode_outcome':getattr(self.bridge.manager,'last_episode_outcome',None) if term or trunc else None,**selected}
+  if self.preparing and payload['action_source']=='Policy':payload['action_source']='DiagnosticPreparation'
+  payload['prepared_episode']=self.prepared_episode
+  from acoserl.action_provenance import describe
+  from acoserl.transition_semantics import source_code
+  if executed:
+   roles=describe(12 if payload['action_source']=='DiagnosticPreparation' else source_code(decision.get('mode','Normal')),action,payload['executed_action'],
+                  decision.get('active_arm'),bool((payload.get('task_quality') or {}).get('eligible')))
+   payload['arm_control']=roles
+  positions=np.asarray(payload['eef_positions'])
+  motion=np.linalg.norm(positions-self.previous_eef_positions,axis=1)
+  payload['eef_translation_m']=motion.tolist();payload['nonzero_physical_motion']=bool(executed and np.any(motion>1e-5))
+  self.previous_eef_positions=positions.copy()
   self.event('step',**{k:v for k,v in payload.items() if k!='env_id'},reward=float(reward),terminated=bool(term),truncated=bool(trunc))
+  if not executed or any(r.get('risk') for r in decision.get('policy_risks',[])):
+   risk_row=dict(env_id=self.env_id,episode_id=self.episode,frame=payload['frame'],state_before=risk_state,policy_action=np.asarray(action).tolist(),executed_action=payload.get('executed_action'),risk=decision.get('policy_risks'),reason=payload.get('supervisor_stop_reason'),complete_physics=executed,partial=payload.get('partial_physics_step'),source=payload['action_source'])
+   with (self.directory/f'env{self.env_id:02d}_risks.jsonl').open('a') as f:f.write(json.dumps(risk_row)+'\n')
   return self.last,float(reward),bool(term),bool(trunc),{'payload':json.dumps(payload,default=lambda x:x.tolist() if hasattr(x,'tolist') else str(x))}
+ def prepare_pregrasp(self,plans):
+  """Integration-only real fixture actions, all returned to Online with provenance.
+
+  Starts at canonical0; never changes physical state or Actor observation shape.
+  This is not a successful policy episode and is forbidden in formal training.
+  """
+  plan=plans.get(self.env_id)
+  if plan is None:return None
+  assert plan['purpose']=='bounded_integration' and self.frame==0 and not self.dead
+  from acoserl.bimanual_autoserl import snapshot
+  from common import servo
+  arm=plan['arm'];ai='AB'.index(arm);prefix=30 if ai==0 else 58
+  m=self.bridge.manager;enabled=m.cfg['intervention_enabled'];m.cfg['intervention_enabled']=False
+  self.preparing=True;self.prepared_episode=True;records=[]
+  def execute(physical):
+   old={k:v.copy() for k,v in self.last.items()}
+   action=self.scaler.scale(self.torch.tensor(physical,dtype=self.torch.float32)).numpy()
+   nxt,reward,term,trunc,info=self.step(action);payload=json.loads(info['payload'])
+   assert payload['executed'] and not term and not trunc,payload
+   records.append(dict(obs=old,action=payload['executed_action'],next_obs={k:v.copy() for k,v in nxt.items()},reward=reward,terminated=term,truncated=trunc,metadata=payload))
+  try:
+   for action in self.demo['actions'][:prefix]:execute(action)
+   state=snapshot(self.w.env);targets=copy.deepcopy(state['poses'])
+   grips=[1. if any(state['actual_grasps'][a].values()) else -1. for a in 'AB']
+   tangent=m.positions[prefix+1,ai]-m.positions[prefix,ai]
+   targets[ai]['position']+=.003*tangent/max(np.linalg.norm(tangent),1e-9)
+   for _ in range(100):execute(servo(self.w.env,targets,grips,max_position_step=.006,position_gain=2))
+   m.reset((prefix,prefix))
+   # Actual stationary observations, not fabricated stagnation history.
+   for _ in range(20):
+    execute(servo(self.w.env,targets,grips,max_position_step=.006,position_gain=2))
+    now=snapshot(self.w.env)
+    for j in range(2):m.window_measure(j,now)
+   for key in m.episode_touched:m.episode_touched[key]=True
+   self.event('bounded_preparation_complete',arm=arm,actual_controls=len(records),canonical_prefix=prefix,policy_episode=False)
+   return dict(env_id=self.env_id,records=records,observation={k:v.copy() for k,v in self.last.items()},hold_gate=m.passive_hold_entry(ai,snapshot(self.w.env)))
+  finally:self.preparing=False;m.cfg['intervention_enabled']=enabled
  def release_guard(self):
   assert self.runner.physical_writes_attempted==0
   for obj,key,method in self.guard_restore:setattr(obj,key,method)
@@ -211,9 +273,17 @@ class FourByFour:
    obs,_=v.reset_wait(timeout=300)
    for k in self.observation:self.observation[k][g*4:g*4+4]=obs[k]
   return self.observation
+ def prepare_pregrasp(self,plans):
+  results=[d for v in self.groups for d in v.call('prepare_pregrasp',plans) if d is not None]
+  for item in results:
+   for key,value in item['observation'].items():self.observation[key][item['env_id']]=value
+  self.record('bounded_diagnostic_preparation',workers=[{k:v for k,v in r.items() if k not in ('records','observation')} for r in results],actual_controls=sum(len(r['records']) for r in results))
+  return results
+ def apply_capability(self,value):
+  for v in self.groups:v.call('apply_capability',value)
  def checkpoint_states(self):return [d for v in self.groups for d in v.call('checkpoint_state')]
  def cut_all(self,reason):
-  for v in self.groups:v.call('collector_cut',reason)
+  return [d for v in self.groups for d in v.call('collector_cut',reason) if d is not None]
  def diagnostics(self):return [d for v in self.groups for d in v.call('diagnostic')]
  def force_stop(self,ids):
   for v in self.groups:v.call('force_stop',ids)

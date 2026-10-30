@@ -1,0 +1,159 @@
+{
+  "version": "acoserl_v2_empirical_qualified_domains",
+  "carry_local": {
+    "passed": true,
+    "controller_sha256": "5d563f55df5ed8c24f1d41495a528cb3d27c3f6b97613922040a982d35e6675c",
+    "requires_both_holding": true,
+    "reference_index": 80,
+    "target_poses": {
+      "A": {
+        "position": [
+          -0.02018249199148427,
+          -0.14250652139935543,
+          0.9544117789844696
+        ],
+        "rotation": [
+          [
+            0.01821968413143551,
+            0.9942492339981601,
+            0.10552963472039631
+          ],
+          [
+            0.9948052744709159,
+            -0.028599348000041134,
+            0.0976961779130376
+          ],
+          [
+            0.10015242880227157,
+            0.10320144373041541,
+            -0.9896054532069644
+          ]
+        ]
+      },
+      "B": {
+        "position": [
+          -0.13651417269463012,
+          0.23185297070715846,
+          1.015643306793635
+        ],
+        "rotation": [
+          [
+            -0.12256766077063619,
+            0.9915576752203595,
+            -0.04231483480774311
+          ],
+          [
+            0.9911835624430722,
+            0.120136841541986,
+            -0.05587740909323226
+          ],
+          [
+            -0.050322103253649296,
+            -0.04879053203141037,
+            -0.9975405605328626
+          ]
+        ]
+      }
+    },
+    "direct_hold_max_speed": {
+      "A": 0.0025178405006009,
+      "B": 0.0036599429523840967
+    },
+    "capture_position_max": {
+      "A": 0.00503448157800226,
+      "B": 0.005282967578138724
+    },
+    "capture_rotation_max": {
+      "A": 0.0008386895227834582,
+      "B": 0.0005816034485284279
+    },
+    "per_arm": {
+      "A": {
+        "passed": true,
+        "trials": 12,
+        "object_peak_m": 0.00026535291300285366,
+        "capture_position_max": 0.00503448157800226,
+        "capture_rotation_max": 0.0008386895227834582,
+        "entry_speed_max": 0.0025178405006009,
+        "requires_both_holding": true,
+        "shield_speed_max": 0.13851200826856885,
+        "paths": [
+          "outputs/acoserl_v2/local_physics_v3/Carry_A_0.json",
+          "outputs/acoserl_v2/local_physics_v3/Carry_A_1.json",
+          "outputs/acoserl_v2/local_physics_v3/Carry_A_2.json",
+          "outputs/acoserl_v2/local_physics_v3/Carry_A_3.json",
+          "outputs/acoserl_v2/local_physics_v3/Carry_A_4.json",
+          "outputs/acoserl_v2/local_physics_v3/Carry_A_5.json",
+          "outputs/acoserl_v2/hold_domain_v1/Carry_A_0.json",
+          "outputs/acoserl_v2/hold_domain_v1/Carry_A_1.json",
+          "outputs/acoserl_v2/hold_domain_v1/Carry_A_2.json",
+          "outputs/acoserl_v2/hold_domain_v1/Carry_A_3.json",
+          "outputs/acoserl_v2/hold_domain_v1/Carry_A_4.json",
+          "outputs/acoserl_v2/hold_domain_v1/Carry_A_5.json"
+        ]
+      },
+      "B": {
+        "passed": true,
+        "trials": 12,
+        "object_peak_m": 0.00017258677860370347,
+        "capture_position_max": 0.005281405792315756,
+        "capture_rotation_max": 0.0005768616000158779,
+        "entry_speed_max": 0.0036599429523840967,
+        "requires_both_holding": true,
+        "shield_speed_max": 0.12800981121400232,
+        "paths": [
+          "outputs/acoserl_v2/local_physics_v3/Carry_B_0.json",
+          "outputs/acoserl_v2/local_physics_v3/Carry_B_1.json",
+          "outputs/acoserl_v2/local_physics_v3/Carry_B_2.json",
+          "outputs/acoserl_v2/local_physics_v3/Carry_B_3.json",
+          "outputs/acoserl_v2/local_physics_v3/Carry_B_4.json",
+          "outputs/acoserl_v2/local_physics_v3/Carry_B_5.json",
+          "outputs/acoserl_v2/hold_domain_v1/Carry_B_0.json",
+          "outputs/acoserl_v2/hold_domain_v1/Carry_B_1.json",
+          "outputs/acoserl_v2/hold_domain_v1/Carry_B_2.json",
+          "outputs/acoserl_v2/hold_domain_v1/Carry_B_3.json",
+          "outputs/acoserl_v2/hold_domain_v1/Carry_B_4.json",
+          "outputs/acoserl_v2/hold_domain_v1/Carry_B_5.json"
+        ]
+      }
+    },
+    "excluded": "passive empty handback failed; all other reference neighborhoods unqualified"
+  },
+  "passive_brake": {
+    "passed": true,
+    "controller_sha256": "5d563f55df5ed8c24f1d41495a528cb3d27c3f6b97613922040a982d35e6675c",
+    "speed_intervals": {
+      "B": [
+        0.063793366044585,
+        0.07302364785331766
+      ]
+    },
+    "trials": 12,
+    "object_peak_m": 0.0013823229590543317,
+    "capture_position_max": 0.005282967578138724,
+    "capture_rotation_max": 0.0005816034485284279,
+    "entry_speed_max": 0.07302364785331766,
+    "requires_both_holding": true,
+    "shield_speed_max": 0.15020358448309046,
+    "excluded": "active A braking and all other speed/phase domains"
+  },
+  "joint": {
+    "passed": false,
+    "controller_sha256": "5d563f55df5ed8c24f1d41495a528cb3d27c3f6b97613922040a982d35e6675c",
+    "mode": "B second-insertion vertical 3mm unload; A completed and held static",
+    "trials": 12,
+    "passed_trials": 11,
+    "failed_cases": [
+      "outputs/acoserl_v2/local_physics_v3/Contact_B_6.json"
+    ],
+    "reason": "requires all 12 complete physical+Actor handback trials; no general coupled recovery"
+  },
+  "joint_grip_shield": {
+    "passed": true,
+    "controller_sha256": "07e94c6a509769eb8853e678e1f53ea83e381c6a5b9f760a2f5405b006f5475c",
+    "max_speed_m_s": 0.15020358448309046,
+    "domain": "independent correct two-object grasps, >=10 stable grasp steps; only retain both closed gripper commands; Actor pose commands unchanged except workspace clipping",
+    "not_a_coupled_recovery": true
+  },
+  "formal_training_approved": false
+}

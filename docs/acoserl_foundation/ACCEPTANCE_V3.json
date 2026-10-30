@@ -1,0 +1,184 @@
+{
+  "source_commit_verified": true,
+  "contact_failure_reproduced": true,
+  "contact_failure_root_cause_fixed": false,
+  "first_piece_progress_protected": false,
+  "handoff_protocol_verified": false,
+  "contact_recovery_12_of_12_passed": false,
+  "contact_actor_continuation_verified": false,
+  "independent_contact_cases_verified": false,
+  "passive_hold_prediction_verified": false,
+  "safety_thresholds_unchanged": true,
+  "dynamic_demo_provenance_verified": false,
+  "safety_projection_excluded_from_demo": true,
+  "nstep_checkpoint_verified": false,
+  "real_actor_intervention_verified": false,
+  "npu_16env_integration_verified": false,
+  "collector_protocol": "acoserl_v3",
+  "passed": false,
+  "formal_training_approved": false,
+  "implementation_commit": "200e96bf6814db2e8db4e0bac701520745e858c5",
+  "tested_source_sha256": {
+    "src/acoserl/dynamic_demo.py": "1b8ae7612932a155f64bd7cf06e0583eaacd7e38f3d61b263806ff39e737a440",
+    "src/acoserl/transition_semantics.py": "1804dc343b930d3accf07f542f5847ddcf5a3a0c87a779ffbdc5841e586aab59",
+    "scripts/acoserl_v3/reproduce_contact_failure.py": "677384960d81ebe520400995c83a10a2472d9c27d88c34754c545cb1800e8155",
+    "scripts/acoserl_v3/audit_v2_demo_sources.py": "4ef72aa268820607a8305d9a50f866439814c9f46ff364d92fb3814c00ab39e7",
+    "scripts/acoserl_v3/validate_data.py": "a77f681a66c9af0f728304e6ae43272a9c350a02e0a2895b6689e94f5f5d996c"
+  },
+  "checks": {
+    "source_commit_verified": {
+      "passed": true,
+      "status": "verified_partial_round1",
+      "paths": [
+        "src/acoserl/dynamic_demo.py",
+        "src/acoserl/transition_semantics.py",
+        "scripts/acoserl_v3/reproduce_contact_failure.py",
+        "scripts/acoserl_v3/audit_v2_demo_sources.py",
+        "scripts/acoserl_v3/validate_data.py"
+      ],
+      "parameters": {
+        "commit": "200e96bf6814db2e8db4e0bac701520745e858c5",
+        "sha256": {
+          "src/acoserl/dynamic_demo.py": "1b8ae7612932a155f64bd7cf06e0583eaacd7e38f3d61b263806ff39e737a440",
+          "src/acoserl/transition_semantics.py": "1804dc343b930d3accf07f542f5847ddcf5a3a0c87a779ffbdc5841e586aab59",
+          "scripts/acoserl_v3/reproduce_contact_failure.py": "677384960d81ebe520400995c83a10a2472d9c27d88c34754c545cb1800e8155",
+          "scripts/acoserl_v3/audit_v2_demo_sources.py": "4ef72aa268820607a8305d9a50f866439814c9f46ff364d92fb3814c00ab39e7",
+          "scripts/acoserl_v3/validate_data.py": "a77f681a66c9af0f728304e6ae43272a9c350a02e0a2895b6689e94f5f5d996c"
+        }
+      },
+      "summary": "已提交源码与实际执行验证时源码一致。"
+    },
+    "contact_failure_reproduced": {
+      "passed": true,
+      "status": "verified_partial_round1",
+      "paths": [
+        "outputs/acoserl_v3/original_contact_b6_v2/result.json",
+        "outputs/acoserl_v3/original_contact_b6_v2/control_trace.json",
+        "outputs/acoserl_v3/original_contact_b6_v2/substeps.json"
+      ],
+      "parameters": {
+        "original_case": "Contact_B_6",
+        "real_control_steps": 284,
+        "substep_seconds": 0.002
+      },
+      "summary": "原动作、末端位姿逐步精确一致，第284控制步再次触发completed_piece1_displaced。"
+    },
+    "contact_failure_root_cause_fixed": {
+      "passed": false,
+      "status": "pending",
+      "paths": [],
+      "parameters": {},
+      "summary": "尚未完成V3强制验收；不以V2结果代替。"
+    },
+    "first_piece_progress_protected": {
+      "passed": false,
+      "status": "pending",
+      "paths": [],
+      "parameters": {},
+      "summary": "尚未完成V3强制验收；不以V2结果代替。"
+    },
+    "handoff_protocol_verified": {
+      "passed": false,
+      "status": "pending",
+      "paths": [],
+      "parameters": {},
+      "summary": "尚未完成V3强制验收；不以V2结果代替。"
+    },
+    "contact_recovery_12_of_12_passed": {
+      "passed": false,
+      "status": "pending",
+      "paths": [],
+      "parameters": {},
+      "summary": "尚未完成V3强制验收；不以V2结果代替。"
+    },
+    "contact_actor_continuation_verified": {
+      "passed": false,
+      "status": "pending",
+      "paths": [],
+      "parameters": {},
+      "summary": "尚未完成V3强制验收；不以V2结果代替。"
+    },
+    "independent_contact_cases_verified": {
+      "passed": false,
+      "status": "pending",
+      "paths": [],
+      "parameters": {},
+      "summary": "尚未完成V3强制验收；不以V2结果代替。"
+    },
+    "passive_hold_prediction_verified": {
+      "passed": false,
+      "status": "pending",
+      "paths": [],
+      "parameters": {},
+      "summary": "尚未完成V3强制验收；不以V2结果代替。"
+    },
+    "safety_thresholds_unchanged": {
+      "passed": true,
+      "status": "verified_partial_round1",
+      "paths": [
+        "configs/bimanual_autoserl/v1.json",
+        "configs/ascend16/formal.json"
+      ],
+      "parameters": {
+        "force_N": 80,
+        "passive_eef_m": 0.002,
+        "passive_object_m": 0.003,
+        "protected_piece1_m": 0.002
+      },
+      "summary": "安全阈值与正式超参数文件相对V2没有修改。"
+    },
+    "dynamic_demo_provenance_verified": {
+      "passed": false,
+      "status": "pending",
+      "paths": [
+        "outputs/acoserl_v3/provenance_audit_v1/result.json"
+      ],
+      "parameters": {},
+      "summary": "历史来源和动作逐字段核对通过；新物理Guide/Recover质量、三段动作链与交还后任务进展验收待完成。"
+    },
+    "safety_projection_excluded_from_demo": {
+      "passed": true,
+      "status": "verified_partial_round1",
+      "paths": [
+        "outputs/acoserl_v3/provenance_audit_v1/result.json",
+        "outputs/acoserl_v3/data_contracts_v2/result.json"
+      ],
+      "parameters": {
+        "historical_complete_rows": 92,
+        "projection_rows": 52,
+        "admission_modes": 2,
+        "quota_combinations": 18
+      },
+      "summary": "历史真实投影样本在两个V3接纳模式均排除；旧污染协议重载被拒绝。尚未证明全部任务纠偏质量规则。"
+    },
+    "nstep_checkpoint_verified": {
+      "passed": false,
+      "status": "pending",
+      "paths": [
+        "outputs/acoserl_v3/data_contracts_v2/result.json"
+      ],
+      "parameters": {},
+      "summary": "18组合、投影断段和数据采样重载契约通过；V3真实NPU更新与整模型checkpoint验证待完成。"
+    },
+    "real_actor_intervention_verified": {
+      "passed": false,
+      "status": "pending",
+      "paths": [],
+      "parameters": {},
+      "summary": "尚未完成V3强制验收；不以V2结果代替。"
+    },
+    "npu_16env_integration_verified": {
+      "passed": false,
+      "status": "pending",
+      "paths": [],
+      "parameters": {},
+      "summary": "尚未完成V3强制验收；不以V2结果代替。"
+    }
+  },
+  "updated_at": "2026-10-30T00:43:56.154015+08:00",
+  "automation_id": "aco-serl-v3",
+  "stage": "first scheduled execution; partial implementation",
+  "new_rl_training_effective_steps": 0,
+  "new_rl_actor_updates": 0,
+  "new_rl_critic_updates": 0
+}

@@ -1,0 +1,1414 @@
+{
+  "integration_summary": {
+    "status": "completed",
+    "config": {
+      "method": "ResFiT RLPD + Bimanual AutoSERL V1",
+      "task": "TwoArmThreePieceAssembly",
+      "demo": "demo_0",
+      "offline_transitions": 224,
+      "device": "npu:0",
+      "num_envs": 16,
+      "startup_groups": [
+        4,
+        4,
+        4,
+        4
+      ],
+      "n_step": 3,
+      "gamma": 0.99,
+      "batch_size": 256,
+      "offline_fraction": 0.5,
+      "online_capacity": 2048,
+      "seed": 20261027,
+      "warmup_real_steps": 0,
+      "stddev": 0.1,
+      "utd": 1,
+      "utd_selection": "user_fixed_1; no UTD throughput comparison",
+      "maximum_actual_interactions": 2016,
+      "wall_limit_seconds": 1800,
+      "checkpoint_interval": 25000,
+      "evaluation_interval": 50000,
+      "evaluation_episodes": 20,
+      "evaluation_extra_workers": 1,
+      "intervention_enabled": true,
+      "passive_hold_entry_gate_enabled": true,
+      "reset_protocol": "canonical demo_0 frame0 only, at explicit episode reset",
+      "initial_weights": "verified frozen public pretrained visual backbone; fresh random Actor/Critic/adapters; empty online replay; no smoke/old RL checkpoint",
+      "resume_boundary": "learner/replay/RNG restore; pending real tails truncated, all workers start NEW episodes; no mid-episode physics restore",
+      "notes": "UTD is critic updates per valid real interaction after warmup; actor updated once per such interaction. No baseline or algorithm ablations.",
+      "purpose": "integration",
+      "visual_encoder": "resnet18_spatial84",
+      "manager_config": {
+        "version": "autoserl_baseline_v1",
+        "method": "full_acoserl",
+        "sliding_enabled": true,
+        "safety_recovery_enabled": true,
+        "predict_workspace_risk": true,
+        "risk_margin_m": 0.01,
+        "cooldown_steps": 4,
+        "autonomy_enabled": true,
+        "stage_clean_completions": 5,
+        "full_clean_successes": 5,
+        "dynamic_demo_enabled": true,
+        "dynamic_capacity": 5000,
+        "original_demo_fraction": 0.75,
+        "carry_local": {
+          "enabled": false,
+          "reason": "retained as bounded physical prototype; not required for baseline launch"
+        },
+        "joint": {
+          "enabled": false,
+          "reason": "advanced contact recovery is outside this baseline"
+        },
+        "admission_mode": "official",
+        "original_quota": 96,
+        "positive_quota": 2,
+        "passive_brake": {
+          "enabled": false,
+          "reason": "new baseline has no production qualification for this optional mode"
+        },
+        "joint_grip_shield": {
+          "enabled": true,
+          "qualification": "configs/bimanual_autoserl/qualification_v2.json"
+        },
+        "v3_enabled": true,
+        "baseline_mode": true,
+        "development_validation": false,
+        "enabled_baseline_modes": [
+          "Guide_A",
+          "Guide_B",
+          "Recover_A",
+          "Recover_B"
+        ],
+        "pregrasp_hold_qualification": "configs/bimanual_autoserl/pregrasp_hold_baseline.json"
+      },
+      "integration_diagnostic_pregrasp": true,
+      "collector_protocol": "autoserl_baseline_v1",
+      "source_commit": "7d0261d407158a25d3f54b3c705df6462d08ea52",
+      "runtime_versions": {
+        "python": "3.10.20",
+        "torch": "2.3.1",
+        "torch_npu": "2.3.1",
+        "mujoco": "3.2.3"
+      },
+      "task_metric_counts_are_legacy_step_occurrences": true,
+      "supervisor_config": {
+        "intervention_enabled": true,
+        "trigger_position_m": 0.02,
+        "exit_position_m": 0.005,
+        "exit_rotation_rad": 0.02,
+        "stable_exit_steps": 3,
+        "max_recovery_steps": 350,
+        "cooldown_steps": 4,
+        "object_window_position_m": 0.012,
+        "object_window_rotation_rad": 0.15,
+        "passive_position_drift_m": 0.002,
+        "passive_rotation_drift_rad": 0.03,
+        "passive_object_position_drift_m": 0.003,
+        "passive_object_rotation_drift_rad": 0.035,
+        "base_drift_m": 0.001,
+        "robot_force_stop_N": 80,
+        "position_command_cap_m": 0.01,
+        "rotation_command_cap_rad": 0.02,
+        "position_gain": 2.0,
+        "rotation_gain": 1.0,
+        "stagnation_window": 20,
+        "stagnation_motion_m": 0.005,
+        "strict_success_stable_steps": 3,
+        "direction_epsilon_m": 1e-06,
+        "direction_cosine_min": 0.0,
+        "active_object_exit_position_m": 0.006,
+        "active_object_exit_rotation_rad": 0.1,
+        "assembled_object_drift_m": 0.002,
+        "assembled_object_rotation_drift_rad": 0.035,
+        "placed_object_linear_speed_m_s": 0.01,
+        "placed_object_angular_speed_rad_s": 0.1,
+        "placed_support_weight_fraction": 0.5,
+        "termination_intervention_steps": 10,
+        "fixed_initial_state": true,
+        "p0_alignment_m": 0.001,
+        "free_workspace_margin_m": 0.12,
+        "window_rule": "L = P1-P0; trailing window endpoint starts at 0; advance per actual non-intervened control step; task-event caps",
+        "return_path_mode": "empty gripper only; elevated waypoints; original hold gates and substep contact monitoring; object-pose-consistent",
+        "stable_grasp_window_steps": 10,
+        "relative_grasp_motion_m": 0.0005,
+        "release_settle_max_steps": 3,
+        "replay_tracking": "original active-arm action plus bounded OSC pose-error feedback at recorded pre-action state; original gripper action retained",
+        "passive_hold_entry_gate_enabled": true
+      },
+      "recovery_points": {
+        "task": "TwoArmThreePieceAssembly",
+        "demo": "demo_0",
+        "recorded_actions": 229,
+        "recorded_states": 229,
+        "reference_states": 230,
+        "reference_path": "configs/bimanual_autoserl/reference_trace.npz",
+        "arms": {
+          "A": {
+            "object": "piece_1",
+            "p0": 30,
+            "p1": 57,
+            "window_length": 27,
+            "first_contact": 52,
+            "first_grasp": 53,
+            "validated": true,
+            "basis": "Revised P0 before closure and before any actual target contacts, collision-enabled geometry distance >20mm in measured prefix; P1 has three closed-command true-grasp states and <1mm relative translation drift. P0 return/replay validation required. Controlled real P0 return/replay/handback and normalized image bridge now passed; later assembly/joint intervals remain unvalidated.",
+            "geometry_evidence": {
+              "minimum_collision_enabled_distance": [
+                0.022402227415929246,
+                "gripper0_right_finger1_pad_collision",
+                "piece_1_2_1_1"
+              ],
+              "raw_contacts": []
+            },
+            "validation_evidence": {
+              "controlled_cases": [
+                "outputs/autoserl_two_point/accepted_A_s1.json",
+                "outputs/autoserl_two_point/accepted_A_s2.json",
+                "outputs/autoserl_two_point/accepted_A_s3.json"
+              ],
+              "image_scaler_bridge": "outputs/autoserl_two_point/bounded_bridge_A/result.json",
+              "domain": "empty active gripper; target object at measured pick pose; no active contact/coupling; verified quasistatic passive hold; elevated corridor check; physical drift monitored every control step. Not a global path safety certificate."
+            },
+            "first_close_action": 45,
+            "first_release_action": 149
+          },
+          "B": {
+            "object": "piece_2",
+            "p0": 38,
+            "p1": 70,
+            "window_length": 32,
+            "first_contact": 64,
+            "first_grasp": 65,
+            "validated": true,
+            "basis": "Revised P0 before closure and before any actual target contacts, collision-enabled geometry distance >20mm in measured prefix; P1 has three closed-command true-grasp states and <1mm relative translation drift. P0 return/replay validation required. Controlled real P0 return/replay/handback and normalized image bridge now passed; later assembly/joint intervals remain unvalidated.",
+            "geometry_evidence": {
+              "minimum_collision_enabled_distance": [
+                0.021989930080354103,
+                "gripper1_right_finger2_collision",
+                "piece_2_3_1_1"
+              ],
+              "raw_contacts": []
+            },
+            "validation_evidence": {
+              "controlled_cases": [
+                "outputs/autoserl_two_point/accepted_B_s1.json",
+                "outputs/autoserl_two_point/accepted_B_s2.json",
+                "outputs/autoserl_two_point/accepted_B_s3.json"
+              ],
+              "image_scaler_bridge": "outputs/autoserl_two_point/bounded_bridge_B/result.json",
+              "domain": "empty active gripper; target object at measured pick pose; no active contact/coupling; verified quasistatic passive hold; elevated corridor check; physical drift monitored every control step. Not a global path safety certificate."
+            },
+            "first_close_action": 58,
+            "first_release_action": 215
+          }
+        },
+        "assembly": [
+          {
+            "objects": [
+              "base",
+              "piece_1"
+            ],
+            "first_contact": 105,
+            "last_contact": 213,
+            "unilateral_recovery_validated": false,
+            "joint_recovery_validated": false,
+            "barrier": "No unilateral replay across assembly contact; do not rewind completed piece_1. No invented joint recovery."
+          },
+          {
+            "objects": [
+              "piece_1",
+              "piece_2"
+            ],
+            "first_contact": 213,
+            "last_contact": 215,
+            "unilateral_recovery_validated": false,
+            "joint_recovery_validated": false,
+            "barrier": "No unilateral replay across assembly contact; do not rewind completed piece_1. No invented joint recovery."
+          }
+        ],
+        "reset_protocol": "Only canonical demo frame0; every intermediate state reached by actual control actions"
+      },
+      "reference_sha256": "d7e4239184edc2c6694312a9fe7bb24f71272d6a47e8c84ac33c9c0375c2b7e9",
+      "acceptance_gate": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/docs/ascend16/deployment_gate.json",
+      "qualification": null,
+      "controller_hashes": {
+        "manager_v3.py": "427d13edeeabd653747a59ceacbdce9181bfce40f33f1dbf5da1a80ca65de02b",
+        "progress_guard.py": "70e36baca5f1ecc57070e8e64c3b96362d7833672f6ebc921a4f2d54393c6ef2",
+        "hold_envelope.py": "7a52a2243f4719a64dc7b9f9fe129ac0db9ff9fc026fef515a5b7372d78ef1b1",
+        "manager_v2.py": "07e94c6a509769eb8853e678e1f53ea83e381c6a5b9f760a2f5405b006f5475c",
+        "local_recovery.py": "5d563f55df5ed8c24f1d41495a528cb3d27c3f6b97613922040a982d35e6675c",
+        "contact_modes.py": "204c800c5b1a51a0c026718b27bf3a9f6a3c59c706e7dcde8b2049682b873393",
+        "bimanual_autoserl.py": "cf67e73261f2677e45d70cae9fdf0c5e80d344843ea6baed61aebc2da03808f0",
+        "intervention_manager.py": "aa13768e5206771416a9960653a7456d7fa5ccc69bf2655b9b8acfdf25f41af0",
+        "two_point_supervisor.py": "6f0af00a9b29f0fc8990f50e6b1b5af7f4a05668d9c311238a8a794bca084608",
+        "dynamic_demo.py": "b4d995367b807c155b078b8f406a45ff2a5aabf6755260bce7fd5f022a4183ae",
+        "transition_semantics.py": "bf2c1c8829532a2de6d06451d640be8f794d78de55568f92d832c286e6270be3",
+        "isolated_nstep.py": "cc62e2700bf30c56bd4bde831ce752214630853e38842ef8a773af63396e503e",
+        "ascend_data.py": "55426310e2172f06f62459a63ef4c66c280fdd74306169c60a1aa6e4e6bfdf1a",
+        "autoserl_env.py": "92f7fe88ffa93dc480ed7b645d5326e9be9490e1787f04aeaed0985b47fe4b94",
+        "parallel_autoserl.py": "ce2073629816b2aecd543756b2fe4c2f6ddac947b333ae21a675b7863250d146",
+        "ascend_checkpoint.py": "6fb22facf1cede8c616e2201c6bc27c8dfc0a69d8b3c9e44c1a6200a642ef5a0",
+        "v3_gate.py": "d134ff372b6e5ad4fa95c09ffaedb4b99a6e5a42a46d3f8ec192e86cb639ad83"
+      },
+      "visual_manifest": {
+        "name": "resnet18_spatial84",
+        "feature_shape_per_camera": [
+          81,
+          128
+        ],
+        "parameters_total": 93366058,
+        "parameters_trainable": 58297522,
+        "encoder_trainable": 49536,
+        "encoder_frozen": 35068536,
+        "load_evidence": [
+          {
+            "file": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/cache/pretrained_visual/resnet18-f37072fd.pth",
+            "sha256": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec",
+            "strict": true,
+            "keys": 102,
+            "all_tensors_exact": true,
+            "legacy_batchnorm_zero_counters": [
+              "bn1.num_batches_tracked",
+              "layer1.0.bn1.num_batches_tracked",
+              "layer1.0.bn2.num_batches_tracked",
+              "layer1.1.bn1.num_batches_tracked",
+              "layer1.1.bn2.num_batches_tracked",
+              "layer2.0.bn1.num_batches_tracked",
+              "layer2.0.bn2.num_batches_tracked",
+              "layer2.0.downsample.1.num_batches_tracked",
+              "layer2.1.bn1.num_batches_tracked",
+              "layer2.1.bn2.num_batches_tracked",
+              "layer3.0.bn1.num_batches_tracked",
+              "layer3.0.bn2.num_batches_tracked",
+              "layer3.0.downsample.1.num_batches_tracked",
+              "layer3.1.bn1.num_batches_tracked",
+              "layer3.1.bn2.num_batches_tracked",
+              "layer4.0.bn1.num_batches_tracked",
+              "layer4.0.bn2.num_batches_tracked",
+              "layer4.0.downsample.1.num_batches_tracked",
+              "layer4.1.bn1.num_batches_tracked",
+              "layer4.1.bn2.num_batches_tracked"
+            ],
+            "state_sha256": "b6e132d398763cadd5e66a4e994f5a5eb6cf7bd415eb7e8fae476475f749ffe2"
+          },
+          {
+            "file": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/cache/pretrained_visual/resnet18-f37072fd.pth",
+            "sha256": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec",
+            "strict": true,
+            "keys": 102,
+            "all_tensors_exact": true,
+            "legacy_batchnorm_zero_counters": [
+              "bn1.num_batches_tracked",
+              "layer1.0.bn1.num_batches_tracked",
+              "layer1.0.bn2.num_batches_tracked",
+              "layer1.1.bn1.num_batches_tracked",
+              "layer1.1.bn2.num_batches_tracked",
+              "layer2.0.bn1.num_batches_tracked",
+              "layer2.0.bn2.num_batches_tracked",
+              "layer2.0.downsample.1.num_batches_tracked",
+              "layer2.1.bn1.num_batches_tracked",
+              "layer2.1.bn2.num_batches_tracked",
+              "layer3.0.bn1.num_batches_tracked",
+              "layer3.0.bn2.num_batches_tracked",
+              "layer3.0.downsample.1.num_batches_tracked",
+              "layer3.1.bn1.num_batches_tracked",
+              "layer3.1.bn2.num_batches_tracked",
+              "layer4.0.bn1.num_batches_tracked",
+              "layer4.0.bn2.num_batches_tracked",
+              "layer4.0.downsample.1.num_batches_tracked",
+              "layer4.1.bn1.num_batches_tracked",
+              "layer4.1.bn2.num_batches_tracked"
+            ],
+            "state_sha256": "b6e132d398763cadd5e66a4e994f5a5eb6cf7bd415eb7e8fae476475f749ffe2"
+          },
+          {
+            "file": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/cache/pretrained_visual/resnet18-f37072fd.pth",
+            "sha256": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec",
+            "strict": true,
+            "keys": 102,
+            "all_tensors_exact": true,
+            "legacy_batchnorm_zero_counters": [
+              "bn1.num_batches_tracked",
+              "layer1.0.bn1.num_batches_tracked",
+              "layer1.0.bn2.num_batches_tracked",
+              "layer1.1.bn1.num_batches_tracked",
+              "layer1.1.bn2.num_batches_tracked",
+              "layer2.0.bn1.num_batches_tracked",
+              "layer2.0.bn2.num_batches_tracked",
+              "layer2.0.downsample.1.num_batches_tracked",
+              "layer2.1.bn1.num_batches_tracked",
+              "layer2.1.bn2.num_batches_tracked",
+              "layer3.0.bn1.num_batches_tracked",
+              "layer3.0.bn2.num_batches_tracked",
+              "layer3.0.downsample.1.num_batches_tracked",
+              "layer3.1.bn1.num_batches_tracked",
+              "layer3.1.bn2.num_batches_tracked",
+              "layer4.0.bn1.num_batches_tracked",
+              "layer4.0.bn2.num_batches_tracked",
+              "layer4.0.downsample.1.num_batches_tracked",
+              "layer4.1.bn1.num_batches_tracked",
+              "layer4.1.bn2.num_batches_tracked"
+            ],
+            "state_sha256": "b6e132d398763cadd5e66a4e994f5a5eb6cf7bd415eb7e8fae476475f749ffe2"
+          }
+        ],
+        "backbone_hashes": [
+          "b6e132d398763cadd5e66a4e994f5a5eb6cf7bd415eb7e8fae476475f749ffe2",
+          "b6e132d398763cadd5e66a4e994f5a5eb6cf7bd415eb7e8fae476475f749ffe2",
+          "b6e132d398763cadd5e66a4e994f5a5eb6cf7bd415eb7e8fae476475f749ffe2"
+        ]
+      },
+      "agent_config": {
+        "device": "npu:0",
+        "actor_lr": 0.0001,
+        "critic_lr": 0.0001,
+        "critic_target_tau": 0.01,
+        "stddev_clip": 0.3,
+        "lr_warmup_steps": 0,
+        "lr_warmup_start": 1e-08,
+        "use_prop": 1,
+        "enc_type": "resnet18_spatial84",
+        "vit": {
+          "depth": 1,
+          "embed_dim": 128,
+          "embed_norm": 0,
+          "embed_style": "embed2",
+          "num_heads": 4,
+          "patch_size": 8,
+          "stride": -1
+        },
+        "critic": {
+          "drop": 0,
+          "feature_dim": 128,
+          "fuse_patch": 1,
+          "hidden_dim": 1024,
+          "norm_weight": 0,
+          "orth": 1,
+          "spatial_emb": 1024,
+          "num_q": 10,
+          "loss": {
+            "type": "mse",
+            "n_bins": 51,
+            "v_min": 0.0,
+            "v_max": 1.0,
+            "sigma": -1.0
+          },
+          "policy_gradient_type": "ensemble_mean",
+          "num_layers": 2,
+          "use_layer_norm": true,
+          "min_q_heads": 2
+        },
+        "actor": {
+          "feature_dim": 128,
+          "hidden_dim": 1024,
+          "dropout": 0,
+          "orth": 1,
+          "max_action_norm": -1,
+          "spatial_emb": 0,
+          "actor_last_layer_init_scale": null,
+          "actor_last_layer_init_distribution": "normal",
+          "actor_intermediate_layer_init_distribution": "default",
+          "action_l2_reg_weight": 0.0,
+          "action_scale": 1.0,
+          "num_layers": 2,
+          "use_layer_norm": true
+        },
+        "critic_grad_clip_norm": 1.0,
+        "actor_grad_clip_norm": 1.0,
+        "bc_loss_coef": 0.0,
+        "bc_loss_dynamic": 0,
+        "bc_backprop_encoder": false,
+        "freeze_encoder": false,
+        "clip_q_target_to_reward_range": false,
+        "target_action_noise": true
+      },
+      "normalization_frames": 224
+    },
+    "restoration_checks": {
+      "parameters_exact": true,
+      "optimizers_exact": true,
+      "replays_exact": true,
+      "sampling_exact": true,
+      "rng_restored": true,
+      "pending": 0,
+      "optimizer_continuation_update": true
+    },
+    "dynamic_demo_rows": 147,
+    "dynamic_demo_stats": {
+      "accepted_segments": 0,
+      "accepted_rows": 147,
+      "rejected_segments": 0,
+      "rejected_rows": 0,
+      "rejected_partial_steps": 0,
+      "duplicates": 0,
+      "sampled_batches": 1578,
+      "sampled_original": 163488,
+      "sampled_dynamic": 38496,
+      "sampled_positive": 5269,
+      "stage_rows": {
+        "1": 131,
+        "2": 4,
+        "3": 12
+      },
+      "observed_complete_source_rows": {
+        "DiagnosticPreparation": 328,
+        "Recover_A": 74,
+        "Recover_B": 80,
+        "Policy": 662,
+        "SafetyProjection": 434
+      },
+      "safety_projection_rows": 434,
+      "safety_projection_excluded_rows": 434,
+      "task_intervention_candidate_rows": 154,
+      "accepted_action_sources": {
+        "Recover_A": 67,
+        "Recover_B": 80
+      },
+      "quality_rejected_rows": 7,
+      "quality_wait_rows": 3,
+      "accepted_error_reduction_m": 0.37267882491869386,
+      "safe_handbacks": 1,
+      "dynamic_guide_rows": 0,
+      "dynamic_recovery_rows": 147,
+      "expert_action_dimensions": 1029
+    },
+    "stop_reason": "operator_stop",
+    "counters": {
+      "actual_interactions": 1578,
+      "valid_real_steps": 1578,
+      "partial_action_attempts": 0,
+      "warmup_real_steps": 0,
+      "critic_updates": 1578,
+      "actor_updates": 1578,
+      "proposals": 1608,
+      "evaluation_interactions": 15,
+      "evaluation_seconds": 87.90655817091465,
+      "collection_health": {
+        "valid_steps": 1578,
+        "proposals": 1608,
+        "nonzero_motion_steps": 1398,
+        "policy_motion_steps": 662,
+        "projection_steps": 434,
+        "task_intervention_steps": 154,
+        "safe_handbacks": 1,
+        "ends": 42,
+        "short_ends": 0,
+        "grasps": {
+          "A": 232,
+          "B": 3
+        },
+        "first_assembly": 0,
+        "full_success": 0,
+        "reasons": {
+          "workspace_exit_A": 12,
+          "simultaneous_high_confidence_risks_no_joint_qualification": 30
+        },
+        "stages": {
+          "approach_pregrasp": 1426,
+          "grasp_stabilization": 9,
+          "independent_carry": 143
+        }
+      },
+      "global_capability": {
+        "stage_counts": {
+          "A:approach_pregrasp": 0,
+          "B:approach_pregrasp": 0,
+          "A:grasp_stabilization": 0,
+          "A:independent_carry": 0,
+          "B:grasp_stabilization": 0
+        },
+        "clean_full": 0,
+        "disable": false,
+        "episodes": 58,
+        "stage_metrics": {
+          "A:approach_pregrasp": {
+            "stage_entered": 57,
+            "stage_progressed": 29,
+            "stage_completed": 1,
+            "stage_stably_completed": 1,
+            "stage_policy_completed": 0,
+            "stage_intervention_assisted": 43
+          },
+          "B:approach_pregrasp": {
+            "stage_entered": 58,
+            "stage_progressed": 57,
+            "stage_completed": 1,
+            "stage_stably_completed": 1,
+            "stage_policy_completed": 0,
+            "stage_intervention_assisted": 2
+          },
+          "A:grasp_stabilization": {
+            "stage_entered": 2,
+            "stage_progressed": 2,
+            "stage_completed": 2,
+            "stage_stably_completed": 2,
+            "stage_policy_completed": 1,
+            "stage_intervention_assisted": 1
+          },
+          "A:independent_carry": {
+            "stage_entered": 2,
+            "stage_progressed": 0,
+            "stage_completed": 0,
+            "stage_stably_completed": 0,
+            "stage_policy_completed": 0,
+            "stage_intervention_assisted": 2
+          },
+          "B:grasp_stabilization": {
+            "stage_entered": 1,
+            "stage_progressed": 0,
+            "stage_completed": 0,
+            "stage_stably_completed": 0,
+            "stage_policy_completed": 0,
+            "stage_intervention_assisted": 1
+          }
+        }
+      },
+      "pending_update_budget": 0
+    },
+    "workers": [
+      {
+        "env_id": 0,
+        "pid": 102922,
+        "seed": 20261027,
+        "episodes": 1,
+        "resets": 1,
+        "real_steps": 230,
+        "proposals": 230,
+        "interventions": 1,
+        "recoveries": 1,
+        "safe_stops": 0,
+        "reasons": {},
+        "episode_length_sum": 230,
+        "episode_length_histogram": {
+          "230": 1
+        },
+        "assisted_successes": 0,
+        "autonomous_successes": 0,
+        "intervention_steps": 74,
+        "episode_id": 0,
+        "frame": 230,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 1,
+        "pid": 102923,
+        "seed": 20262036,
+        "episodes": 1,
+        "resets": 1,
+        "real_steps": 258,
+        "proposals": 258,
+        "interventions": 1,
+        "recoveries": 0,
+        "safe_stops": 0,
+        "reasons": {},
+        "episode_length_sum": 258,
+        "episode_length_histogram": {
+          "258": 1
+        },
+        "assisted_successes": 0,
+        "autonomous_successes": 0,
+        "intervention_steps": 80,
+        "episode_id": 0,
+        "frame": 258,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 2,
+        "pid": 102924,
+        "seed": 20263045,
+        "episodes": 4,
+        "resets": 4,
+        "real_steps": 79,
+        "proposals": 80,
+        "interventions": 33,
+        "recoveries": 0,
+        "safe_stops": 3,
+        "reasons": {
+          "workspace_exit_A": 2,
+          "simultaneous_high_confidence_risks_no_joint_qualification": 1
+        },
+        "episode_length_sum": 79,
+        "episode_length_histogram": {
+          "26": 1,
+          "21": 2,
+          "11": 1
+        },
+        "assisted_successes": 0,
+        "autonomous_successes": 0,
+        "intervention_steps": 33,
+        "episode_id": 3,
+        "frame": 11,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 3,
+        "pid": 102925,
+        "seed": 20264054,
+        "episodes": 4,
+        "resets": 4,
+        "real_steps": 79,
+        "proposals": 80,
+        "interventions": 31,
+        "recoveries": 0,
+        "safe_stops": 3,
+        "reasons": {
+          "workspace_exit_A": 2,
+          "simultaneous_high_confidence_risks_no_joint_qualification": 1
+        },
+        "episode_length_sum": 79,
+        "episode_length_histogram": {
+          "25": 1,
+          "21": 1,
+          "20": 1,
+          "13": 1
+        },
+        "assisted_successes": 0,
+        "autonomous_successes": 0,
+        "intervention_steps": 31,
+        "episode_id": 3,
+        "frame": 13,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 4,
+        "pid": 104176,
+        "seed": 20265063,
+        "episodes": 4,
+        "resets": 4,
+        "real_steps": 78,
+        "proposals": 80,
+        "interventions": 31,
+        "recoveries": 0,
+        "safe_stops": 3,
+        "reasons": {
+          "simultaneous_high_confidence_risks_no_joint_qualification": 2,
+          "workspace_exit_A": 1
+        },
+        "episode_length_sum": 78,
+        "episode_length_histogram": {
+          "25": 1,
+          "21": 2,
+          "11": 1
+        },
+        "assisted_successes": 0,
+        "autonomous_successes": 0,
+        "intervention_steps": 31,
+        "episode_id": 3,
+        "frame": 11,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 5,
+        "pid": 104177,
+        "seed": 20266072,
+        "episodes": 4,
+        "resets": 4,
+        "real_steps": 78,
+        "proposals": 80,
+        "interventions": 29,
+        "recoveries": 0,
+        "safe_stops": 3,
+        "reasons": {
+          "simultaneous_high_confidence_risks_no_joint_qualification": 2,
+          "workspace_exit_A": 1
+        },
+        "episode_length_sum": 78,
+        "episode_length_histogram": {
+          "25": 1,
+          "20": 2,
+          "13": 1
+        },
+        "assisted_successes": 0,
+        "autonomous_successes": 0,
+        "intervention_steps": 29,
+        "episode_id": 3,
+        "frame": 13,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 6,
+        "pid": 104178,
+        "seed": 20267081,
+        "episodes": 4,
+        "resets": 4,
+        "real_steps": 77,
+        "proposals": 80,
+        "interventions": 30,
+        "recoveries": 0,
+        "safe_stops": 3,
+        "reasons": {
+          "simultaneous_high_confidence_risks_no_joint_qualification": 3
+        },
+        "episode_length_sum": 77,
+        "episode_length_histogram": {
+          "24": 1,
+          "21": 1,
+          "20": 1,
+          "12": 1
+        },
+        "assisted_successes": 0,
+        "autonomous_successes": 0,
+        "intervention_steps": 30,
+        "episode_id": 3,
+        "frame": 12,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 7,
+        "pid": 104179,
+        "seed": 20268090,
+        "episodes": 4,
+        "resets": 4,
+        "real_steps": 78,
+        "proposals": 80,
+        "interventions": 30,
+        "recoveries": 0,
+        "safe_stops": 3,
+        "reasons": {
+          "simultaneous_high_confidence_risks_no_joint_qualification": 2,
+          "workspace_exit_A": 1
+        },
+        "episode_length_sum": 78,
+        "episode_length_histogram": {
+          "25": 1,
+          "21": 2,
+          "11": 1
+        },
+        "assisted_successes": 0,
+        "autonomous_successes": 0,
+        "intervention_steps": 30,
+        "episode_id": 3,
+        "frame": 11,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 8,
+        "pid": 105426,
+        "seed": 20269099,
+        "episodes": 4,
+        "resets": 4,
+        "real_steps": 77,
+        "proposals": 80,
+        "interventions": 30,
+        "recoveries": 0,
+        "safe_stops": 3,
+        "reasons": {
+          "simultaneous_high_confidence_risks_no_joint_qualification": 3
+        },
+        "episode_length_sum": 77,
+        "episode_length_histogram": {
+          "24": 1,
+          "21": 1,
+          "20": 1,
+          "12": 1
+        },
+        "assisted_successes": 0,
+        "autonomous_successes": 0,
+        "intervention_steps": 30,
+        "episode_id": 3,
+        "frame": 12,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 9,
+        "pid": 105427,
+        "seed": 20270108,
+        "episodes": 4,
+        "resets": 4,
+        "real_steps": 78,
+        "proposals": 80,
+        "interventions": 31,
+        "recoveries": 0,
+        "safe_stops": 3,
+        "reasons": {
+          "simultaneous_high_confidence_risks_no_joint_qualification": 2,
+          "workspace_exit_A": 1
+        },
+        "episode_length_sum": 78,
+        "episode_length_histogram": {
+          "25": 1,
+          "22": 1,
+          "20": 1,
+          "11": 1
+        },
+        "assisted_successes": 0,
+        "autonomous_successes": 0,
+        "intervention_steps": 31,
+        "episode_id": 3,
+        "frame": 11,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 10,
+        "pid": 105428,
+        "seed": 20271117,
+        "episodes": 4,
+        "resets": 4,
+        "real_steps": 77,
+        "proposals": 80,
+        "interventions": 32,
+        "recoveries": 0,
+        "safe_stops": 3,
+        "reasons": {
+          "simultaneous_high_confidence_risks_no_joint_qualification": 3
+        },
+        "episode_length_sum": 77,
+        "episode_length_histogram": {
+          "25": 1,
+          "21": 2,
+          "10": 1
+        },
+        "assisted_successes": 0,
+        "autonomous_successes": 0,
+        "intervention_steps": 32,
+        "episode_id": 3,
+        "frame": 10,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 11,
+        "pid": 105429,
+        "seed": 20272126,
+        "episodes": 4,
+        "resets": 4,
+        "real_steps": 77,
+        "proposals": 80,
+        "interventions": 31,
+        "recoveries": 0,
+        "safe_stops": 3,
+        "reasons": {
+          "simultaneous_high_confidence_risks_no_joint_qualification": 3
+        },
+        "episode_length_sum": 77,
+        "episode_length_histogram": {
+          "24": 1,
+          "21": 1,
+          "20": 1,
+          "12": 1
+        },
+        "assisted_successes": 0,
+        "autonomous_successes": 0,
+        "intervention_steps": 31,
+        "episode_id": 3,
+        "frame": 12,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 12,
+        "pid": 106665,
+        "seed": 20273135,
+        "episodes": 4,
+        "resets": 4,
+        "real_steps": 77,
+        "proposals": 80,
+        "interventions": 31,
+        "recoveries": 0,
+        "safe_stops": 3,
+        "reasons": {
+          "simultaneous_high_confidence_risks_no_joint_qualification": 3
+        },
+        "episode_length_sum": 77,
+        "episode_length_histogram": {
+          "25": 1,
+          "21": 1,
+          "20": 1,
+          "11": 1
+        },
+        "assisted_successes": 0,
+        "autonomous_successes": 0,
+        "intervention_steps": 31,
+        "episode_id": 3,
+        "frame": 11,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 13,
+        "pid": 106666,
+        "seed": 20274144,
+        "episodes": 4,
+        "resets": 4,
+        "real_steps": 78,
+        "proposals": 80,
+        "interventions": 31,
+        "recoveries": 0,
+        "safe_stops": 3,
+        "reasons": {
+          "simultaneous_high_confidence_risks_no_joint_qualification": 2,
+          "workspace_exit_A": 1
+        },
+        "episode_length_sum": 78,
+        "episode_length_histogram": {
+          "25": 1,
+          "23": 1,
+          "21": 1,
+          "9": 1
+        },
+        "assisted_successes": 0,
+        "autonomous_successes": 0,
+        "intervention_steps": 31,
+        "episode_id": 3,
+        "frame": 9,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 14,
+        "pid": 106667,
+        "seed": 20275153,
+        "episodes": 4,
+        "resets": 4,
+        "real_steps": 79,
+        "proposals": 80,
+        "interventions": 33,
+        "recoveries": 0,
+        "safe_stops": 3,
+        "reasons": {
+          "workspace_exit_A": 2,
+          "simultaneous_high_confidence_risks_no_joint_qualification": 1
+        },
+        "episode_length_sum": 79,
+        "episode_length_histogram": {
+          "26": 1,
+          "22": 1,
+          "20": 1,
+          "11": 1
+        },
+        "assisted_successes": 0,
+        "autonomous_successes": 0,
+        "intervention_steps": 33,
+        "episode_id": 3,
+        "frame": 11,
+        "dead": true,
+        "npu_plugin_loaded": false
+      },
+      {
+        "env_id": 15,
+        "pid": 106668,
+        "seed": 20276162,
+        "episodes": 4,
+        "resets": 4,
+        "real_steps": 78,
+        "proposals": 80,
+        "interventions": 31,
+        "recoveries": 0,
+        "safe_stops": 3,
+        "reasons": {
+          "simultaneous_high_confidence_risks_no_joint_qualification": 2,
+          "workspace_exit_A": 1
+        },
+        "episode_length_sum": 78,
+        "episode_length_histogram": {
+          "24": 1,
+          "21": 2,
+          "12": 1
+        },
+        "assisted_successes": 0,
+        "autonomous_successes": 0,
+        "intervention_steps": 31,
+        "episode_id": 3,
+        "frame": 12,
+        "dead": true,
+        "npu_plugin_loaded": false
+      }
+    ],
+    "online_rows": 1578,
+    "offline_rows": 224,
+    "rounds": 80,
+    "wall_seconds": 1779.71683883667,
+    "training_seconds": 1501.7166851311922,
+    "timing": {
+      "inference": 3.1270306282676756,
+      "step": 223.1434961531777,
+      "reset": 23.350662637036294,
+      "sample": 146.41904280986637,
+      "transfer": 21.265138930408284,
+      "update": 505.2690021516755
+    },
+    "valid_steps_s": 1.0507974078094122,
+    "actual_steps_s": 1.0507974078094122,
+    "updates_s": 1.0507974078094122,
+    "stage_counts": {},
+    "checkpoint": "/data/home/3220251075/lerobot_workspace/acoserl_dexmimicgen/outputs/ascend16/autoserl_baseline_npu_v1/checkpoints/final",
+    "peak_npu_allocated_bytes": 1599265792,
+    "utd_effective": 1.0,
+    "all_losses_and_gradient_norms_finite": true,
+    "all_workers_cpu_only": true,
+    "all_actions_stored_are_executed": true
+  },
+  "integration_audit": {
+    "passed": true,
+    "real_live_rows": 1578,
+    "online_rows": 1578,
+    "original_rows": 224,
+    "dynamic_rows": 147,
+    "dynamic_stats": {
+      "accepted_segments": 0,
+      "accepted_rows": 147,
+      "rejected_segments": 0,
+      "rejected_rows": 0,
+      "rejected_partial_steps": 0,
+      "duplicates": 0,
+      "sampled_batches": 1578,
+      "sampled_original": 163488,
+      "sampled_dynamic": 38496,
+      "sampled_positive": 5269,
+      "stage_rows": {
+        "1": 131,
+        "2": 4,
+        "3": 12
+      },
+      "observed_complete_source_rows": {
+        "DiagnosticPreparation": 328,
+        "Recover_A": 74,
+        "Recover_B": 80,
+        "Policy": 662,
+        "SafetyProjection": 434
+      },
+      "safety_projection_rows": 434,
+      "safety_projection_excluded_rows": 434,
+      "task_intervention_candidate_rows": 154,
+      "accepted_action_sources": {
+        "Recover_A": 67,
+        "Recover_B": 80
+      },
+      "quality_rejected_rows": 7,
+      "quality_wait_rows": 3,
+      "accepted_error_reduction_m": 0.37267882491869386,
+      "safe_handbacks": 1,
+      "dynamic_guide_rows": 0,
+      "dynamic_recovery_rows": 147,
+      "expert_action_dimensions": 1029
+    },
+    "source_counts": {
+      "DiagnosticPreparation": 328,
+      "Recover_A": 74,
+      "Policy": 662,
+      "Recover_B": 80,
+      "Constrained_A": 434
+    },
+    "workers": [
+      {
+        "env_id": 0,
+        "sources": {
+          "DiagnosticPreparation": 150,
+          "Recover_A": 74,
+          "Policy": 6
+        },
+        "complete": 230,
+        "partial": 0,
+        "rejected": 0,
+        "handbacks": 1,
+        "policy_proposals": 80,
+        "nonzero_motion": 143
+      },
+      {
+        "env_id": 1,
+        "sources": {
+          "DiagnosticPreparation": 178,
+          "Recover_B": 80
+        },
+        "complete": 258,
+        "partial": 0,
+        "rejected": 0,
+        "handbacks": 0,
+        "policy_proposals": 80,
+        "nonzero_motion": 165
+      },
+      {
+        "env_id": 2,
+        "sources": {
+          "Policy": 46,
+          "Constrained_A": 33
+        },
+        "complete": 79,
+        "partial": 0,
+        "rejected": 1,
+        "handbacks": 0,
+        "policy_proposals": 80,
+        "nonzero_motion": 79
+      },
+      {
+        "env_id": 3,
+        "sources": {
+          "Policy": 48,
+          "Constrained_A": 31
+        },
+        "complete": 79,
+        "partial": 0,
+        "rejected": 1,
+        "handbacks": 0,
+        "policy_proposals": 80,
+        "nonzero_motion": 79
+      },
+      {
+        "env_id": 4,
+        "sources": {
+          "Policy": 47,
+          "Constrained_A": 31
+        },
+        "complete": 78,
+        "partial": 0,
+        "rejected": 2,
+        "handbacks": 0,
+        "policy_proposals": 80,
+        "nonzero_motion": 78
+      },
+      {
+        "env_id": 5,
+        "sources": {
+          "Policy": 49,
+          "Constrained_A": 29
+        },
+        "complete": 78,
+        "partial": 0,
+        "rejected": 2,
+        "handbacks": 0,
+        "policy_proposals": 80,
+        "nonzero_motion": 78
+      },
+      {
+        "env_id": 6,
+        "sources": {
+          "Policy": 47,
+          "Constrained_A": 30
+        },
+        "complete": 77,
+        "partial": 0,
+        "rejected": 3,
+        "handbacks": 0,
+        "policy_proposals": 80,
+        "nonzero_motion": 77
+      },
+      {
+        "env_id": 7,
+        "sources": {
+          "Policy": 48,
+          "Constrained_A": 30
+        },
+        "complete": 78,
+        "partial": 0,
+        "rejected": 2,
+        "handbacks": 0,
+        "policy_proposals": 80,
+        "nonzero_motion": 78
+      },
+      {
+        "env_id": 8,
+        "sources": {
+          "Policy": 47,
+          "Constrained_A": 30
+        },
+        "complete": 77,
+        "partial": 0,
+        "rejected": 3,
+        "handbacks": 0,
+        "policy_proposals": 80,
+        "nonzero_motion": 77
+      },
+      {
+        "env_id": 9,
+        "sources": {
+          "Policy": 47,
+          "Constrained_A": 31
+        },
+        "complete": 78,
+        "partial": 0,
+        "rejected": 2,
+        "handbacks": 0,
+        "policy_proposals": 80,
+        "nonzero_motion": 78
+      },
+      {
+        "env_id": 10,
+        "sources": {
+          "Policy": 45,
+          "Constrained_A": 32
+        },
+        "complete": 77,
+        "partial": 0,
+        "rejected": 3,
+        "handbacks": 0,
+        "policy_proposals": 80,
+        "nonzero_motion": 77
+      },
+      {
+        "env_id": 11,
+        "sources": {
+          "Policy": 46,
+          "Constrained_A": 31
+        },
+        "complete": 77,
+        "partial": 0,
+        "rejected": 3,
+        "handbacks": 0,
+        "policy_proposals": 80,
+        "nonzero_motion": 77
+      },
+      {
+        "env_id": 12,
+        "sources": {
+          "Policy": 46,
+          "Constrained_A": 31
+        },
+        "complete": 77,
+        "partial": 0,
+        "rejected": 3,
+        "handbacks": 0,
+        "policy_proposals": 80,
+        "nonzero_motion": 77
+      },
+      {
+        "env_id": 13,
+        "sources": {
+          "Policy": 47,
+          "Constrained_A": 31
+        },
+        "complete": 78,
+        "partial": 0,
+        "rejected": 2,
+        "handbacks": 0,
+        "policy_proposals": 80,
+        "nonzero_motion": 78
+      },
+      {
+        "env_id": 14,
+        "sources": {
+          "Policy": 46,
+          "Constrained_A": 33
+        },
+        "complete": 79,
+        "partial": 0,
+        "rejected": 1,
+        "handbacks": 0,
+        "policy_proposals": 80,
+        "nonzero_motion": 79
+      },
+      {
+        "env_id": 15,
+        "sources": {
+          "Policy": 47,
+          "Constrained_A": 31
+        },
+        "complete": 78,
+        "partial": 0,
+        "rejected": 2,
+        "handbacks": 0,
+        "policy_proposals": 80,
+        "nonzero_motion": 78
+      }
+    ],
+    "actual_actor_proposals": 1280,
+    "nonzero_motion_steps": 1398,
+    "safe_handbacks": 1,
+    "rejected_attempts": 30,
+    "partial_attempts": 0,
+    "nstep_rgb_links_exact": 1404,
+    "no_cross_env_episode": true,
+    "executed_actions_exact": true,
+    "per_arm_expert_masks_exact": true,
+    "all_parameters_finite": true,
+    "gripper_gradient_history": [
+      {
+        "shape": [
+          14,
+          1024
+        ],
+        "per_output_second_moment": [
+          1.1654325362542295e-06,
+          7.833978088456206e-06,
+          1.363622141070664e-05,
+          1.338755009783199e-05,
+          1.1736507076420821e-05,
+          1.0490722161193844e-05,
+          1.6615998902125284e-05,
+          2.8190354441903764e-06,
+          1.725164838717319e-05,
+          2.213371317338897e-06,
+          5.982336006127298e-06,
+          7.031237146293279e-06,
+          1.1580611499084625e-05,
+          8.654529665363953e-06
+        ],
+        "all_outputs_have_gradient_history": true
+      }
+    ],
+    "source_manifest_exact": true,
+    "checkpoint_reload": {
+      "parameters_exact": true,
+      "optimizers_exact": true,
+      "replays_exact": true,
+      "sampling_exact": true,
+      "rng_restored": true,
+      "pending": 0,
+      "optimizer_continuation_update": true
+    },
+    "new_physics_steps": 0,
+    "new_gradient_updates": 0
+  },
+  "natural_episode_statistics": {
+    "episodes": 42,
+    "length_min": 20,
+    "length_mean": 22.166666666666668,
+    "length_median": 21.0,
+    "length_max": 26,
+    "excluded": [
+      "diagnostic_prepared_env00_env01",
+      "final_collector_cuts"
+    ]
+  },
+  "evaluation_stage_metrics": {
+    "episodes": [
+      {
+        "worker_pid": 111615,
+        "training_step": 1578,
+        "episode": 0,
+        "length": 15,
+        "grasp_reached": {
+          "A": false,
+          "B": false
+        },
+        "stable_grasp": {
+          "A": false,
+          "B": false
+        },
+        "policy_only_stable_grasp": {
+          "A": false,
+          "B": false
+        },
+        "both_stably_held": false,
+        "first_assembly": false,
+        "second_assembly_geometry": false,
+        "full_success": false,
+        "projection_steps": 0,
+        "reason": "workspace_exit_A"
+      }
+    ],
+    "episodes_count": 1,
+    "fixed_canonical_initial_state": true,
+    "independent_initial_physical_states": false,
+    "full_success_rate": 0.0,
+    "a_stable_grasp_rate": 0.0,
+    "b_stable_grasp_rate": 0.0,
+    "both_stable_hold_rate": 0.0,
+    "first_assembly_rate": 0.0,
+    "second_assembly_geometry_rate": 0.0,
+    "note": "Geometry stage reach is not full strict success; safety-constrained and policy-only grasp metrics are separate. Bounded/incomplete diagnostic episodes are not formal20-episode performance evaluations."
+  },
+  "formal_training_started": true,
+  "scope": "single-task AutoSERL baseline; no advanced12+4 requirement",
+  "formal_status": "docs/acoserl_foundation/AUTOSERL_BASELINE_FORMAL_STATUS.json"
+}

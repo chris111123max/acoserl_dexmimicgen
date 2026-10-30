@@ -1,0 +1,11 @@
+{
+  "version": "autoserl_baseline_v1",
+  "v3_enabled": true,
+  "baseline_mode": true,
+  "development_validation": false,
+  "carry_local": {"enabled": false, "reason": "retained as bounded physical prototype; not required for baseline launch"},
+  "joint": {"enabled": false, "reason": "advanced contact recovery is outside this baseline"},
+  "passive_brake": {"enabled": false, "reason": "new baseline has no production qualification for this optional mode"},
+  "enabled_baseline_modes": ["Guide_A", "Guide_B", "Recover_A", "Recover_B"],
+  "pregrasp_hold_qualification": "configs/bimanual_autoserl/pregrasp_hold_baseline.json"
+}
