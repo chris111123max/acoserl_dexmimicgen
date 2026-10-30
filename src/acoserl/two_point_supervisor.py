@@ -242,7 +242,10 @@ class TwoPointMixin:
             action=np.asarray(self.last_decision['policy_action'],dtype=float).copy()
             sl=slice(ai*7,ai*7+7)
             guided=self.command(self.targets,self.grips)
-            action[sl]=guided[sl]
+            action[sl.start:sl.stop-1]=guided[sl.start:sl.stop-1]
+            # A positional Guide must not replace the active gripper command.
+            # Grasp/closure remains a normal Policy decision until a separately
+            # qualified P0/P1 Recovery explicitly owns the gripper.
             self.last_decision['per_arm_control']=[
                 'Guide' if i==ai else 'Policy' for i in range(2)]
             # V2/V3 action checks are applied to the actual composed 14D
