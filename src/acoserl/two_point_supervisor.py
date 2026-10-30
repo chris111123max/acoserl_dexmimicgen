@@ -259,6 +259,12 @@ class TwoPointMixin:
                 self.last_decision['guide_composed_action_risks']=risks
                 self.stop('guide_composed_action_risk_unqualified')
                 return self.refuse()
+            if hasattr(self,'_independent_tcp_swept_clearance'):
+                clear,reason=self._independent_tcp_swept_clearance(action,state)
+                if not clear:
+                    self.last_decision['guide_composed_action_clearance']=reason
+                    self.stop(reason)
+                    return self.refuse()
         elif self.recovery_stage=='Replay_P0_P1':
             # Literal demonstrated action at t: s_t -> s_(t+1). Other arm holds its captured pose.
             action=self.command(self.targets,self.grips);sl=slice(ai*7,ai*7+7)

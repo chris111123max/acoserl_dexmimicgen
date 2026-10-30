@@ -112,15 +112,29 @@ class V2Mixin:
                 risk["risk"]=True
         return risks
 
-    def _project_independent_risks(self,policy,state,risks,indices):
-        """Correct only identified independent risks; never authorize contact recovery.
+    def _independent_tcp_swept_clearance(self,action,state):
+        """Conservative EEF sweep of the ACTUALLY composed 14D action."""
+        p=[np.asarray(x['position']) for x in state['poses']]
+        delta=[np.asarray(self.predicted_risk(i,action,state)['displacement'])
+               for i in range(2)]
+        rel=p[0]-p[1];motion=delta[0]-delta[1]
+        t=np.clip(-float(rel@motion)/max(float(motion@motion),1e-12),0.,1.)
+        if np.linalg.norm(rel+t*motion)<.12:
+            return False,'independent_projection_tcp_clearance'
+        return True,'independent_tcp_swept_clearance'
 
-        A successful per-arm correction is NOT a joint-contact controller or
-        a nonlinear collision certificate. Live 2ms guards remain authoritative.
+    def _project_independent_risks(self,policy,state,risks,indices):
+        """Correct selected Policy arms, never a Guide arm's unused proposal.
+
+        A separate screen in TwoPoint.recovery_action validates the final
+        Guide_A+Policy_B or Policy_A+Guide_B command before physical stepping.
         """
+        from acoserl.osc_prediction import project_independent_workspace
         corrected=np.asarray(policy,dtype=float).copy()
+        chosen=tuple(sorted(set(indices)))
         assessment=self.contact_assessment(state)
-        for ai in indices:
+        motion_projected=False
+        for ai in chosen:
             risk=risks[ai];categories=set(risk['categories'])
             if categories=={'unplanned_grasp_release'}:
                 corrected[7*ai+6]=1.
@@ -131,33 +145,28 @@ class V2Mixin:
                         {'workspace','open_gripper_unplanned_approach'}) or
                     risk.get('gripper_contact',{}).get('command_reversal')):
                 return None,'independent_risk_projection_not_qualified'
-            ctl=self.env.robots[ai].part_controllers['right']
-            dp=np.asarray(risk['displacement']).copy()
             position=np.asarray(state['poses'][ai]['position'])
-            lo=self.positions[:,ai].min(0)-self.cfg['free_workspace_margin_m']
-            hi=self.positions[:,ai].max(0)+self.cfg['free_workspace_margin_m']
-            dp=np.clip(dp,lo+.003-position,hi-.003-position)
-            dp[((position-lo<.010)&(dp<0))|((hi-position<.010)&(dp>0))]=0
-            if 'gripper_contact' in risk:
-                normal=np.asarray(risk['gripper_contact']['normal'])
-                dp-=max(0.,float(np.dot(dp,normal)))*normal
-            from acoserl.osc_prediction import command_for_displacement
-            corrected=command_for_displacement(self.env,ai,corrected,dp)
-        if hasattr(self,'action_bounds'):corrected=np.clip(corrected,*self.action_bounds)
-        # A composed action is assessed again as a WHOLE. Independent
-        # projected dimensions may not introduce a new risk elsewhere.
+            lower=self.positions[:,ai].min(0)-self.cfg['free_workspace_margin_m']
+            upper=self.positions[:,ai].max(0)+self.cfg['free_workspace_margin_m']
+            corrected,reason=project_independent_workspace(
+                self.env,ai,corrected,position,lower,upper,
+                self.manager_cfg['risk_margin_m'],
+                getattr(self,'action_bounds',None),
+                risk.get('gripper_contact',{}).get('normal'))
+            if corrected is None:return None,ARMS[ai]+':'+reason
+            motion_projected=True
+        # The active Guide arm's original Actor proposal is never executed.
+        # Check only projected arms HERE; the final joint command is checked
+        # AFTER the real Guide action has replaced that arm's six pose DOFs.
         fresh=self.action_risks(corrected,state)
-        if any(r['risk'] for r in fresh):
-            return None,'independent_projection_residual_risk'
-        # Cheap conservative TCP path screen; actual robot geometry and
-        # dynamic contact are still guarded at every physical substep.
-        p=[np.asarray(x['position']) for x in state['poses']]
-        delta=[np.asarray(self.predicted_risk(i,corrected,state)['displacement'])
-               for i in range(2)]
-        rel=p[0]-p[1];motion=delta[0]-delta[1]
-        t=np.clip(-float(rel@motion)/max(float(motion@motion),1e-12),0.,1.)
-        if np.linalg.norm(rel+t*motion)<.12:
-            return None,'independent_projection_tcp_clearance'
+        remaining=[ARMS[i]+':'+','.join(fresh[i]['categories'])
+                   for i in chosen if fresh[i]['risk']]
+        if remaining:return None,'independent_projection_residual_risk:'+';'.join(remaining)
+        guide_substitution=(self.mode.startswith('Guide_') and
+                            self.active is not None and self.active not in chosen)
+        if motion_projected and not guide_substitution:
+            clear,reason=self._independent_tcp_swept_clearance(corrected,state)
+            if not clear:return None,reason
         return corrected,'independent_risks_corrected'
 
     def _local_decision(self,policy):
@@ -281,29 +290,15 @@ class V2Mixin:
                 self.steps+=1;self.last_decision=dict(policy_action=policy.tolist(),policy_risks=risks)
                 self.stop("near_contact_gripper_reversal_no_qualified_correction")
                 return self.refuse()
-            safe_free=not any(any(g.values()) for g in state["actual_grasps"].values()) and self.contact_assessment(state)["category"]=="Independent"
-            release_only=risks[ai]["categories"]==["unplanned_grasp_release"]
+            safe_free=not any(any(g.values()) for g in state['actual_grasps'].values()) and self.contact_assessment(state)['category']=='Independent'
+            release_only=risks[ai]['categories']==['unplanned_grasp_release']
             if safe_free or release_only:
-                corrected=policy.copy()
-                if release_only:corrected[7*ai+6]=1.
-                ctl=self.env.robots[ai].part_controllers["right"]
-                dp=np.asarray(risks[ai]["displacement"])
-                position=np.asarray(state["poses"][ai]["position"])
-                lo=self.positions[:,ai].min(0)-self.cfg["free_workspace_margin_m"]
-                hi=self.positions[:,ai].max(0)+self.cfg["free_workspace_margin_m"]
-                dp=np.clip(dp,lo+.003-position,hi-.003-position)
-                dp[((position-lo<.010)&(dp<0))|((hi-position<.010)&(dp>0))]=0
-                if "gripper_contact" in risks[ai]:
-                    normal=np.asarray(risks[ai]["gripper_contact"]["normal"])
-                    dp-=max(0,float(np.dot(dp,normal)))*normal
-                from acoserl.osc_prediction import command_for_displacement
-                corrected=command_for_displacement(self.env,ai,corrected,dp)
-                if hasattr(self,"action_bounds"):corrected=np.clip(corrected,*self.action_bounds)
-                # Check the final command, not just a risk annotation.
-                remaining=self.action_risks(corrected,state)
-                if remaining[ai]["risk"]:
-                    self.steps+=1;self.last_decision=dict(policy_action=policy.tolist(),policy_risks=risks)
-                    self.stop("no_legal_projected_action");return self.refuse()
+                corrected,reason=self._project_independent_risks(policy,state,risks,[ai])
+                if corrected is None:
+                    self.steps+=1;self.last_decision=dict(
+                        policy_action=policy.tolist(),policy_risks=risks,
+                        independent_risk_refusal=reason)
+                    self.stop('no_legal_projected_action:'+reason);return self.refuse()
                 final,decision=super().choose(corrected)
                 decision["policy_action"]=policy.tolist();decision["policy_risks"]=risks
                 if final is not None and decision["mode"]=="Normal":
