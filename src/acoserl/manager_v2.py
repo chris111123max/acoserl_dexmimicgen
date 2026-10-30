@@ -110,6 +110,52 @@ class V2Mixin:
                 risk["risk"]=True
         return risks
 
+    def _project_independent_risks(self,policy,state,risks,indices):
+        """Correct only identified independent risks; never authorize contact recovery.
+
+        A successful per-arm correction is NOT a joint-contact controller or
+        a nonlinear collision certificate. Live 2ms guards remain authoritative.
+        """
+        corrected=np.asarray(policy,dtype=float).copy()
+        assessment=self.contact_assessment(state)
+        for ai in indices:
+            risk=risks[ai];categories=set(risk['categories'])
+            if categories=={'unplanned_grasp_release'}:
+                corrected[7*ai+6]=1.
+                continue
+            if (assessment['category']!='Independent' or
+                    any(any(g.values()) for g in state['actual_grasps'].values()) or
+                    not categories or not categories.issubset(
+                        {'workspace','open_gripper_unplanned_approach'}) or
+                    risk.get('gripper_contact',{}).get('command_reversal')):
+                return None,'independent_risk_projection_not_qualified'
+            ctl=self.env.robots[ai].part_controllers['right']
+            dp=np.asarray(risk['displacement']).copy()
+            position=np.asarray(state['poses'][ai]['position'])
+            lo=self.positions[:,ai].min(0)-self.cfg['free_workspace_margin_m']
+            hi=self.positions[:,ai].max(0)+self.cfg['free_workspace_margin_m']
+            dp=np.clip(dp,lo+.003-position,hi-.003-position)
+            dp[((position-lo<.010)&(dp<0))|((hi-position<.010)&(dp>0))]=0
+            if 'gripper_contact' in risk:
+                normal=np.asarray(risk['gripper_contact']['normal'])
+                dp-=max(0.,float(np.dot(dp,normal)))*normal
+            corrected[7*ai:7*ai+3]=ctl.origin_ori.T@dp/ctl.output_max[:3]
+        if hasattr(self,'action_bounds'):corrected=np.clip(corrected,*self.action_bounds)
+        # A composed action is assessed again as a WHOLE. Independent
+        # projected dimensions may not introduce a new risk elsewhere.
+        fresh=self.action_risks(corrected,state)
+        if any(r['risk'] for r in fresh):
+            return None,'independent_projection_residual_risk'
+        # Cheap conservative TCP path screen; actual robot geometry and
+        # dynamic contact are still guarded at every physical substep.
+        p=[np.asarray(x['position']) for x in state['poses']]
+        delta=[np.asarray(self.predicted_risk(i,corrected,state)['displacement'])
+               for i in range(2)]
+        if min(np.linalg.norm(p[0]-p[1]),
+               np.linalg.norm(p[0]+delta[0]-(p[1]+delta[1])))<.12:
+            return None,'independent_projection_tcp_clearance'
+        return corrected,'independent_risks_corrected'
+
     def _local_decision(self,policy):
         self.steps+=1;self.age+=1
         state=snapshot(self.env);danger=self.physical_danger(state,self.contacts.read())
@@ -133,6 +179,27 @@ class V2Mixin:
             self.steps+=1;self.last_decision=dict(policy_action=policy.tolist(),contact_assessment=self.contact_assessment(state))
             self.stop(danger);return self.refuse()
         early_risks=self.action_risks(policy,state)
+        # An in-flight Guide does not freeze the other arm. Its fresh Policy
+        # proposal must be checked each step and corrected only if unsafe.
+        if self.mode.startswith('Guide_') and self.active is not None:
+            self.projected=False;self.projected_arms=[]
+            other=1-self.active
+            proposal=policy
+            if early_risks[other]['risk']:
+                proposal,reason=self._project_independent_risks(
+                    policy,state,early_risks,[other])
+                if proposal is None:
+                    self.steps+=1;self.last_decision=dict(
+                        policy_action=policy.tolist(),policy_risks=early_risks)
+                    self.stop('guide_passive_policy_risk:'+reason)
+                    return self.refuse()
+            final,decision=super().choose(proposal)
+            decision['policy_action']=policy.tolist()
+            if final is not None and proposal is not policy:
+                self.projected=True;self.projected_arms=[other]
+                decision['pre_super_projection_arms']=[other]
+                decision['policy_risks_original']=early_risks
+            return final,decision
         enabled=self.cfg["intervention_enabled"] and self.manager_cfg["method"]!="plain_rlpd"
         contact_candidate=None
         if enabled and not any(r["risk"] for r in early_risks) and self.mode=="Normal" and self.manager_cfg["safety_recovery_enabled"]:
@@ -183,9 +250,28 @@ class V2Mixin:
                                     projection_reason="independent_held_objects_joint_grip_retention")
                 return final,decision
             if len(active)>1:
-                self.steps+=1;self.last_decision=dict(policy_action=policy.tolist(),policy_risks=risks)
-                self.stop("simultaneous_high_confidence_risks_no_joint_qualification")
-                return self.refuse()
+                # Two independent free-space action risks are NOT evidence
+                # of a mechanically coupled joint recovery requirement.
+                corrected,reason=self._project_independent_risks(
+                    policy,state,risks,active)
+                if corrected is None:
+                    self.steps+=1;self.last_decision=dict(
+                        policy_action=policy.tolist(),policy_risks=risks,
+                        independent_risk_refusal=reason)
+                    self.stop("simultaneous_high_confidence_risks_no_joint_qualification")
+                    return self.refuse()
+                final,decision=super().choose(corrected)
+                decision["policy_action"]=policy.tolist()
+                decision["policy_risks_original"]=risks
+                if final is not None:
+                    self.projected=True;self.projected_arms=active
+                    self.takeover_sequence+=1
+                    decision["pre_super_projection_arms"]=active
+                    if decision["mode"]=="Normal":
+                        decision.update(mode="Constrained_Joint",
+                            takeover_id=self.takeover_sequence,
+                            projection_reason="independent_free_risk_correction")
+                return final,decision
             ai=active[0]
             if risks[ai].get("gripper_contact",{}).get("command_reversal"):
                 self.steps+=1;self.last_decision=dict(policy_action=policy.tolist(),policy_risks=risks)

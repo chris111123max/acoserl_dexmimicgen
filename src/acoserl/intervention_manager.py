@@ -237,12 +237,14 @@ class InterventionManagerMixin:
         controlling = self.control_active()
         before_stages = self.last_decision.get("collaboration", {}).get(
             "per_arm", ["unknown"] * 2)
-        for arm, stage in zip(ARMS, before_stages):
+        guide=controlling and self.mode.startswith("Guide_")
+        for ai, (arm, stage) in enumerate(zip(ARMS, before_stages)):
             key = (arm, stage)
             self.episode_phase_steps[key] = self.episode_phase_steps.get(key, 0) + 1
-            if controlling:
+            if controlling and (not guide or ai==self.active):
                 self.episode_touched.add(key)
             else:
+                # The other arm remains a Policy arm during ordinary Guide.
                 self.episode_policy_steps[key] = self.episode_policy_steps.get(key, 0) + 1
         result = super().after_step()
         state, contact = snapshot(self.env), self.contacts.read()

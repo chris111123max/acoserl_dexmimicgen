@@ -93,9 +93,14 @@ class V3Mixin:
 
     def start_recovery(self,ai,state,kind,target):
         if self.v3_enabled():
-            entry=self.passive_hold_entry(ai,state)
-            if not entry["allowed"]:raise RuntimeError("recovery start without calibrated passive hold")
-            self.hold_age=0;self.hold_limit=entry["calibration_horizon_controls"]
+            if kind=='sliding':
+                # Ordinary Guide never acquires static ownership of the
+                # independent Policy arm.
+                self.hold_age=0;self.hold_limit=None
+            else:
+                entry=self.passive_hold_entry(ai,state)
+                if not entry["allowed"]:raise RuntimeError("recovery start without calibrated passive hold")
+                self.hold_age=0;self.hold_limit=entry["calibration_horizon_controls"]
         return super().start_recovery(ai,state,kind,target)
 
     def start_local(self,ai,index=None,contact_mode=False,validation=False):
@@ -267,6 +272,12 @@ class V3Mixin:
             decision["takeover_id"]=self.takeover_id
         if final is None:
             self.last_decision=decision;self.stop(projection["refusal"]);return self.refuse()
+        if decision.get("pre_super_projection_arms") and source.startswith(("Guide_","Recover_")):
+            # An independent safety correction on the Policy arm is not
+            # expert guidance on that arm; exclude the mixed step from Demo.
+            decision.update(mode="Constrained_Joint",
+                source_before_projection=source,action_projection_applied=True,
+                projection_reason="independent_policy_risk_correction")
         if projection["applied"]:
             affected={i for i in range(2) if np.max(abs(final[7*i:7*i+7]-intervention[7*i:7*i+7]))>1e-7}
             affected.update(getattr(self,"projected_arms",[]) if self.projected else [])
@@ -360,6 +371,17 @@ class V3Mixin:
         source_mode=self.mode
         super().handback(result,index)
         if not result.get("handback") or self.mode=="Safe_Stop":return
+        if source_mode.startswith("Guide_"):
+            # No Recovery_Stabilizing static hold for Guide: the non-guided
+            # arm was always Policy-controlled. Next command is a guarded
+            # full Actor proposal without moving either arm to a hold pose.
+            self.handoff_local=None;self.handoff_phase="Handoff_Ready"
+            self.mode="Handoff_Ready"
+            self.guarded_steps=0;self.guarded_unmodified=0
+            self.v3_stats["target_reached"]+=1
+            result.update(target_reached=True,handback=False,
+                safe_handback=False,guide_handoff_no_passive_hold=True)
+            return
         self.handoff_local=HandoffHold(self,source_mode)
         self.handoff_phase="Recovery_Stabilizing";self.mode="Recovery_Stabilizing"
         self.handoff_stable=0;self.handoff_age=0

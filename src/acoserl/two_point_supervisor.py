@@ -148,6 +148,21 @@ class TwoPointMixin:
         if any(arm in {e['a'],e['b']} for e in contact['edges']):return False,'active_arm_has_contact_no_free_return'
         oe=object_error(state['objects'][obj],self.ref_object(obj,p['p0']))
         if oe['position_m']>.003 or oe['rotation_rad']>.035:return False,'target_object_not_at_validated_pick_pose'
+        # Ordinary sliding Guide is single-arm feedback, NOT an arm-freezing
+        # P0 recovery. The other arm retains its Policy action and must pass
+        # whole-joint action screening before either arm moves.
+        if kind=='sliding':
+            if target>=p['first_contact']:return False,'guide_target_crosses_contact_barrier'
+            if self.contact_assessment(state,contact)['category']!='Independent':
+                return False,'guide_requires_independent_free_space'
+            start=np.asarray(state['poses'][ai]['position'])
+            goal=np.asarray(self.pose(ai,target)['position'])
+            other=np.asarray(state['poses'][1-ai]['position'])
+            delta=goal-start
+            alpha=np.clip(np.dot(other-start,delta)/max(float(np.dot(delta,delta)),1e-12),0.,1.)
+            if np.linalg.norm(start+alpha*delta-other)<.12:
+                return False,'guide_tcp_corridor_near_other_arm'
+            return True,'eligible_single_arm_free_guide'
         entry=self.passive_hold_entry(ai,state);self.last_decision['passive_hold_entry']=entry
         if not entry['allowed']:return False,entry['reason']
         # Free pregrasp captures were observed to drift 2.13mm when the local
@@ -181,7 +196,13 @@ class TwoPointMixin:
         goal=self.pose(ai,target);current=state['poses'][ai];height=max(current['position'][2],goal['position'][2],float(self.trace['object_positions'][0,:,2].max())+.10)
         p_up=copy.deepcopy(current);p_up['position'][2]=height
         p_over=copy.deepcopy(goal);p_over['position'][2]=height
-        self.plan=[p_up,p_over,goal];self.recovery_stage='Return_P0' if kind=='safety_recovery' else 'Sliding_Return';self.replay_index=None
+        if kind=='sliding':
+            # Track the legal window target directly. The normal second-arm
+            # Policy proposal will be spliced back in at every control step.
+            self.plan=[];self.targets[ai]=goal
+            self.recovery_stage='Sliding_Guide';self.replay_index=None
+        else:
+            self.plan=[p_up,p_over,goal];self.recovery_stage='Return_P0';self.replay_index=None
         self.events.append({'event':'start','step':self.steps,'arm':ARMS[ai],'kind':kind,'target':target,'plan':[p['position'].tolist() for p in self.plan]})
 
     def choose(self,policy_action):
@@ -215,7 +236,27 @@ class TwoPointMixin:
 
     def recovery_action(self,state):
         ai=self.active
-        if self.recovery_stage=='Replay_P0_P1':
+        if self.recovery_stage=='Sliding_Guide':
+            # Guide owns ONLY the active arm. In particular, do not replace a
+            # moving, independently controlled arm with a captured static pose.
+            action=np.asarray(self.last_decision['policy_action'],dtype=float).copy()
+            sl=slice(ai*7,ai*7+7)
+            guided=self.command(self.targets,self.grips)
+            action[sl]=guided[sl]
+            self.last_decision['per_arm_control']=[
+                'Guide' if i==ai else 'Policy' for i in range(2)]
+            # V2/V3 action checks are applied to the actual composed 14D
+            # command. Unsafe active-guide or passive-policy proposals fail
+            # closed; never confuse this with qualification for static Hold.
+            if self.contact_assessment(state,self.contacts.read())['category']!='Independent':
+                self.stop('guide_contact_mode_changed')
+                return self.refuse()
+            risks=self.action_risks(action,state)
+            if any(r['risk'] for r in risks):
+                self.last_decision['guide_composed_action_risks']=risks
+                self.stop('guide_composed_action_risk_unqualified')
+                return self.refuse()
+        elif self.recovery_stage=='Replay_P0_P1':
             # Literal demonstrated action at t: s_t -> s_(t+1). Other arm holds its captured pose.
             action=self.command(self.targets,self.grips);sl=slice(ai*7,ai*7+7)
             nominal=self.trace['actions'][self.replay_index,sl].copy()
@@ -227,7 +268,7 @@ class TwoPointMixin:
             self.targets[ai]=self.plan[0];action=self.command(self.targets,self.grips)
         if hasattr(self,'action_bounds'):
             bounded=np.clip(action,*self.action_bounds);self.last_decision['controller_saturated_dimensions']=np.flatnonzero(np.abs(action-bounded)>1e-8).tolist();action=bounded
-        self.last_decision.update(mode=self.mode,execute=True,recovery_step=self.age+1,recovery_kind=self.recovery_kind,recovery_stage=self.recovery_stage,replay_index=self.replay_index,indices=self.indices(),executed_action=action.tolist())
+        self.last_decision.update(mode=self.mode,active_arm=ARMS[ai],execute=True,recovery_step=self.age+1,recovery_kind=self.recovery_kind,recovery_stage=self.recovery_stage,replay_index=self.replay_index,indices=self.indices(),executed_action=action.tolist())
         return action,self.last_decision
 
     def retention(self,state):
@@ -260,17 +301,37 @@ class TwoPointMixin:
         if self.completed[0] and self.protected_first is None:
             speed=np.asarray(self.env.sim.data.cvel[self.env.obj_body_id['piece_1']])
             if np.linalg.norm(speed[3:])<=self.cfg['placed_object_linear_speed_m_s'] and np.linalg.norm(speed[:3])<=self.cfg['placed_object_angular_speed_rad_s']:self.protected_first=copy.deepcopy(state['objects']['piece_1'])
-        frozen=self.control_active()
         projected=set(getattr(self,"projected_arms",[])) if getattr(self,"projected",False) else set()
+        guide=self.control_active() and self.recovery_stage=='Sliding_Guide'
         for ai,w in enumerate(self.windows):
             lo,hi,stage=self.legal_bounds(ai,state)
+            # During Guide only the guided arm's window is frozen. The
+            # independently controlled Policy arm must keep its own progress.
+            frozen=self.control_active() and (not guide or ai==self.active)
             if not frozen and lo>w.floor:w.event(lo)
             w.tick(hi,frozen or ai in projected);self.cursors[ai].index=max(self.cursors[ai].index,w.end)
         result={'handback':False,'indices':self.indices(),'completed':self.completed.copy()}
         if not self.control_active():return result
         self.age+=1;self.intervention_control_steps+=1
-        ai=self.active;p=self.points['arms'][ARMS[ai]];failure,pe=self.retention(state)
+        ai=self.active;p=self.points['arms'][ARMS[ai]]
         danger=self.physical_danger(state,self.contacts.read())
+        if self.recovery_stage=='Sliding_Guide':
+            # No passive-retention test: the other arm has never been put in
+            # Hold. Its normal motion is checked by joint and substep safety.
+            result.update(recovery_stage=self.recovery_stage,passive_control='Policy',
+                          retention_failure=danger)
+            if danger:self.stop(danger);return result
+            e=errors(state['poses'][ai],self.targets[ai])
+            okay=(e['position_m']<self.cfg['exit_position_m'] and
+                  e['rotation_rad']<self.cfg['exit_rotation_rad'])
+            self.stable=self.stable+1 if okay else 0
+            result.update(error=e,stable_guide_steps=self.stable)
+            if self.stable>=self.cfg['stable_exit_steps']:
+                self.handback(result,None)
+            elif self.age>=self.cfg.get('max_guide_steps',80):
+                self.stop('guide_timeout_no_safe_handback')
+            return result
+        failure,pe=self.retention(state)
         if danger:failure=danger
         result.update(passive_error=pe,recovery_stage=self.recovery_stage,retention_failure=failure)
         if failure:self.stop(failure);return result
