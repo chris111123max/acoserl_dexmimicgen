@@ -29,15 +29,16 @@ class CollectionHealth:
   by_env=d.setdefault('grasp_streaks_by_env',{})
   streak=by_env.setdefault(str(p.get('env_id')),{'A':0,'B':0,'episode':None})
   if streak.get('episode')!=p.get('episode_id'):
-   streak.update(A=0,B=0,episode=p.get('episode_id'))
+   streak.update(A=0,B=0,episode=p.get('episode_id'),counted_A=False,counted_B=False)
   for arm,obj in [('A','piece_1'),('B','piece_2')]:
    held=bool(p.get('supervisor_grasps',{}).get(arm,{}).get(obj,False))
    d['grasps'][arm]+=int(held) # historical step-occurrence counter
    streak[arm]=streak[arm]+1 if held else 0
    d['grasp_streaks'][arm]=max(d['grasp_streaks'][arm],streak[arm])
-   if streak[arm]>=10 and d['grasp_episode_markers'][arm]!=list(episode):
+   if streak[arm]>=10 and not streak.get('counted_'+arm,False):
     d['stable_grasp_episodes'][arm]+=1
     d['grasp_episode_markers'][arm]=list(episode)
+    streak['counted_'+arm]=True
   d['first_assembly']+=int(p.get('task_metrics',{}).get('first_piece_assembled',False))
   d['full_success']+=int(p.get('success',False))
   stage=p.get('stage','unknown');d['stages'][stage]=d['stages'].get(stage,0)+1
