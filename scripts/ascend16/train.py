@@ -189,7 +189,7 @@ def main():
    if a.mode=='formal' and next_diagnostic is not None and c['actual_interactions']>=next_diagnostic:
     write(out/f'early_diagnostic_{next_diagnostic:07d}.json',dict(counters=c,health=health.snapshot(),stall=health.stall(),workers=pool.diagnostics()))
     next_diagnostic=next((x for x in (2000,5000,10000,25000) if x>c['actual_interactions']),None)
-   if a.mode=='formal' and health.stall()['stop']:stop_reason='collection_deadlock_no_task_progress';break
+   if a.mode=='formal' and health.stall()['stop']:stop_reason='collection_deadlock_intervention_or_task_progress';break
    if a.mode=='formal' and c['actual_interactions']>=next_checkpoint:
     save(out/'checkpoints'/f'step_{c["actual_interactions"]:07d}',agent,on,off,assembler,pool,c,config,norm,dynamic);next_checkpoint+=25000
    if a.mode=='formal' and c['actual_interactions']>=next_eval:
