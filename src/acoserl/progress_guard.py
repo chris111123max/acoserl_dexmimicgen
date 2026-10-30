@@ -134,14 +134,8 @@ class AssemblyProgressGuard:
             return dict(allowed=False,reason="no_completed_first_assembly")
         assessment=m.contact_assessment(state)
         if not assessment["allowed"]:return dict(allowed=False,reason=assessment["reason"])
-        ctl=env.robots[ai].part_controllers["right"];dt=1./float(env.control_freq)
-        omega=np.sqrt(np.asarray(ctl.kp));response=1-(1+omega*dt)*np.exp(-omega*dt)
-        site=env.sim.model.site_id2name(env.robots[ai].eef_site_id["right"])
-        v=np.asarray(env.sim.data.get_site_xvelp(site));w=np.asarray(env.sim.data.get_site_xvelr(site))
-        delta=np.asarray(ctl.origin_ori)@(np.asarray(action[7*ai:7*ai+6])*np.asarray(ctl.output_max))[:3]
-        angular=np.asarray(ctl.origin_ori)@(np.asarray(action[7*ai:7*ai+6])*np.asarray(ctl.output_max))[3:]
-        dp=response[:3]*delta+v*dt*np.exp(-omega[:3]*dt)
-        dw=response[3:]*angular+w*dt*np.exp(-omega[3:]*dt)
+        from acoserl.osc_prediction import predict
+        nominal=predict(env,ai,action);dp=nominal['displacement'];dw=nominal['angular_displacement']
         increment=Rotation.from_rotvec(dw).as_matrix()
         released_B=(ai==1 and not any(state["actual_grasps"]["B"].values())
                     and (m.completed[1] or m.valid_release(1,state)))

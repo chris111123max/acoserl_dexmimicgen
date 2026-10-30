@@ -1,7 +1,7 @@
 {
   "collector_protocol": "autoserl_baseline_v1",
-  "passed": true,
-  "formal_training_approved": true,
+  "passed": false,
+  "formal_training_approved": false,
   "selected_utd": 1,
   "selected_visual": "resnet18_spatial84",
   "pretrained_validation_passed": true,
@@ -150,10 +150,11 @@
   "source_commit": "7d0261d407158a25d3f54b3c705df6462d08ea52",
   "integration": "outputs/ascend16/autoserl_baseline_npu_v1/",
   "level_A_system_integrated": true,
-  "level_B_formal_running": true,
+  "level_B_formal_running": false,
   "level_C_task_learned": false,
   "scope": "Necessary single-task baseline gates only; advanced12+4 not prerequisite",
   "source_commit_note": "Parent HEAD during dirty-tree validation; tested_source_sha256 binds exact code sealed in the subsequent implementation commit. Formal run records that commit separately.",
   "formal_startup_status": "docs/acoserl_foundation/AUTOSERL_BASELINE_FORMAL_STATUS.json",
-  "implementation_commit": "91f9e545b6ce4f364ca872b50497d8bc265fa070"
+  "implementation_commit": "91f9e545b6ce4f364ca872b50497d8bc265fa070",
+  "superseded_reason": "Training stopped after natural exploration produced no interventions; new physical acceptance required."
 }

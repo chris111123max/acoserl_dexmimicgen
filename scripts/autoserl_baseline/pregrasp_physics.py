@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 ROOT=Path(__file__).resolve().parents[2]
 def case(value):
- tag,arm,kind=value
+ tag,arm,kind,production=value
  os.environ['ASCEND_RT_VISIBLE_DEVICES']=''
  import torch
  torch.set_num_threads(1);sys.path.insert(0,str(ROOT/'scripts/assembly_feasibility'))
@@ -14,7 +14,7 @@ def case(value):
  from resfit.rl_finetuning.utils.normalization import ActionScaler
  out=ROOT/'outputs/autoserl_baseline'/tag/(kind+'_'+arm);out.mkdir(parents=True,exist_ok=False)
  E,D,R=setup();m=BimanualAutoSERL(E,intervention_enabled=False)
- m.manager_cfg={**method_config('full_acoserl'),'v3_enabled':True,'baseline_mode':True,'development_validation':True,
+ m.manager_cfg={**method_config('full_acoserl'),'v3_enabled':True,'baseline_mode':True,'development_validation':not production,
                 'carry_local':{'enabled':False},'joint':{'enabled':False},'passive_brake':{'enabled':False}}
  n=json.loads((ROOT/'docs/ascend16/normalization.json').read_text());scale=ActionScaler(torch.tensor(n['effective_action_min']),torch.tensor(n['effective_action_max']),action_scale=0,min_range_per_dim=.1)
  m.action_bounds=(scale.limits.min.numpy(),scale.limits.max.numpy());R.safety=m.substep_safety
@@ -64,9 +64,9 @@ def case(value):
   save(out/'result.json',result);save(out/'controls.json',rows);E.close()
  return result
 if __name__=='__main__':
- p=argparse.ArgumentParser();p.add_argument('--tag',required=True);a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--tag',required=True);p.add_argument('--kind',choices=['window','recovery']);p.add_argument('--production',action='store_true');a=p.parse_args()
  out=ROOT/'outputs/autoserl_baseline'/a.tag;out.mkdir(exist_ok=False)
- work=[(a.tag,arm,kind) for arm in ('A','B') for kind in ('window','recovery')]
+ work=[(a.tag,arm,kind,a.production) for arm in ('A','B') for kind in ('window','recovery') if not a.kind or kind==a.kind]
  (out/'cases.json').write_text(json.dumps(work))
  with mp.get_context('spawn').Pool(4) as pool:
   results=[]

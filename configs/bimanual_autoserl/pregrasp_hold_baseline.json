@@ -471,27 +471,30 @@
     }
   ],
   "source_sha256": {
-    "src/acoserl/manager_v3.py": "427d13edeeabd653747a59ceacbdce9181bfce40f33f1dbf5da1a80ca65de02b",
-    "src/acoserl/progress_guard.py": "70e36baca5f1ecc57070e8e64c3b96362d7833672f6ebc921a4f2d54393c6ef2",
+    "src/acoserl/manager_v3.py": "a15fe0c74d33aae24252cce596b7cc1dd8ac20a6794a15d798867aefb3b09b94",
+    "src/acoserl/progress_guard.py": "1a7ba61b6c37a0674d671f14c80b2e951bad863ede5e8e96a288c5eb31c04a7b",
     "src/acoserl/hold_envelope.py": "7a52a2243f4719a64dc7b9f9fe129ac0db9ff9fc026fef515a5b7372d78ef1b1",
     "src/acoserl/local_recovery.py": "5d563f55df5ed8c24f1d41495a528cb3d27c3f6b97613922040a982d35e6675c",
-    "src/acoserl/manager_v2.py": "07e94c6a509769eb8853e678e1f53ea83e381c6a5b9f760a2f5405b006f5475c",
+    "src/acoserl/manager_v2.py": "25452f3c11b0ae6816006bb1d6034e8599a831d2107595b6822f64df0a471927",
     "src/acoserl/contact_modes.py": "204c800c5b1a51a0c026718b27bf3a9f6a3c59c706e7dcde8b2049682b873393",
-    "src/acoserl/two_point_supervisor.py": "6f0af00a9b29f0fc8990f50e6b1b5af7f4a05668d9c311238a8a794bca084608",
-    "src/acoserl/intervention_manager.py": "aa13768e5206771416a9960653a7456d7fa5ccc69bf2655b9b8acfdf25f41af0",
+    "src/acoserl/two_point_supervisor.py": "33ce57f1f29791927afbb97de6eff4d4becb752a2f900010353cadb8e5685ed2",
+    "src/acoserl/intervention_manager.py": "e055ce5a94601d01e32dca6046cc04b35d12d53ec64515b74e48b003d193da44",
     "src/acoserl/bimanual_autoserl.py": "cf67e73261f2677e45d70cae9fdf0c5e80d344843ea6baed61aebc2da03808f0",
     "configs/bimanual_autoserl/v1.json": "841543748e2df98f0e13a77a26c0cf69f7f42c86481d0ff2a0b66814eb909295",
     "configs/bimanual_autoserl/recovery_points.json": "b2586d922750242dc059d62fe2d9aee651cf2ff23c04e4ef59bd622c0b1a31d4",
     "configs/bimanual_autoserl/hold_envelope_v3r3.json": "76548296b03e206b87d0836c5d8ce1c6d106564ec0d3215e9875f63d64219e8e",
     "configs/bimanual_autoserl/reference_trace.npz": "d7e4239184edc2c6694312a9fe7bb24f71272d6a47e8c84ac33c9c0375c2b7e9",
-    "src/acoserl/pregrasp_hold.py": "85f9efab87665ec04c19e7ef0218f812984a50c809923f1512b20be2f1cad97c"
+    "src/acoserl/pregrasp_hold.py": "f916d38c377e3de8b4f94cfb18171257129d4eeb77a57f243c00c1c9e1784962",
+    "src/acoserl/osc_prediction.py": "dcabbefb94d23a761c28ce41ba12cc991b17283f6fe42fd45fc6c829fd252ea2"
   },
   "note": "Historical task-specific passive hold geometry; new baseline physical validation required before production enable",
   "evidence": [
     "outputs/autoserl_baseline/pregrasp_baseline_v1/window_A/result.json",
     "outputs/autoserl_baseline/pregrasp_baseline_v1/recovery_A/result.json",
     "outputs/autoserl_baseline/pregrasp_baseline_v1/window_B/result.json",
-    "outputs/autoserl_baseline/pregrasp_baseline_v1/recovery_B/result.json"
+    "outputs/autoserl_baseline/pregrasp_baseline_v1/recovery_B/result.json",
+    "outputs/autoserl_baseline/github_pregrasp_final_dev/recovery_A/result.json",
+    "outputs/autoserl_baseline/github_pregrasp_final_dev/recovery_B/result.json"
   ],
-  "scope_note": "Actual four pregrasp tests; subsequent contact/release guard changes are inactive before first assembly. Current production NPU integration separately required."
+  "scope_note": "Source-bound narrow P0 hold only; A/B genuine recovery development validation passed, production-path physical recheck remains mandatory."
 }

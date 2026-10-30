@@ -7,7 +7,7 @@ from acoserl.isolated_nstep import IsolatedNStep
 from acoserl.transition_semantics import Boundary,TASK_INTERVENTION_SOURCES,SAFETY_PROJECTION_SOURCES,source_family
 
 class DynamicDemo:
-    admission_protocol = "task_interventions_baseline_per_arm_v1"
+    admission_protocol = "task_interventions_guide_policy_per_arm_v2"
     def __init__(self, capacity=5000, original_fraction=.5, n=3, gamma=.99,
                  admission_mode="safe_handback", original_quota=None,
                  positive_quota=0, sampling_seed=0):

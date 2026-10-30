@@ -38,3 +38,6 @@ checkpoint周期仍25000，因此启动核验时尚无正式checkpoint；保存/
 新的只读状态工具：source scripts/ascend16/activate.sh后执行python scripts/autoserl_baseline/status.py。它读取当前baseline tag，避免旧status脚本读取上次实验。验收和正式运行两个目录严格分开。
 
 完整机器启动快照保存在outputs/autoserl_baseline/formal_startup_current.json、formal_startup_confirmed.json，以及本目录AUTOSERL_BASELINE_FORMAL_STATUS.json。下一轮只监控当前PID、有效步、更新、阶段与2k/5k/10k诊断，不重复启动NPU训练，不回到旧V3高级12+4研究。
+
+## n
+上述为历史启动快照；此训练已按用户要求正常停止，最终有效步11587，Dynamic Demo为0。系统需完成新的自然探索验收后才能重新评估开训。

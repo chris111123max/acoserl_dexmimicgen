@@ -106,18 +106,23 @@ class InterventionManagerMixin:
         assert ctl.input_type == "delta" and ctl.input_ref_frame == "base"
         assert np.allclose(ctl.output_max, -ctl.output_min)
         current = np.asarray(state["poses"][ai]["position"])
-        displacement = np.asarray(ctl.origin_ori) @ (
-            np.clip(physical_action[7*ai:7*ai+3], -1, 1) * np.asarray(ctl.output_max)[:3])
+        from acoserl.osc_prediction import predict
+        prediction=predict(self.env,ai,physical_action)
+        displacement=prediction['displacement']
         lo = self.positions[:, ai].min(0) - self.cfg["free_workspace_margin_m"]
         hi = self.positions[:, ai].max(0) + self.cfg["free_workspace_margin_m"]
         margin = float(np.minimum(current - lo, hi - current).min())
         proposed = current + displacement
-        crossing = bool(np.any(proposed < lo) or np.any(proposed > hi))
-        outward = bool(np.any((current-lo < self.manager_cfg["risk_margin_m"]) & (displacement < 0))
-                       or np.any((hi-current < self.manager_cfg["risk_margin_m"]) & (displacement > 0)))
+        # Nominal prediction is not a certificate: retain the raw setpoint as
+        # an additional conservative screen, rather than interpreting it as motion.
+        command=np.asarray(prediction['command_displacement'])
+        crossing = bool(np.any(proposed < lo) or np.any(proposed > hi) or
+                        np.any(current+command < lo) or np.any(current+command > hi))
+        outward = bool(any(np.any((current-lo < self.manager_cfg["risk_margin_m"]) & (d < 0))
+                       or np.any((hi-current < self.manager_cfg["risk_margin_m"]) & (d > 0)) for d in (displacement,command)))
         return dict(arm=ARMS[ai], risk=bool(crossing or outward), margin_m=margin,
                     predicted_position=proposed.tolist(), displacement=displacement.tolist(),
-                    estimate="one OSC command, no dynamics or collision certificate")
+                    command_displacement=command.tolist(),estimate=prediction["estimate"])
 
     def advanced_qualification(self, kind, state=None, contact=None):
         # No implementation in this revision. Config alone never grants authority.
@@ -237,12 +242,14 @@ class InterventionManagerMixin:
         controlling = self.control_active()
         before_stages = self.last_decision.get("collaboration", {}).get(
             "per_arm", ["unknown"] * 2)
-        for arm, stage in zip(ARMS, before_stages):
+        guide=controlling and self.mode.startswith("Guide_")
+        for ai, (arm, stage) in enumerate(zip(ARMS, before_stages)):
             key = (arm, stage)
             self.episode_phase_steps[key] = self.episode_phase_steps.get(key, 0) + 1
-            if controlling:
+            if controlling and (not guide or ai==self.active):
                 self.episode_touched.add(key)
             else:
+                # The other arm remains a Policy arm during ordinary Guide.
                 self.episode_policy_steps[key] = self.episode_policy_steps.get(key, 0) + 1
         result = super().after_step()
         state, contact = snapshot(self.env), self.contacts.read()
@@ -283,8 +290,11 @@ class InterventionManagerMixin:
             obj = self.points["arms"][ARMS[self.active]]["object"]
             change = object_error(state["objects"][obj], self.baseline["objects"][obj])
             gripper = np.asarray(self.env.robots[self.active].gripper["right"].current_action)
+            contact=self.contacts.read()
+            active_contact=any(ARMS[self.active] in (edge['a'],edge['b']) for edge in contact['edges'])
             if (any(state["actual_grasps"][ARMS[self.active]].values()) or
-                    gripper.shape != (2,) or gripper[0] < .999 or
+                    gripper.shape != (2,) or not np.isfinite(gripper).all() or active_contact or
+                    self.contact_assessment(state,contact)['category']!='Independent' or
                     change["position_m"] > .003 or change["rotation_rad"] > .035):
                 self.stop("guide_handback_grasp_or_object_stage_mismatch")
                 result["handback"] = False

@@ -34,7 +34,7 @@ def evaluate(agent,normalization,out,step,deadline,torch,device,episodes=20,mana
  write(out/f'evaluation_{step:07d}.json',result);return result
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--mode',choices=['stress','formal','integration'],required=True);p.add_argument('--tag',required=True);p.add_argument('--utd',type=int,choices=[1,2,4]);p.add_argument('--resume',type=Path);p.add_argument('--stress-steps',type=int,default=64);p.add_argument('--gate',type=Path,default=ROOT/'docs/ascend16/deployment_gate.json');p.add_argument('--visual',choices=['minivit','dinov2_vits14','resnet18_imagenet','squeezenet1_1_imagenet','resnet18_spatial84'],default='minivit');p.add_argument('--intervention-method',choices=['plain_rlpd','independent_window','window_recovery','full_acoserl'],default='full_acoserl');p.add_argument('--integration-steps',type=int,default=256);p.add_argument('--integration-seconds',type=int,default=1200);p.add_argument('--demo-original-quota',type=int,choices=[64,96,128]);p.add_argument('--demo-positive-quota',type=int,choices=[0,2,4]);p.add_argument('--demo-admission',choices=['official','safe_handback']);p.add_argument('--integration-pregrasp',action='store_true');p.add_argument('--supervisor-version',choices=['v2','v3','baseline'],default='baseline');a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--mode',choices=['stress','formal','integration'],required=True);p.add_argument('--tag',required=True);p.add_argument('--utd',type=int,choices=[1,2,4]);p.add_argument('--resume',type=Path);p.add_argument('--stress-steps',type=int,default=64);p.add_argument('--gate',type=Path,default=ROOT/'docs/ascend16/deployment_gate.json');p.add_argument('--visual',choices=['minivit','dinov2_vits14','resnet18_imagenet','squeezenet1_1_imagenet','resnet18_spatial84'],default='minivit');p.add_argument('--intervention-method',choices=['plain_rlpd','independent_window','window_recovery','full_acoserl'],default='full_acoserl');p.add_argument('--seed',type=int);p.add_argument('--integration-steps',type=int,default=256);p.add_argument('--integration-seconds',type=int,default=1200);p.add_argument('--demo-original-quota',type=int,choices=[64,96,128]);p.add_argument('--demo-positive-quota',type=int,choices=[0,2,4]);p.add_argument('--demo-admission',choices=['official','safe_handback']);p.add_argument('--integration-pregrasp',action='store_true');p.add_argument('--supervisor-version',choices=['v2','v3','baseline'],default='baseline');a=p.parse_args()
  assert not a.integration_pregrasp or (a.mode=='integration' and a.resume is None and a.supervisor_version=='baseline')
  assert a.tag.replace('_','').replace('-','').isalnum() and '/' not in a.tag
  stop_requested={'value':False}
@@ -42,6 +42,9 @@ def main():
  signal.signal(signal.SIGINT,lambda *_:stop_requested.update(value=True))
  config=json.loads((ROOT/'configs/ascend16/formal.json').read_text())
  config['purpose']=a.mode
+ if a.seed is not None:
+  assert a.mode=='integration','seed override is limited to independent bounded validation'
+  config['seed']=a.seed
  config['visual_encoder']=a.visual
  from acoserl.intervention_manager import method_config
  manager_config=method_config(a.intervention_method)
@@ -165,6 +168,7 @@ def main():
    for e,payload in enumerate(info):
     capability.observe(payload,actor_controlled=not warm);health.observe(payload)
     if term[e] or trunc[e]:health.episode(payload)
+   health.set_dynamic_demo_rows(len(dynamic.buffer) if dynamic is not None else 0)
    c['collection_health']=health.snapshot()
    c['global_capability']=capability.snapshot();pool.apply_capability(capability.snapshot())
    c['actual_interactions']+=real+partial;c['valid_real_steps']+=real;c['partial_action_attempts']+=partial;c['proposals']+=16
@@ -189,7 +193,7 @@ def main():
    if a.mode=='formal' and next_diagnostic is not None and c['actual_interactions']>=next_diagnostic:
     write(out/f'early_diagnostic_{next_diagnostic:07d}.json',dict(counters=c,health=health.snapshot(),stall=health.stall(),workers=pool.diagnostics()))
     next_diagnostic=next((x for x in (2000,5000,10000,25000) if x>c['actual_interactions']),None)
-   if a.mode=='formal' and health.stall()['stop']:stop_reason='collection_deadlock_no_task_progress';break
+   if a.mode=='formal' and health.stall()['stop']:stop_reason='collection_deadlock_intervention_or_task_progress';break
    if a.mode=='formal' and c['actual_interactions']>=next_checkpoint:
     save(out/'checkpoints'/f'step_{c["actual_interactions"]:07d}',agent,on,off,assembler,pool,c,config,norm,dynamic);next_checkpoint+=25000
    if a.mode=='formal' and c['actual_interactions']>=next_eval:
@@ -211,6 +215,7 @@ def main():
   c['global_capability']=capability.snapshot();pool.apply_capability(capability.snapshot())
   if dynamic is not None:
    for e in set(dynamic.pending)|set(dynamic.stream.queues):dynamic.close_episode(e,True,6)
+  health.set_dynamic_demo_rows(len(dynamic.buffer) if dynamic is not None else 0)
   c['collection_health']=health.snapshot()
   visual_final=manifest(agent);assert visual_initial['backbone_hashes']==visual_final['backbone_hashes'],'frozen pretrained weights changed'
   visual_audit={'frozen_backbones_unchanged':True,'backbones_eval':all(not e.backbone.training for e in agent.encoders if hasattr(e,'backbone')),'adapter_grad_norms':[float(e.adapter.weight.grad.norm()) for e in agent.encoders if hasattr(e,'adapter') and e.adapter.weight.grad is not None]}

@@ -1,0 +1,25 @@
+{
+  "passed": false,
+  "formal_training_approved": false,
+  "target_commit": "81d232acfe1a43848b73afb118e0bf6d61ef95ba",
+  "reason": "Natural NPU and physical safety / two-seed checkpoint acceptance pending",
+  "checks": {
+    "guide_substep_hold_removed": {
+      "passed": false,
+      "note": "source corrected, natural physical Guide_A executed; no safe handback yet"
+    },
+    "guide_B_physics": {
+      "passed": false
+    },
+    "recovery_A_B_regression": {
+      "passed": false
+    },
+    "two_seed_npu_natural_interventions_and_dynamic_demo": {
+      "passed": false
+    },
+    "nstep_and_checkpoint": {
+      "passed": false
+    }
+  },
+  "no_long_training": true
+}

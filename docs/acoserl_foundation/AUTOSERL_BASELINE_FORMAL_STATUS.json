@@ -1,6 +1,6 @@
 {
   "level_A_system_integrated": true,
-  "level_B_formal_running": true,
+  "level_B_formal_running": false,
   "level_C_task_learned": false,
   "verified_utc": "2026-10-30T05:44:28.347379+00:00",
   "implementation_commit": "91f9e545b6ce4f364ca872b50497d8bc265fa070",
@@ -101,5 +101,11 @@
     "id": "aco-serl-v3",
     "status": "not_found",
     "no_duplicate_created": true
-  }
+  },
+  "historical_startup_snapshot": true,
+  "current_status": "stopped_by_user",
+  "stop_reason": "operator_stop",
+  "final_checkpoint": "outputs/ascend16/autoserl_baseline_formal_20261030_133346/checkpoints/final",
+  "final_valid_steps": 11587,
+  "final_dynamic_rows": 0
 }

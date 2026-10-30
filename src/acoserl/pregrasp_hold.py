@@ -12,7 +12,7 @@ def qualified_entry(manager,active,state,entry):
     proof=json.loads(p.read_text())
     development=bool(manager.manager_cfg.get('development_validation',False))
     if not proof.get('passed') and not development:return None
-    if proof.get('passed') and proof.get('source_sha256')!=manager.v3_fingerprint():return None
+    if proof.get('passed') and proof.get('source_sha256')!=manager.v3_fingerprint() and not development:return None
     pi=1-active;arm='AB'[pi]
     if manager.contact_assessment(state)['category']!='Independent':return None
     if any(state['actual_grasps']['AB'[active]].values()):return None
@@ -41,5 +41,5 @@ def qualified_entry(manager,active,state,entry):
             'calibrated_domain':domain['name'],'validated_error_bound_m':domain['observed_peak_eef_m'],
             'conservative_peak_position_m':float(position),'calibration_horizon_controls':manager.cfg['max_recovery_steps'],
             'qualification_scope':'static measured P0 hold pose/grasp only; actual2ms retention checks remain active',
-            'development_qualification':not proof.get('passed',False)}
+            'development_qualification':bool(development and proof.get('source_sha256')!=manager.v3_fingerprint()) or not proof.get('passed',False)}
     return None
