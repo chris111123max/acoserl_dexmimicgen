@@ -1,4 +1,4 @@
-"""Measurement and existing OSC command utilities; no policy or RL algorithm."""
+"""Measurement and existing OSC command utilities; real actions only."""
 from pathlib import Path
 import json,hashlib,os,re
 import numpy as np
@@ -75,12 +75,15 @@ class Contacts:
                 'dynamic_A_B_coupled':'B' in reachable,'max_external_contact_force_N':max_force,'max_robot_contact_force_N':max_robot_force,'details':details}
 
 class SafetyStop(RuntimeError):
-    pass
+    def __init__(self, reason, evidence=None):
+        super().__init__(reason)
+        self.evidence=evidence or {}
 
 class ActionOnly:
-    """After the one initial reset, all state setters are forbidden by this harness."""
+    """Frozen live physics; private-data preview, continuous live safety checks."""
     def __init__(self,env):
         self.env=env;self.contact=Contacts(env);self.log=[];self.physical_writes_attempted=0;self.safety=None
+        self.preview=None;self.last_attempt=None
         def denied(*args,**kwargs):
             self.physical_writes_attempted+=1
             raise RuntimeError('Direct physical state restoration is forbidden after initial setup')
@@ -88,24 +91,59 @@ class ActionOnly:
             setattr(env.sim,name,denied)
         env.reset=denied;env.reset_from_xml_string=denied
     def step(self,action):
+        from acoserl.substep_guard import WorkspacePreview,refresh_positions
+        action=np.asarray(action,dtype=float)
         assert np.isfinite(action).all() and np.max(np.abs(action))<=1.000001
-        # Monitor every 2 ms integration step. Exceptions stop the current test;
-        # no state correction or rollback is performed.
-        substeps=[];sim=self.env.sim
-        method='step2' if self.env.lite_physics else 'step'
-        original=getattr(sim,method)
+        sim=self.env.sim;method='step2' if self.env.lite_physics else 'step'
+        original=getattr(sim,method);start_time=float(sim.data.time)
+        owner=getattr(self.safety,'__self__',None)
+        if owner is not None and hasattr(owner,'positions') and self.preview is None:
+            self.preview=WorkspacePreview(self.env,owner)
+        attempt=dict(start_time=start_time,action=action.tolist(),executed_substeps=0,
+                     partial_physics=False,complete=False,substeps=[],stop_reason=None,physical_state_writes=0)
+        self.last_attempt=attempt
+        def fail(reason):
+            attempt.update(stop_reason=reason,physical_time=float(sim.data.time),
+                           partial_physics=bool(float(sim.data.time)>start_time))
+            if self.preview is not None:attempt['preview_totals']=self.preview.audit()
+            raise SafetyStop(reason,attempt)
         def monitored():
-            original();contact=self.contact.read();substeps.append(contact)
+            # At this point robosuite has updated ctrl for this physics step.
+            if self.preview is not None:
+                reason,prediction=self.preview.before(method)
+                if reason:
+                    attempt['rejected_preview']=prediction
+                    fail(reason)
+            original()
+            refresh_positions(sim.model._model,sim.data._data)
+            contact=self.contact.read()
+            attempt['executed_substeps']+=1
+            record=dict(index=attempt['executed_substeps'],time=float(sim.data.time),
+                        positions=[p['position'].tolist() for p in poses(self.env)],
+                        linear_velocities=[np.asarray(sim.data.get_site_xvelp(sim.model.site_id2name(r.eef_site_id['right']))).tolist() for r in self.env.robots],
+                        force_sample_time=float(sim.data.time)-float(sim.model._model.opt.timestep),
+                        robot_force_N=contact['max_robot_contact_force_N'],
+                        external_force_N=contact['max_external_contact_force_N'],
+                        edges=contact['edges'],coupled=contact['dynamic_A_B_coupled'])
+            # At most one control interval of evidence is retained in RAM.
+            attempt['substeps'].append(record)
+            if self.preview is not None:
+                actual=np.asarray(record['positions'])
+                predicted=np.asarray(prediction['predicted_positions'])
+                record['preview_error_m']=float(np.max(np.linalg.norm(actual-predicted,axis=1)))
+                if record['preview_error_m']>1e-6:fail('substep_preview_does_not_match_live_physics')
             if self.safety:
                 reason=self.safety(contact)
-                if reason:raise SafetyStop(reason)
+                if reason:fail(reason)
         setattr(sim,method,monitored)
         try:self.env.step(action)
         finally:setattr(sim,method,original)
+        attempt.update(complete=True,physical_time=float(sim.data.time))
         result=snapshot(self.env);result['contacts']=self.contact.read()
-        result['substep_coupled']=any(c['dynamic_A_B_coupled'] for c in substeps)
-        result['substep_max_external_force_N']=max((c['max_external_contact_force_N'] for c in substeps),default=0)
-        result['substep_contact_edges']=sorted({tuple(sorted((e['a'],e['b']))) for c in substeps for e in c['edges']})
+        result['substep_coupled']=any(s['coupled'] for s in attempt['substeps'])
+        result['substep_max_external_force_N']=max((s['external_force_N'] for s in attempt['substeps']),default=0.)
+        result['substep_max_robot_force_N']=max((s['robot_force_N'] for s in attempt['substeps']),default=0.)
+        result['substep_contact_edges']=sorted({tuple(sorted((e['a'],e['b']))) for s in attempt['substeps'] for e in s['edges']})
         return result
 
 def setup():
@@ -113,7 +151,7 @@ def setup():
     return env,demo,ActionOnly(env)
 
 def servo(env,targets,grippers,max_position_step=0.002,max_rotation_step=0.02,position_gain=1.0,rotation_gain=1.0):
-    """Bounded proportional pose feedback converted to existing base-frame OSC inputs."""
+    """Bounded proportional pose feedback in the existing base-frame OSC inputs."""
     current=poses(env);action=[]
     for i,r in enumerate(env.robots):
         ctl=r.part_controllers['right'];ctl.update()
@@ -123,10 +161,8 @@ def servo(env,targets,grippers,max_position_step=0.002,max_rotation_step=0.02,po
         dw=rotation_gain*Rotation.from_matrix(targets[i]['rotation']@current[i]['rotation'].T).as_rotvec();norm=np.linalg.norm(dw)
         if norm>max_rotation_step:dw*=max_rotation_step/norm
         local=np.concatenate((ctl.origin_ori.T@dp,ctl.origin_ori.T@dw))
-        # Controller's original symmetric scaling; no gains or physical parameters changed.
         assert np.allclose(ctl.output_max,-ctl.output_min)
-        values=local/ctl.output_max
-        action.extend(values.tolist()+[float(grippers[i])])
+        action.extend((local/ctl.output_max).tolist()+[float(grippers[i])])
     return np.asarray(action)
 
 def errors(actual,target):

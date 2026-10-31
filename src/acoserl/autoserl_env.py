@@ -1,4 +1,4 @@
-"""Explicit-reset, one-environment integration and versioned strict task semantics."""
+"""Explicit-reset bridge: executed normalized actions only, no fake transitions."""
 import numpy as np
 import torch
 from acoserl.transition_semantics import boundary,Boundary
@@ -37,19 +37,14 @@ class SafeStopBeforeStep(RuntimeError):
  def __init__(self,decision):self.decision=decision;super().__init__(str(decision.get('reason')))
 
 class UnsafePartialStep(SafeStopBeforeStep):
- """A monitored 2-ms integration step advanced; no full transition may be invented."""
+ """Some, but not all, live physics substeps advanced; no complete row exists."""
  pass
 
 class InterventionBridge:
- """Each instance owns one manager; vector auto-reset is intentionally unsupported.
-
- Incoming and stored actions use official normalized coordinates. Supervision
- uses physical controller input coordinates. It does not change Actor observations.
- """
+ """One manager per env; supervision uses physical controller coordinates."""
  def __init__(self,env,action_scaler,intervention_enabled=True,initial_progress=(0,0),config=None):
   self.env=env;self.scaler=action_scaler
   self.manager=BimanualAutoSERL(env.env,config,intervention_enabled)
-  # Recovery commands obey the same physical action domain as policy and offline rows.
   self.manager.action_bounds=(self.scaler.limits.min.numpy().copy(),self.scaler.limits.max.numpy().copy())
   self.manager.reset(initial_progress)
  def reset(self,**kwargs):
@@ -64,36 +59,45 @@ class InterventionBridge:
    self.manager.stop('recovery_action_outside_offline_normalization_domain')
    raise SafeStopBeforeStep({'mode':'Safe_Stop','reason':self.manager.stop_reason,'proposed_action':final.tolist()})
   if decision['mode']=='Normal':
-   # Preserve exact legacy numerical behavior: do not scale/unscale policy actions twice.
    assert np.array_equal(final,physical)
    executed_normalized=policy.clone();inverse=physical.copy()
   else:
    executed_normalized=self.scaler.scale(torch.tensor(final,dtype=torch.float32))
    inverse=self.scaler.unscale(executed_normalized).numpy()
   assert np.max(abs(inverse-final))<2e-6
-  # Execute the same float32 controller inputs represented in Replay Buffer.
+  start_time=float(self.env.env.sim.data.time)
   try:
    obs,reward,term,trunc,info=self.env.step(inverse)
   except SafetyStop as error:
    self.manager.stop('physics_substep_safety:'+str(error))
-   raise UnsafePartialStep({**decision,'interrupted_mode':decision['mode'],'mode':'Safe_Stop','reason':self.manager.stop_reason,
-    'partial_physics_step':True,'physical_time':float(self.env.env.sim.data.time),
-    'qpos_partial':self.env.env.sim.data.qpos.tolist(),'proposed_action':inverse.tolist()}) from error
+   partial=bool(float(self.env.env.sim.data.time)>start_time)
+   payload={**decision,'interrupted_mode':decision['mode'],'mode':'Safe_Stop','reason':self.manager.stop_reason,
+     'partial_physics_step':partial,'physical_time':float(self.env.env.sim.data.time),
+     'qpos_partial':self.env.env.sim.data.qpos.tolist(),'proposed_action':inverse.tolist(),
+     'physics_failure_evidence':getattr(error,'evidence',{})}
+   # Preview can reject BEFORE the first live substep. Do not count a shadow
+   # calculation as an attempted live physical interaction.
+   raise (UnsafePartialStep(payload) if partial else SafeStopBeforeStep(payload)) from error
   after=self.manager.after_step()
   proposal=np.asarray(decision.get('intervention_action_proposed',final),dtype=np.float32)
-  intervention_normalized=self.scaler.scale(torch.from_numpy(proposal)).numpy()
-  info['intervention_action_normalized']=intervention_normalized
+  info['intervention_action_normalized']=self.scaler.scale(torch.from_numpy(proposal)).numpy()
   info['task_quality']=after.get('task_quality',{})
   info['strict_task_success']=bool(info['success'])
   info['success']=bool(info['success'] and self.manager.stop_reason is None)
-  # Keep the existing safe strict-success definition consistent with sparse reward.
   reward=float(info['success'])
   kind,bootstrap=boundary(term,trunc,info['success'],self.manager.stop_reason)
   if self.manager.mode=='Safe_Stop' and not info['success']:
    term=kind==Boundary.PHYSICAL_FAILURE;trunc=not term
+  runner=self.env.action_runner
+  if runner is not None and runner.last_attempt is not None:
+   attempt=runner.last_attempt
+   decision['physics_execution']=dict(complete=attempt['complete'],
+       executed_substeps=attempt['executed_substeps'],
+       max_robot_force_N=max((s['robot_force_N'] for s in attempt['substeps']),default=0.),
+       preview=runner.preview.audit() if runner.preview else None)
   info.update(boundary_kind=int(kind),bootstrap_allowed=bootstrap)
   info.update({'auto_intervention':decision,'recovery_result':after,
-   'policy_action_normalized':policy.numpy(),'policy_action_physical':physical,
-   'executed_action_physical':inverse,'executed_action_normalized':executed_normalized,
-   'supervisor_mode_after':self.manager.mode,'supervisor_stop_reason':self.manager.stop_reason})
+    'policy_action_normalized':policy.numpy(),'policy_action_physical':physical,
+    'executed_action_physical':inverse,'executed_action_normalized':executed_normalized,
+    'supervisor_mode_after':self.manager.mode,'supervisor_stop_reason':self.manager.stop_reason})
   return obs,reward,term,trunc,info
