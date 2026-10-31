@@ -89,7 +89,7 @@ def main():
     p.add_argument('--utd',type=int,choices=(1,),default=1)
     p.add_argument('--visual',choices=('resnet18_spatial84','minivit'),default='resnet18_spatial84')
     p.add_argument('--supervisor-version',choices=('baseline',),default='baseline')
-    p.add_argument('--intervention-method',choices=('full_acoserl','plain_rlpd'),default='full_acoserl')
+    p.add_argument('--intervention-method',choices=('full_acoserl','plain_rlpd','independent_window'),default='independent_window')
     p.add_argument('--demo-admission',choices=('official','safe_handback'),default='official')
     p.add_argument('--demo-original-quota',type=int,choices=(64,96,128),default=96)
     p.add_argument('--demo-positive-quota',type=int,choices=(0,2,4),default=2)
@@ -99,36 +99,69 @@ def main():
         p.error('invalid bounded integration budget')
     cfg=json.loads((ROOT/'configs/ascend16/formal.json').read_text())
     manifest,dependency=source_manifest(),dependency_manifest()
-    if a.mode=='formal':
-        if a.gate is None or a.static_hold_certificate is None:p.error('formal requires external acceptance and static-hold certificate')
-        require_gate(a.gate,manifest,dependency)
-        hold=json.loads(external_path(a.static_hold_certificate).read_text())
-        if (hold.get('protocol')!='static_hold_requalification_v1' or not hold.get('passed') or
-                hold.get('source_sha256')!=manifest or hold.get('dependency')!=dependency):
-            raise ValueError('static-hold certificate is missing or stale')
-        for receipt in hold.get('receipts',[]):
-            path=external_path(receipt['path'])
-            if hashlib.sha256(path.read_bytes()).hexdigest()!=receipt['sha256']:
-                raise ValueError('static-hold evidence changed')
-        if min(hold.get('counts',{}).get(arm,0) for arm in ('A','B'))<3:
-            raise ValueError('static-hold physical evidence incomplete')
+    # Tiered authorization: plain RLPD and independent Guide are legal
+    # simulator training modes without the static P0 Recovery certificate.
+    # The full Recovery path still requires current, unchanged external proof.
+    recovery_authorized=False
+    acceptance_verified=False
+    if a.intervention_method!='full_acoserl' and (a.gate or a.static_hold_certificate):
+        p.error('only full_acoserl accepts Recovery qualification arguments')
+    if a.intervention_method=='full_acoserl':
+        if a.mode=='formal' and (a.gate is None or a.static_hold_certificate is None):
+            p.error('full_acoserl formal requires external acceptance and static-hold certificate; '
+                    'choose independent_window or plain_rlpd for certificate-free training')
+        if a.gate is not None:
+            require_gate(a.gate,manifest,dependency)
+            acceptance_verified=True
+        if a.static_hold_certificate is not None:
+            hold=json.loads(external_path(a.static_hold_certificate).read_text())
+            if (hold.get('protocol')!='static_hold_requalification_v1' or not hold.get('passed') or
+                    hold.get('source_sha256')!=manifest or hold.get('dependency')!=dependency):
+                raise ValueError('static-hold certificate is missing or stale')
+            for receipt in hold.get('receipts',[]):
+                path=external_path(receipt['path'])
+                if hashlib.sha256(path.read_bytes()).hexdigest()!=receipt['sha256']:
+                    raise ValueError('static-hold evidence changed')
+            if min(hold.get('counts',{}).get(arm,0) for arm in ('A','B'))<3:
+                raise ValueError('static-hold physical evidence incomplete')
+            recovery_authorized=True
+    training_tier=('recovery_qualified' if recovery_authorized else
+                   'guide_without_recovery' if a.intervention_method!='plain_rlpd' else
+                   'policy_with_safety_shield')
     from acoserl.intervention_manager import method_config
     manager=method_config(a.intervention_method)
     manager.update(json.loads((ROOT/'configs/bimanual_autoserl/baseline.json').read_text()))
     manager.update(admission_mode=a.demo_admission,original_quota=a.demo_original_quota,
                    positive_quota=a.demo_positive_quota,original_demo_fraction=a.demo_original_quota/128)
-    if a.intervention_method=='plain_rlpd':manager['dynamic_demo_enabled']=False;manager['original_quota']=128
-    if a.static_hold_certificate:manager['static_hold_certificate']=str(external_path(a.static_hold_certificate))
+    # Runtime permission is separate from the training-entry check. No
+    # unqualified static Hold, P0/P1 return, or contact Recovery may execute.
+    manager['qualified_recovery_enabled']=bool(recovery_authorized)
+    if not recovery_authorized:
+        manager['safety_recovery_enabled']=False
+        manager['predict_workspace_risk']=False
+    if a.intervention_method=='plain_rlpd':
+        manager.update(dynamic_demo_enabled=False,original_quota=128,
+                       original_demo_fraction=1.0)
+    elif a.intervention_method=='independent_window':
+        # Guide interventions can populate the supervised demo buffer, subject
+        # to the same executed-action and physical-quality admission filters.
+        manager['dynamic_demo_enabled']=True
+    if recovery_authorized:
+        manager['static_hold_certificate']=str(external_path(a.static_hold_certificate))
     cfg.update(purpose=a.mode,collector_protocol='reviewed_baseline_v1',utd=1,
                manager_config=manager,visual_encoder=a.visual,
+               training_tier=training_tier,recovery_authorized=recovery_authorized,
+               acceptance_verified=acceptance_verified,
+               safety_shield_active=True,
+               passive_hold_entry_gate_enabled=bool(recovery_authorized),
                source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
                source_sha256=manifest,dependency=dependency)
     if a.seed is not None:cfg['seed']=a.seed
     if a.mode=='integration':
         cfg.update(warmup_real_steps=0,online_capacity=2048,
                    maximum_actual_interactions=a.integration_steps,wall_limit_seconds=a.integration_seconds)
-    root=a.output_root or (ROOT.parents[1]/'testing'/'runs' if a.mode=='integration' else ROOT/'outputs/ascend16')
-    root=external_path(root) if a.mode=='integration' else root.expanduser().resolve()
+    # All formal as well as integration artifacts stay outside the repo.
+    root=external_path(a.output_root or (ROOT.parents[1]/'testing'/'runs'/a.mode))
     out=root/a.tag;out.mkdir(parents=True,exist_ok=False)
     stop={'requested':False}
     signal.signal(signal.SIGINT,lambda *_:stop.update(requested=True))
@@ -141,7 +174,11 @@ def main():
     start=time.time();deadline=start+cfg['wall_limit_seconds'];pool=None
     c=dict(actual_interactions=0,valid_real_steps=0,partial_action_attempts=0,warmup_real_steps=0,
            critic_updates=0,actor_updates=0,proposals=0,evaluation_interactions=0,evaluation_seconds=0.)
-    summary=dict(status='initializing',formal_training_approved=a.mode=='formal')
+    summary=dict(status='initializing',formal_training_mode=a.mode=='formal',
+                 full_recovery_training_approved=bool(a.mode=='formal' and acceptance_verified),
+                 training_tier=training_tier,recovery_authorized=recovery_authorized,
+                 acceptance_verified=acceptance_verified,
+                 physical_qualification_not_claimed=not acceptance_verified)
     try:
         import torch,torch_npu
         from acoserl.ascend_data import offline,replay,raw_row

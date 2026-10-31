@@ -267,10 +267,33 @@ class ReviewedRuntimeMixin:
         if danger: return danger
         return super().substep_safety(contact)
 
+    def _recovery_permitted(self):
+        # A bounded, external real-physics qualification trial is explicitly
+        # separate from a production learner. It never authorizes the learner.
+        return (bool(self.manager_cfg.get('qualified_recovery_enabled', False)) or
+                getattr(self, '_static_hold_trial', None) is not None)
+
+    def start_recovery(self, ai, state, kind, target):
+        if kind != 'sliding' and not self._recovery_permitted():
+            self.stop('recovery_disabled_no_current_qualification')
+            return None
+        return super().start_recovery(ai, state, kind, target)
+
+    def start_local(self, *args, **kwargs):
+        if not self._recovery_permitted():
+            return False, 'recovery_disabled_no_current_qualification'
+        return super().start_local(*args, **kwargs)
+
     def passive_hold_entry(self, active, state):
         from acoserl.qualification import external_hold_entry
+        if not self._recovery_permitted():
+            return {'allowed': False, 'reason': 'recovery_disabled_no_current_qualification'}
         entry = external_hold_entry(self, active, state)
-        return entry if entry is not None else super().passive_hold_entry(active, state)
+        # Production Recovery requires the SOURCE-BOUND external certificate.
+        # It must not fall through to the old unverified envelope JSON.
+        if entry is None:
+            return {'allowed': False, 'reason': 'external_hold_certificate_required'}
+        return entry
 
     def _task_quality(self):
         report = super()._task_quality()
