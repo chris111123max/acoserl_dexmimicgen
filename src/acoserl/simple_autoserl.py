@@ -17,6 +17,8 @@ from scipy.spatial.transform import Rotation
 ROOT = Path(__file__).resolve().parents[2]
 ARMS = ('A', 'B')
 EXPERT = frozenset(('Guide', 'ReturnP0', 'Replay', 'Settle'))
+# Bounded task-adaptation settling; never relax the 10-step grasp criterion.
+SIMPLE_SETTLE_MAX_CONTROLS = 80
 
 
 @dataclass
@@ -359,6 +361,7 @@ class SimpleBimanualAutoSERL:
         if danger:
             self.stop(danger)
         issued, handbacks = self._issued, []
+        settle_diagnostics = {}
         self.intervention_control_steps += int(any(s in EXPERT for s in issued))
         for ai, arm in enumerate(self.arms):
             p = self.points['arms'][ARMS[ai]]
@@ -371,10 +374,16 @@ class SimpleBimanualAutoSERL:
             else:
                 arm.relative.clear()
             stable = len(arm.relative) == arm.relative.maxlen
+            relative_translation_span_m = None
+            relative_rotation_span_rad = None
             if stable:
                 x0, r0 = arm.relative[0]
-                stable = (max(np.linalg.norm(x-x0) for x, _ in arm.relative) < self.cfg['relative_grasp_motion_m'] and
-                          max(Rotation.from_matrix(r@r0.T).magnitude() for _, r in arm.relative) <= .035)
+                relative_translation_span_m = float(max(
+                    np.linalg.norm(x-x0) for x, _ in arm.relative))
+                relative_rotation_span_rad = float(max(
+                    Rotation.from_matrix(r@r0.T).magnitude() for _, r in arm.relative))
+                stable = (relative_translation_span_m < self.cfg['relative_grasp_motion_m'] and
+                          relative_rotation_span_rad <= .035)
             if stable:
                 self._stable_grasp.add(ai)
             domain = self._domain(state, contact, ai)
@@ -408,11 +417,28 @@ class SimpleBimanualAutoSERL:
                 e = errors(state['poses'][ai], self.pose(ai, arm.p1))
                 command = np.asarray(self.env.robots[ai].gripper['right'].current_action)
                 closed = command.shape == (2,) and np.allclose(command, [-1., 1.])
-                if held and stable and closed and e['position_m'] <= .005 and e['rotation_rad'] <= .02:
+                ready = bool(held and stable and closed and
+                             e['position_m'] <= .005 and e['rotation_rad'] <= .02)
+                settle_diagnostics[ARMS[ai]] = dict(
+                    controls=int(arm.stable), limit=SIMPLE_SETTLE_MAX_CONTROLS,
+                    held=bool(held), gripper_closed=bool(closed),
+                    relative_window_steps=len(arm.relative),
+                    required_window_steps=arm.relative.maxlen,
+                    relative_translation_span_m=relative_translation_span_m,
+                    relative_translation_limit_m=float(self.cfg['relative_grasp_motion_m']),
+                    relative_rotation_span_rad=relative_rotation_span_rad,
+                    relative_rotation_limit_rad=.035,
+                    p1_position_error_m=float(e['position_m']),
+                    p1_rotation_error_rad=float(e['rotation_rad']),
+                    ready=ready)
+                if ready:
                     arm.floor = max(arm.floor, arm.p1)
                     arm.start = max(arm.start, arm.p1)
                     arm.reset_intervention(True)
-                elif arm.stable >= 30:
+                elif arm.stable >= SIMPLE_SETTLE_MAX_CONTROLS:
+                    # The overall max_recovery_steps check below remains
+                    # authoritative. Never report an unstable grasp as a
+                    # successful recovery merely because time elapsed.
                     self.stop('recovery_grasp_not_established_'+ARMS[ai])
             elif arm.mode == 'Handoff':
                 if arm.handoff_holding and not held:
@@ -443,7 +469,8 @@ class SimpleBimanualAutoSERL:
             takeover_id=self._segment, indices=self.indices(),
             task_quality=dict(eligible=not self.stop_reason and any(s in EXPERT for s in issued),
                               error_before_m=self._error_before, error_after_m=error_after, handoff_confirmed=bool(handbacks)),
-            per_arm_modes=[a.mode for a in self.arms], stable_grasps=[ARMS[i] for i in sorted(self._stable_grasp)])
+            per_arm_modes=[a.mode for a in self.arms], stable_grasps=[ARMS[i] for i in sorted(self._stable_grasp)],
+            settle_diagnostics=settle_diagnostics)
 
     def set_global_capability(self, value):
         self.auto_disabled = bool(self.auto_disabled or value.get('disable', False))
