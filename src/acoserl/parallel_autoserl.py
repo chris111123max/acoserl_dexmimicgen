@@ -182,7 +182,8 @@ class AutoSERLWorker(gym.Env):
   from acoserl.transition_semantics import source_code
   if executed:
    roles=describe(12 if payload['action_source']=='DiagnosticPreparation' else source_code(decision.get('mode','Normal')),action,payload['executed_action'],
-                  decision.get('active_arm'),bool((payload.get('task_quality') or {}).get('eligible')))
+                  decision.get('active_arm'),bool((payload.get('task_quality') or {}).get('eligible')),
+                  guide_gripper_owned=bool(decision.get('guide_gripper_owned',False)))
    payload['arm_control']=roles
   positions=np.asarray(payload['eef_positions'])
   motion=np.linalg.norm(positions-self.previous_eef_positions,axis=1)

@@ -1,8 +1,9 @@
-"""Per-arm/per-dimension execution provenance; metadata only, never Actor input."""
+"""Per-arm/per-dimension execution provenance; never Actor input."""
 import numpy as np
-# Stable replay ids: Policy0, Guide1, Recover2, SafeHold3, SafetyProjection4,
-# OriginalDemo5, Rejected6, Unknown7.
-def describe(source,policy,executed,active_arm=None,quality=False):
+# Policy0, Guide1, Recover2, SafeHold3, SafetyProjection4, OriginalDemo5,
+# Rejected6, Unknown7. Equal numeric actions do not imply equal ownership.
+def describe(source, policy, executed, active_arm=None, quality=False,
+             guide_gripper_owned=False):
     policy=np.asarray(policy);executed=np.asarray(executed)
     pose=[0,0];grip=[0,0];expert=np.zeros(14,dtype=bool)
     if source==6:
@@ -10,10 +11,11 @@ def describe(source,policy,executed,active_arm=None,quality=False):
     elif source in (1,2):
         ai=0 if source==1 else 1
         if active_arm in ('A','B'):ai='AB'.index(active_arm)
-        # Guide replaces ONLY the deviating arm. The other seven Policy
-        # dimensions remain autonomous, never mislabeled as static Hold.
         pose[ai]=1
-        grip[ai]=1 if abs(policy[7*ai+6]-executed[7*ai+6])>1e-6 else 0
+        # Pose-only Guide retains Policy gripper; explicit forward-grasp Guide
+        # owns its active gripper even when the Actor happened to agree.
+        grip[ai]=(1 if guide_gripper_owned else
+                  4 if abs(policy[7*ai+6]-executed[7*ai+6])>1e-6 else 0)
         other=1-ai
         pose[other]=4 if np.any(abs(policy[7*other:7*other+6]-executed[7*other:7*other+6])>1e-6) else 0
         grip[other]=4 if abs(policy[7*other+6]-executed[7*other+6])>1e-6 else 0

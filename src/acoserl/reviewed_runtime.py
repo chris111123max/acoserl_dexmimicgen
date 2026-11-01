@@ -21,18 +21,30 @@ class ReviewedRuntimeMixin:
         self._risk_cache = None
         self._runtime_before = None
         self._handoff_owner = None
+        self._forward_grasp = None
         self.runtime_stats = dict(control_proposals=0, safety_projections=0,
                                   final_refusals=0, choose_seconds=0.0,
-                                  risk_cache_hits=0, handbacks_A=0, handbacks_B=0)
+                                  risk_cache_hits=0, handbacks_A=0, handbacks_B=0,
+                                  forward_grasp_starts=0, forward_grasp_completions=0)
         self._workspace_bounds = None
 
     def v3_fingerprint(self):
-        result = super().v3_fingerprint()
-        for name in ('src/acoserl/reviewed_runtime.py', 'src/acoserl/bimanual_core.py',
-                     'src/acoserl/substep_guard.py', 'src/acoserl/qualification.py',
-                     'scripts/assembly_feasibility/common.py'):
-            result[name] = hashlib.sha256((ROOT/name).read_bytes()).hexdigest()
-        return result
+        # Production sources are immutable during a run. The retained V3 code
+        # already caches its hashes; do not reread extension files per action.
+        if not hasattr(self, '_reviewed_fingerprint'):
+            result = super().v3_fingerprint()
+            for name in ('src/acoserl/reviewed_runtime.py', 'src/acoserl/bimanual_core.py',
+                         'src/acoserl/substep_guard.py', 'src/acoserl/qualification.py',
+                         'scripts/assembly_feasibility/common.py', 'src/acoserl/grasp_guidance.py'):
+                result[name] = hashlib.sha256((ROOT/name).read_bytes()).hexdigest()
+            self._reviewed_fingerprint = result
+        return copy.deepcopy(self._reviewed_fingerprint)
+
+    def advanced_qualification(self, kind, state=None, contact=None):
+        if not self.manager_cfg.get(kind, {}).get('enabled', False):
+            return dict(allowed=False, kind=kind, reason=kind+'_disabled',
+                        controller_available=True, proof={})
+        return super().advanced_qualification(kind, state, contact)
 
     def predicted_risk(self, ai, physical_action, state):
         if self._workspace_bounds is None:
@@ -49,7 +61,9 @@ class ReviewedRuntimeMixin:
         # used by the projector; no artificial instantaneous stop is assumed.
         lo = np.minimum(lower+.003, current)
         hi = np.maximum(upper-.003, current)
-        crossing = bool(np.any(path_low < lo-1e-8) or np.any(path_high > hi+1e-8)
+        crossing = bool(np.any(current+estimate['brake_low'] < lo-1e-8) or
+                        np.any(current+estimate['brake_high'] > hi+1e-8) or
+                        np.any(path_low < lo-1e-8) or np.any(path_high > hi+1e-8)
                         or np.any(current+raw < lo-1e-8) or np.any(current+raw > hi+1e-8))
         outward = bool(np.any((current-lower < self.manager_cfg['risk_margin_m']) & (raw < -1e-8))
                        or np.any((upper-current < self.manager_cfg['risk_margin_m']) & (raw > 1e-8)))
@@ -59,6 +73,9 @@ class ReviewedRuntimeMixin:
                     predicted_position=(current+estimate['displacement']).tolist(),
                     trajectory_min=path_low.tolist(), trajectory_max=path_high.tolist(),
                     actual_velocity=estimate['linear_velocity'].tolist(),
+                    nominal_terminal_velocity=estimate['terminal_velocity'].tolist(),
+                    nominal_brake_low=(current+estimate['brake_low']).tolist(),
+                    nominal_brake_high=(current+estimate['brake_high']).tolist(),
                     lower=lower.tolist(), upper=upper.tolist(),
                     estimate=estimate['estimate'])
 
@@ -181,6 +198,7 @@ class ReviewedRuntimeMixin:
         policy = np.asarray(policy_action, dtype=float)
         if policy.shape != (14,) or not np.isfinite(policy).all():
             raise ValueError('expected finite 14D Policy action')
+        self._maybe_start_forward_grasp(policy)
         self._runtime_before = dict(intervention_steps=self.intervention_control_steps,
                                     touched=set(self.episode_touched),
                                     policy_steps=self.episode_policy_steps.copy())
@@ -212,17 +230,33 @@ class ReviewedRuntimeMixin:
             self.runtime_stats['choose_seconds'] += time.perf_counter()-start
 
     def handback(self, result, index):
-        owner = dict(arm=self.active, takeover_id=self.takeover_id, source=self.mode)
+        if self._forward_grasp is not None:
+            if not self._forward_grasp.ready:
+                result.update(handback=False, grasp_guide_wait=self._forward_grasp.phase)
+                return
+            index = self._forward_grasp.end
+        owner = dict(arm=self.active, takeover_id=self.takeover_id, source=self.mode, kind=self.recovery_kind)
         super().handback(result, index)
         if self.mode != 'Safe_Stop' and self.handoff_phase in ('Handoff_Ready', 'Recovery_Stabilizing'):
             self._handoff_owner = owner
+            if self._forward_grasp is not None:
+                self.runtime_stats['forward_grasp_completions'] += 1
+                self._forward_grasp = None
 
     def after_step(self):
         from acoserl.action_provenance import describe
         phase = self.handoff_phase
         decision = self.last_decision
         local_before=self.local
+        grasp_result = None
+        if self._forward_grasp is not None:
+            from acoserl.bimanual_core import snapshot
+            grasp_result = self._forward_grasp.observe(self, snapshot(self.env))
+            if self._forward_grasp.controls >= self._forward_grasp.max_controls and not self._forward_grasp.ready:
+                self.stop('forward_grasp_guide_timeout')
         result = super().after_step()
+        if grasp_result is not None:
+            result['forward_grasp'] = grasp_result
         if local_before is not None and result.get('target_reached') and self.mode!='Safe_Stop':
             self._handoff_owner=dict(arm=self.active,takeover_id=self.takeover_id,source=decision.get('mode'))
         source = decision.get('mode', 'Normal')
@@ -246,7 +280,7 @@ class ReviewedRuntimeMixin:
             else:
                 arm = 'AB'[owner['arm']]
                 self.runtime_stats['handbacks_'+arm] += 1
-                result.update(handback_arm=arm, handback_takeover_id=owner['takeover_id'])
+                result.update(handback_arm=arm, handback_takeover_id=owner['takeover_id'], handback_kind=owner.get('kind'))
                 decision['takeover_id'] = owner['takeover_id']
                 result.setdefault('task_quality', {})['handoff_confirmed'] = True
                 # One completed, safety-checked Actor action proves handback.
@@ -294,6 +328,92 @@ class ReviewedRuntimeMixin:
         if entry is None:
             return {'allowed': False, 'reason': 'external_hold_certificate_required'}
         return entry
+
+    def _maybe_start_forward_grasp(self, policy):
+        """Local forward acquisition, never a return-to-P0 or passive Hold."""
+        if (not self.cfg['intervention_enabled'] or self.auto_disabled or
+                not self.manager_cfg.get('grasp_guidance_enabled', False) or
+                not self.manager_cfg.get('sliding_enabled', False) or
+                self.handoff_phase is not None and self.handoff_phase != 'Recovering' or
+                self.local is not None or self._forward_grasp is not None):
+            return
+        adopting = self.mode.startswith('Guide_') and self.recovery_kind == 'sliding'
+        if self.mode != 'Normal' and not adopting:
+            return
+        if self.points.get('task') != 'TwoArmThreePieceAssembly':
+            return
+        from acoserl.bimanual_core import snapshot
+        from acoserl.grasp_guidance import grasp_candidate, ForwardGraspGuide
+        state = snapshot(self.env)
+        candidates = [self.active] if adopting else list(range(2))
+        for ai in candidates:
+            if not adopting and self.cooldown[ai] > 0:
+                continue
+            if self.stage_mastered('AB'[ai], 'grasp_stabilization'):
+                continue
+            index, reason = grasp_candidate(self, state, ai)
+            if index is None:
+                continue
+            # Reaching pregrasp is not itself a reason to override a healthy
+            # Actor. Continue an already-needed Guide, or require a measured
+            # stagnation / missing closure at the demonstrated closing event.
+            points = self.points['arms']['AB'[ai]]
+            missing_closure = index >= points['first_close_action'] and policy[7*ai+6] <= 0
+            stalled = False if adopting else self.window_measure(ai, state, record_history=False)['stagnant']
+            if not adopting and not (missing_closure or stalled):
+                continue
+            trigger = ('existing_guide_at_pregrasp' if adopting else
+                       'missing_grasp_closure' if missing_closure else 'pregrasp_stagnation')
+            # Do not silently extend a nearly exhausted existing Guide.
+            needed = self.points['arms']['AB'[ai]]['p1'] - index + self.cfg['stable_grasp_window_steps'] + 6
+            if adopting and self.age + needed >= self.cfg.get('max_guide_steps', 80):
+                continue
+            if not adopting:
+                self.active = ai
+                self.baseline = copy.deepcopy(state)
+                self.age = 0
+                self.takeover_sequence += 1
+                self.takeover_id = self.takeover_sequence
+                self.episode_interventions += 1
+                self.decision_stats['starts'] += 1
+            self.mode = 'Guide_' + 'AB'[ai]
+            self.recovery_stage = 'Sliding_Guide'
+            self.recovery_kind = 'forward_grasp'
+            self.recovery_index = index
+            self.replay_index = None
+            self.stable = 0
+            self.targets = copy.deepcopy(state['poses'])
+            self.grips = [-1., -1.]
+            self.hold_age = 0
+            self.hold_limit = None
+            self._forward_grasp = ForwardGraspGuide(self, ai, index)
+            stages = self.collaboration(state, self.contacts.read())['per_arm']
+            self.episode_touched.add(('AB'[ai], stages[ai]))
+            self.runtime_stats['forward_grasp_starts'] += 1
+            self.events.append(dict(event='forward_grasp_guide', step=self.steps,
+                                    arm='AB'[ai], start_index=index,
+                                    end_index=self._forward_grasp.end,
+                                    adopts_current_guide=adopting, reason=reason, trigger=trigger))
+            break
+
+    def recovery_action(self, state):
+        if self._forward_grasp is None:
+            return super().recovery_action(state)
+        if self.contact_assessment(state, self.contacts.read())['category'] != 'Independent':
+            self.stop('forward_grasp_contact_mode_changed')
+            return self.refuse()
+        policy = np.asarray(self.last_decision['policy_action'], dtype=float)
+        action = self._forward_grasp.action(self, state, policy)
+        ai = self.active
+        self.last_decision.update(mode=self.mode, active_arm='AB'[ai], execute=True,
+            recovery_step=self.age+1, recovery_kind=self.recovery_kind,
+            recovery_stage=self.recovery_stage, guide_phase=self._forward_grasp.phase,
+            guide_gripper_owned=True, reference_index=self._forward_grasp.index,
+            indices=self.indices(), executed_action=action.tolist(),
+            per_arm_control=['Guide' if i == ai else 'Policy' for i in range(2)])
+        # V3 progress protection and ReviewedRuntime._final_screen still run
+        # on this COMPOSED action. No force, workspace or contact check removed.
+        return action, self.last_decision
 
     def _task_quality(self):
         report = super()._task_quality()

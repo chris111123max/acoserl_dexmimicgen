@@ -5,6 +5,7 @@ Only orchestration, audit, interruption and output ownership are centralized.
 """
 from __future__ import annotations
 import argparse
+import copy
 import hashlib
 import json
 import os
@@ -84,6 +85,10 @@ def main():
     p.add_argument('--tag',required=True);p.add_argument('--output-root',type=Path)
     p.add_argument('--gate',type=Path);p.add_argument('--static-hold-certificate',type=Path)
     p.add_argument('--resume',type=Path);p.add_argument('--seed',type=int)
+    p.add_argument('--grasp-guide', action=argparse.BooleanOptionalAction, default=True)
+    p.add_argument('--checkpoint-seconds', type=int, default=3600)
+    p.add_argument('--checkpoint-mirror-root', type=Path)
+    p.add_argument('--no-grasp-budget', type=int, default=10000)
     p.add_argument('--integration-steps',type=int,default=1024)
     p.add_argument('--integration-seconds',type=int,default=1800)
     p.add_argument('--utd',type=int,choices=(1,),default=1)
@@ -97,6 +102,8 @@ def main():
     if not a.tag.replace('_','').replace('-','').isalnum():p.error('invalid tag')
     if not 16<=a.integration_steps<=2048 or not 60<=a.integration_seconds<=3600:
         p.error('invalid bounded integration budget')
+    if a.checkpoint_seconds < 60 or a.no_grasp_budget < 0:
+        p.error('checkpoint-seconds must be >=60; no-grasp-budget must be >=0')
     cfg=json.loads((ROOT/'configs/ascend16/formal.json').read_text())
     manifest,dependency=source_manifest(),dependency_manifest()
     # Tiered authorization: plain RLPD and independent Guide are legal
@@ -148,7 +155,10 @@ def main():
         manager['dynamic_demo_enabled']=True
     if recovery_authorized:
         manager['static_hold_certificate']=str(external_path(a.static_hold_certificate))
-    cfg.update(purpose=a.mode,collector_protocol='reviewed_baseline_v1',utd=1,
+    manager['grasp_guidance_enabled']=bool(a.grasp_guide and a.intervention_method!='plain_rlpd')
+    cfg.update(purpose=a.mode,collector_protocol='reviewed_forward_grasp_v2',utd=1,
+               checkpoint_seconds=a.checkpoint_seconds,no_grasp_budget=a.no_grasp_budget,
+               guidance_extension='forward_demo_grasp_v1' if manager['grasp_guidance_enabled'] else 'pose_only',
                manager_config=manager,visual_encoder=a.visual,
                training_tier=training_tier,recovery_authorized=recovery_authorized,
                acceptance_verified=acceptance_verified,
@@ -163,6 +173,9 @@ def main():
     # All formal as well as integration artifacts stay outside the repo.
     root=external_path(a.output_root or (ROOT.parents[1]/'testing'/'runs'/a.mode))
     out=root/a.tag;out.mkdir(parents=True,exist_ok=False)
+    from acoserl.run_observability import RunStore, task_progress_stop
+    mirror=external_path(a.checkpoint_mirror_root) if a.checkpoint_mirror_root else None
+    store=RunStore(out,cfg['source_commit'],mirror)
     stop={'requested':False}
     signal.signal(signal.SIGINT,lambda *_:stop.update(requested=True))
     signal.signal(signal.SIGTERM,lambda *_:stop.update(requested=True))
@@ -213,11 +226,15 @@ def main():
             restored,assembler=load(a.resume,agent,on,off,norm,dynamic);c=restored['counters']
         pool=FourByFour(cfg['seed'],norm,out/'workers',resume_workers=None if restored is None else restored['workers'],manager_config=manager)
         if restored is not None:restore_rng(restored['rng'])
-        capability=GlobalCapability(c.get('global_capability'));pool.apply_capability(capability.snapshot())
+        capability=GlobalCapability(c.get('global_capability'))
+        sent_capability=copy.deepcopy(capability.snapshot());pool.apply_capability(sent_capability)
         health=CollectionHealth(c.get('collection_health'))
         start_valid=c['valid_real_steps'];start_actual=c['actual_interactions'];budget=int(c.get('pending_update_budget',0))
         next_save=(c['valid_real_steps']//25000+1)*25000;next_eval=(c['valid_real_steps']//50000+1)*50000
         rounds=0;empty_rounds=0;reason='wall_clock_limit'
+        last_save=time.monotonic();last_status=0.;last_rate_steps=c['valid_real_steps'];last_rate_time=time.monotonic()
+        c.setdefault('grasp_guidance_phase_steps',{})
+        c.setdefault('grasp_guidance_handbacks',{'A':0,'B':0})
         timing={k:0. for k in ('inference','step','reset','sample_transfer','update')}
         while time.time()<deadline and not stop['requested']:
             used=c['valid_real_steps']-start_valid
@@ -248,13 +265,24 @@ def main():
                     partial+=int(payload.get('partial_physics_step',False))
                     for item in assembler.close(e,bootstrap=bool(payload['bootstrap_allowed']),boundary_kind=payload['boundary_kind']):on.add(item)
                     dynamic.close_episode(e,bool(payload['bootstrap_allowed']),payload['boundary_kind'])
+                if payload['executed']:
+                    phase=(payload.get('auto_intervention') or {}).get('guide_phase')
+                    if phase:
+                        table=c['grasp_guidance_phase_steps'];table[phase]=table.get(phase,0)+1
+                    after=payload.get('recovery_result') or {}
+                    if after.get('safe_handback') and after.get('handback_kind')=='forward_grasp':
+                        arm=after.get('handback_arm')
+                        if arm in ('A','B'):c['grasp_guidance_handbacks'][arm]+=1
                 capability.observe(payload,actor_controlled=not warm);health.observe(payload)
                 if term[e] or trunc[e]:health.episode(payload)
             c['actual_interactions']+=real+partial;c['valid_real_steps']+=real
             c['partial_action_attempts']+=partial;c['proposals']+=16
             if warm:c['warmup_real_steps']+=real
             else:budget+=real
-            health.set_dynamic_demo_rows(len(dynamic.buffer));pool.apply_capability(capability.snapshot())
+            health.set_dynamic_demo_rows(len(dynamic.buffer))
+            current_capability=capability.snapshot()
+            if current_capability!=sent_capability:
+                pool.apply_capability(current_capability);sent_capability=copy.deepcopy(current_capability)
             t=time.perf_counter();pool.reset_done(term|trunc);timing['reset']+=time.perf_counter()-t
             metrics={}
             # Reserve one genuine update for post-reload continuation in integration.
@@ -273,10 +301,19 @@ def main():
                 dynamic_demo_rows=len(dynamic.buffer),dynamic_demo_stats=dynamic.stats,
                 demo_sampling=dynamic.last_sample,timing=timing,metrics=metrics))
             print('ROUND',rounds,'valid',c['valid_real_steps'],'updates',c['critic_updates'],'dynamic',len(dynamic.buffer),flush=True)
+            now=time.monotonic()
+            if now-last_status>=60.:
+                c['rolling_valid_steps_s']=(c['valid_real_steps']-last_rate_steps)/max(now-last_rate_time,1e-6)
+                store.heartbeat(c,health.snapshot(),timing,time.time()-start,len(dynamic.buffer),dynamic.stats)
+                last_status=now;last_rate_steps=c['valid_real_steps'];last_rate_time=now
             if empty_rounds>=32:reason='no_live_transition_progress';break
+            if a.mode=='formal' and task_progress_stop(health.snapshot(),a.no_grasp_budget):
+                reason='no_stable_grasp_despite_training';break
             if a.mode=='formal' and health.stall()['stop']:reason='collection_health_stop';break
-            if a.mode=='formal' and c['valid_real_steps']>=next_save:
-                save(out/'checkpoints'/f"step_{c['valid_real_steps']:07d}",agent,on,off,assembler,pool,c,cfg,norm,dynamic);next_save+=25000
+            if a.mode=='formal' and len(on) and (c['valid_real_steps']>=next_save or now-last_save>=a.checkpoint_seconds):
+                checkpoint=save(out/'checkpoints'/f"step_{c['valid_real_steps']:07d}",agent,on,off,assembler,pool,c,cfg,norm,dynamic)
+                store.checkpoint(checkpoint);last_save=time.monotonic()
+                while next_save<=c['valid_real_steps']:next_save+=25000
             if a.mode=='formal' and c['valid_real_steps']>=next_eval:
                 ev=evaluate(agent,norm,out,c,manager,deadline,device)
                 c['evaluation_interactions']+=ev['actual_evaluation_interactions'];c['evaluation_seconds']+=ev['seconds'];next_eval+=50000
@@ -299,6 +336,7 @@ def main():
             write(out/'checkpoint_reload.json',reload_result)
         c['pending_update_budget']=budget
         final=save(out/'checkpoints'/'final',agent,on,off,assembler,pool,c,cfg,norm,dynamic) if len(on) else None
+        if final is not None:store.checkpoint(final)
         if visual_manifest(agent)['backbone_hashes']!=initial_visual['backbone_hashes']:raise AssertionError('frozen visual backbone changed')
         if not all(x.grad is None or bool(torch.isfinite(x.grad).all()) for x in agent.parameters()):raise FloatingPointError('nonfinite gradient')
         summary.update(status='completed',stop_reason=reason,counters=c,workers=pool.diagnostics(),
@@ -315,6 +353,11 @@ def main():
         except Exception:
             summary['worker_close_error']=traceback.format_exc()
         finally:
-            try:write(out/'summary.json',summary)
+            try:
+                summary['storage_manifest']=store.record
+                summary['latest_complete_checkpoint']=store.last_checkpoint
+                write(out/'summary.json',summary)
+                from acoserl.run_observability import atomic_json
+                atomic_json(out/'live_status.json',summary)
             finally:
                 fcntl.flock(lock,fcntl.LOCK_UN);lock.close()

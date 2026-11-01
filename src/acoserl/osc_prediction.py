@@ -61,10 +61,16 @@ def predict(env, ai, action):
     dp = response[:3] * command + inertia
     dw = response[3:] * angular + w * dt * np.exp(-omega[3:] * dt)
     lo, hi = _extrema(command, v, omega[:3], dt)
+    terminal_velocity = omega[:3]**2 * dt * np.exp(-omega[:3]*dt) * command + (1-omega[:3]*dt)*np.exp(-omega[:3]*dt)*v
+    # Reserve nominal stopping travel AFTER this action, not just its endpoint.
+    brake_horizon = dt + 1.0/(np.e*omega[:3])
     return dict(displacement=dp, command_displacement=command,
                 angular_displacement=dw, response=response,
                 linear_inertia=inertia, linear_velocity=v, angular_velocity=w,
                 trajectory_min=lo, trajectory_max=hi,
+                terminal_velocity=terminal_velocity, brake_horizon=brake_horizon,
+                brake_low=dp+np.minimum(terminal_velocity,0.)*brake_horizon,
+                brake_high=dp+np.maximum(terminal_velocity,0.)*brake_horizon,
                 control_dt_s=dt, physics_dt_s=float(env.sim.model._model.opt.timestep),
                 estimate='critical_OSC_full_interval_nominal_not_certificate')
 
@@ -131,6 +137,16 @@ def project_independent_workspace(env, ai, action, position, lower, upper,
             r = 1-(1+omega*t)*decay
             inertia = v*t*decay
             mats.append(r[:, None]*B); lows.append(lo-inertia); highs.append(hi-inertia)
+        # The next cycle must retain nominal braking space. These two
+        # half-spaces plus the endpoint bounds represent both signs of v_T.
+        decay_T = np.exp(-omega*T)
+        velocity_map = (omega**2*T*decay_T)[:,None]*B
+        velocity_bias = (1-omega*T)*decay_T*v
+        H = pred['brake_horizon']
+        terminal_map = pred['response'][:3,None]*B
+        brake_map = terminal_map + H[:,None]*velocity_map
+        brake_bias = pred['linear_inertia'] + H*velocity_bias
+        mats.append(brake_map); lows.append(lo-brake_bias); highs.append(hi-brake_bias)
         for n in normals:
             mats.extend([(n@B)[None, :], (n@(pred['response'][:3, None]*B))[None, :]])
             lows.extend([np.array([-np.inf]), np.array([-np.inf])])
@@ -151,6 +167,8 @@ def project_independent_workspace(env, ai, action, position, lower, upper,
         checked = predict(env, ai, final)
         if (np.all(checked['trajectory_min'] >= lo-1e-8) and
                 np.all(checked['trajectory_max'] <= hi+1e-8) and
+                np.all(checked['brake_low'] >= lo-1e-8) and
+                np.all(checked['brake_high'] <= hi+1e-8) and
                 np.all(A@candidate >= lb-1e-8) and np.all(A@candidate <= ub+1e-8)):
             return final, 'workspace_full_interval_projected'
         u = checked['command_displacement']
