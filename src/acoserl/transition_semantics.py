@@ -15,8 +15,9 @@ class ActionSource(IntEnum):
     Constrained_B = 10
     Constrained_Joint = 11
     DiagnosticPreparation = 12
+    Guide_AB = 13  # Simple baseline: consult explicit per-arm ownership.
 
-TASK_INTERVENTION_SOURCES = frozenset((1,2,3,4,5,7,8))
+TASK_INTERVENTION_SOURCES = frozenset((1,2,3,4,5,7,8,13))
 SAFETY_PROJECTION_SOURCES = frozenset((9,10,11))
 
 def source_family(code):
