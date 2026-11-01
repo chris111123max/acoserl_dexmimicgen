@@ -193,7 +193,7 @@ class SimpleBimanualAutoSERL:
             error = object_error(state['objects']['piece_1'], self._assembly_anchor)
             if (not state['official_metrics']['first_piece_assembled'] or
                     error['position_m'] > self.cfg['assembled_object_drift_m'] or
-                    error['rotation_rad'] > self.cfg['assembled_object_rotation_rad']):
+                    error['rotation_rad'] > self.cfg['assembled_object_rotation_drift_rad']):
                 return 'completed_piece1_progress_lost'
         return None
 
