@@ -64,7 +64,7 @@ class SimpleWorker(AutoSERLWorker):
                           reasons={}, episode_length_sum=0, episode_length_histogram={},
                           assisted_successes=0, autonomous_successes=0, intervention_steps=0)
         np.random.seed(cfg.seed)
-        self.event('construct_start', runtime='stage_aware_bimanual_recovery_v1')
+        self.event('construct_start', runtime='stage_aware_bimanual_recovery_v2_boundary_guard')
         self.w = StrictAssemblyEnv(camera_size=84, env_id=self.env_id)
         n = cfg.normalization
         self.standardizer = StateStandardizer(torch.tensor(n['state_mean']), torch.tensor(n['state_std_population']), min_std=.1)
@@ -132,6 +132,12 @@ class SimpleWorker(AutoSERLWorker):
         kind, bootstrap = boundary(term, trunc, bool(info.get('success', False)), info.get('supervisor_stop_reason'),
                                    executed, bool(info.get('partial_physics_step', False)))
         decision = info.get('auto_intervention') or {}
+        controls = decision.get('per_arm_control', ('Policy', 'Policy'))
+        safety = [ai for ai, source in enumerate(controls) if source == 'BoundaryGuard']
+        executed_source = ('Constrained_Joint' if len(safety) == 2 else
+                           'Constrained_A' if safety == [0] else
+                           'Constrained_B' if safety == [1] else
+                           'Policy' if decision.get('mode') == 'Normal' else 'Guide_AB')
         positions = np.asarray([p['position'] for p in state['poses']])
         motion = np.linalg.norm(positions-self.previous_eef_positions, axis=1)
         self.previous_eef_positions = positions.copy()
@@ -141,7 +147,7 @@ class SimpleWorker(AutoSERLWorker):
             physics_time_advanced=float(self.w.env.sim.data.time)-before, step_seconds=time.perf_counter()-started,
             policy_action=np.asarray(action).tolist(), auto_intervention=decision,
             takeover_id=decision.get('takeover_id', 0), stage=decision.get('stage', 'unknown'),
-            action_source=('Policy' if decision.get('mode') == 'Normal' else 'Guide_AB') if executed else 'Rejected',
+            action_source=executed_source if executed else 'Rejected',
             recovery_result=info.get('recovery_result'), task_quality=info.get('task_quality', {}),
             supervisor_stop_reason=info.get('supervisor_stop_reason'), success=bool(info.get('success', False)),
             episode_outcome=outcome, task_metrics=state['official_metrics'], supervisor_grasps=state['actual_grasps'],
@@ -183,7 +189,7 @@ class SimpleCapability:
 
     def observe(self, payload, **_):
         outcome = payload.get('episode_outcome') or {}
-        if outcome.get('protocol') == 'stage_aware_bimanual_recovery_v1' and outcome.get('disable_requested'):
+        if outcome.get('protocol') == 'stage_aware_bimanual_recovery_v2_boundary_guard' and outcome.get('disable_requested'):
             self.disabled = True
 
     def snapshot(self):

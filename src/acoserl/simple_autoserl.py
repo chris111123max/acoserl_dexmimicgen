@@ -18,6 +18,9 @@ ROOT = Path(__file__).resolve().parents[2]
 ARMS = ('A', 'B')
 RETURN_MODES = frozenset(('ReturnS0', 'ReturnP0', 'ReturnP1'))
 EXPERT = frozenset(('Guide', 'ReturnS0', 'ReturnP0', 'ReturnP1', 'Replay', 'Settle'))
+# Never credit a boundary-safety override as an Actor or expert action.
+from acoserl.boundary_guard import SOURCE as BOUNDARY_GUARD, evaluate as boundary_risk, world_policy_displacement
+SAFETY_ONLY = frozenset((BOUNDARY_GUARD,))
 # Non-safety control limits, kept separate from 350-step recovery and hard
 # physical protections. An abandoned Guide is NOT an expert handback.
 GUIDE_MAX_CONTROLS = 80
@@ -49,6 +52,8 @@ class ArmState:
     age: int = 0
     stable: int = 0
     cooldown: int = 0
+    boundary_guard_streak: int = 0
+    boundary_guard_total: int = 0
     handoff_holding: bool = False
     recovery_anchor: int | None = None
     recovery_goal: int | None = None
@@ -95,7 +100,7 @@ class SimpleBimanualAutoSERL:
     None of its intervention eligibility, QP or certificate code is called.
     Actual force/workspace/collision checks and ActionOnly substeps remain on.
     """
-    protocol = 'stage_aware_bimanual_recovery_v1'
+    protocol = 'stage_aware_bimanual_recovery_v2_boundary_guard'
 
     def __init__(self, env, config=None, intervention_enabled=True):
         from acoserl.bimanual_core import DEFAULT, Contacts
@@ -133,6 +138,7 @@ class SimpleBimanualAutoSERL:
         self.last_decision = None
         self.steps = self.intervention_control_steps = self.episode_interventions = 0
         self.handbacks = [0, 0]
+        self.boundary_guard_steps = 0
         self.initial_snapshot = snapshot(self.env)
         self._issued = None
         self._segment_signature = None
@@ -143,6 +149,7 @@ class SimpleBimanualAutoSERL:
         self._assembly_rest = deque(maxlen=3)
         self._error_before = 0.
         self._issued_targets = [None, None]
+        self._boundary_risks = [None, None]
         self.events = []
         self._event_cursor = 0
 
@@ -159,6 +166,14 @@ class SimpleBimanualAutoSERL:
         self.stop(reason)
         self.last_decision = dict(mode='Safe_Stop', execute=False, reason=reason,
                                   policy_action=np.asarray(policy).tolist(), indices=self.indices())
+        if str(reason).startswith('boundary_guard_'):
+            # Keep refusal evidence even though no complete physical action
+            # was executed and no Replay transition will be produced.
+            self.last_decision.update(
+                boundary_safety=copy.deepcopy(getattr(self, '_boundary_risks', [None, None])),
+                per_arm_cooldown=[int(a.cooldown) for a in self.arms],
+                per_arm_control=['Rejected', 'Rejected'],
+                simple_protocol=self.protocol)
         self._issued = None
         return None, self.last_decision
 
@@ -410,6 +425,36 @@ class SimpleBimanualAutoSERL:
             anchor=arm.recovery_anchor, goal=arm.recovery_goal,
             target=int(target), takeover=arm.takeover))
 
+    def _boundary_safety_candidate(self, ai, state, physical_policy):
+        """Cooldown-only inward proposal; ActionOnly preview is authoritative.
+
+        The proposal is never called a Guide/Recovery. Refuse an unverified
+        risk rather than silently revert to the unsafe outward Policy action.
+        """
+        from acoserl.boundary_guard import MAX_CONSECUTIVE_CONTROLS
+        arm = self.arms[ai]
+        if (not self.cfg.get('boundary_guard_enabled', False)
+                or arm.mode != 'Policy' or arm.cooldown <= 0
+                or not self.cfg['intervention_enabled'] or self.auto_disabled):
+            return None
+        pos = np.asarray(state['poses'][ai]['position'], dtype=float)
+        lo = self.positions[:, ai].min(0) - self.cfg['free_workspace_margin_m']
+        hi = self.positions[:, ai].max(0) + self.cfg['free_workspace_margin_m']
+        robot = self.env.robots[ai]
+        name = self.env.sim.model.site_id2name(robot.eef_site_id['right'])
+        vel = np.asarray(self.env.sim.data.get_site_xvelp(name), dtype=float)
+        world_delta = world_policy_displacement(robot, physical_policy[7*ai:7*ai+7])
+        plan = boundary_risk(
+            pos, lo, hi, world_delta, vel,
+            enter_distance_m=self.cfg.get('boundary_guard_entry_m', .025),
+            retreat_distance_m=self.cfg.get('boundary_guard_retreat_m', .035))
+        if plan is None:
+            return None
+        if arm.boundary_guard_streak >= self.cfg.get(
+                'boundary_guard_max_consecutive', MAX_CONSECUTIVE_CONTROLS):
+            raise ValueError('consecutive_boundary_guard_limit_exceeded')
+        return plan
+
     def choose(self, policy_action):
         from acoserl.bimanual_core import snapshot, servo
         policy = np.asarray(policy_action, dtype=float)
@@ -430,11 +475,42 @@ class SimpleBimanualAutoSERL:
         grips = [float(policy[6]), float(policy[13])]
         measurements = []
         self._issued_targets = [None, None]
+        self._boundary_risks = [None, None]
         for ai, arm in enumerate(self.arms):
             domain = self._domain(state, contact, ai)
             measurement = self._measure(state, ai, domain) if domain else None
             measurements.append(measurement)
             if not enabled:
+                continue
+            # Boundary safety precedes the ordinary cooldown gate. It is
+            # stateless with respect to Expert handback and never captures
+            # another arm or a gripper. The original physics preview remains.
+            plan = None
+            if arm.mode == 'Policy' and arm.cooldown:
+                try:
+                    plan = self._boundary_safety_candidate(ai, state, policy)
+                except (ValueError, KeyError, AttributeError) as error:
+                    return self._refuse(policy, 'boundary_guard_unverified_'+ARMS[ai]+':'+str(error))
+            if plan is not None:
+                if (domain is None or contact['dynamic_A_B_coupled']
+                        or self._active_contact(contact, ai)
+                        or self._assembly_contact(state, contact, ai)):
+                    return self._refuse(policy, 'boundary_guard_unqualified_contact_'+ARMS[ai])
+                sources[ai] = BOUNDARY_GUARD
+                targets[ai]['position'] = plan['target_world_position'].copy()
+                self._boundary_risks[ai] = dict(
+                    axes=plan['axes'],
+                    target_world_position=plan['target_world_position'].tolist(),
+                    requested_world_delta=plan['requested_world_delta'].tolist(),
+                    measured_world_velocity=plan['measured_world_velocity'].tolist(),
+                    entering_distance_m=plan['entering_distance_m'],
+                    retreat_distance_m=plan['retreat_distance_m'],
+                    cooldown_before=int(arm.cooldown),
+                    consecutive_before=int(arm.boundary_guard_streak))
+                self.events.append(dict(
+                    event='boundary_guard_issued', arm=ARMS[ai],
+                    cooldown_remaining=int(arm.cooldown),
+                    axes=copy.deepcopy(plan['axes'])))
                 continue
             # A stalled Guide can recover using S0, P0 or P1 according to the
             # actual arm/object stage. Never rewind across assembly contact.
@@ -495,21 +571,28 @@ class SimpleBimanualAutoSERL:
                         if error > .02:
                             return self._refuse(policy, 'recovery_replay_tracking_'+ARMS[ai])
                         action[7*ai:7*ai+7] = self.trace['actions'][arm.replay, 7*ai:7*ai+7]
-        if any(s == 'Guide' or s in RETURN_MODES or s == 'Settle' for s in sources):
+        if any(s in ((EXPERT | SAFETY_ONLY) - {'Replay'}) for s in sources):
             correction = servo(self.env, targets, grips,
                 max_position_step=self.cfg['position_command_cap_m'],
                 max_rotation_step=self.cfg['rotation_command_cap_rad'],
                 position_gain=self.cfg['position_gain'], rotation_gain=self.cfg['rotation_gain'])
             for ai, source in enumerate(sources):
-                if source == 'Guide' or source in RETURN_MODES or source == 'Settle':
+                if source in ((EXPERT | SAFETY_ONLY) - {'Replay'}):
                     action[7*ai:7*ai+6] = correction[7*ai:7*ai+6]
-                    if source != 'Guide':
+                    if source in RETURN_MODES or source == 'Settle':
                         action[7*ai+6] = grips[ai]
         lo, hi = getattr(self, 'action_bounds', (-np.ones(14), np.ones(14)))
         # Bound expert outputs, never silently alter an independent Policy arm.
         for ai, source in enumerate(sources):
             sl = slice(7*ai, 7*ai+7)
-            if source in EXPERT:
+            if source in SAFETY_ONLY:
+                # Clipping an inward servo action does not prove physical
+                # feasibility. Reject instead of outputting an unverified
+                # substitute. The existing substep preview still decides.
+                if (np.any(action[sl] < np.maximum(lo[sl], -1)-1e-6)
+                        or np.any(action[sl] > np.minimum(hi[sl], 1)+1e-6)):
+                    return self._refuse(policy, 'boundary_guard_outside_action_domain_'+ARMS[ai])
+            elif source in EXPERT:
                 action[sl] = np.clip(action[sl], np.maximum(lo[sl], -1), np.minimum(hi[sl], 1))
             elif np.any(action[sl] < lo[sl]-1e-6) or np.any(action[sl] > hi[sl]+1e-6):
                 return self._refuse(policy, 'policy_action_out_of_range')
@@ -526,7 +609,8 @@ class SimpleBimanualAutoSERL:
         if signature != self._segment_signature:
             self._segment += 1; self._segment_signature = signature
         expert = [s in EXPERT for s in sources]
-        mode = 'Normal' if not any(expert) else 'Guide_AB'
+        mode = ('Guide_AB' if any(expert) else
+                'BoundarySafety' if any(s in SAFETY_ONLY for s in sources) else 'Normal')
         self.mode = mode
         self.last_decision = dict(mode=mode, execute=True, policy_action=policy.tolist(),
             executed_action=action.tolist(), intervention_action_proposed=action.tolist(),
@@ -535,7 +619,8 @@ class SimpleBimanualAutoSERL:
             per_arm_phase=[self._phase_name(state, contact, i, m[0]) if m is not None
                            else 'assembly_contact' for i, m in enumerate(measurements)],
             recovery_anchor_indices=[a.recovery_anchor for a in self.arms],
-            measurements=measurements, recovery_step=1 if any(s in EXPERT and a.age == 0 for s, a in zip(sources, self.arms)) else 2,
+            measurements=measurements, boundary_safety=copy.deepcopy(self._boundary_risks),
+            recovery_step=1 if any(s in EXPERT and a.age == 0 for s, a in zip(sources, self.arms)) else 2,
             stage=max((self._stage(state, i) for i in range(2)), key=lambda x: x != 'approach_pregrasp'))
         return action, self.last_decision
 
@@ -549,7 +634,9 @@ class SimpleBimanualAutoSERL:
             self.stop(danger)
         issued, handbacks = self._issued, []
         settle_diagnostics = {}
-        self.intervention_control_steps += int(any(s in EXPERT for s in issued))
+        # Boundary safety is non-autonomous too: never label its episode
+        # as clean Policy success or prematurely disable the supervisor.
+        self.intervention_control_steps += int(any(s in EXPERT | SAFETY_ONLY for s in issued))
         for ai, arm in enumerate(self.arms):
             p = self.points['arms'][ARMS[ai]]
             held = bool(state['actual_grasps'][ARMS[ai]][p['object']])
@@ -583,7 +670,21 @@ class SimpleBimanualAutoSERL:
             # Settle are expert operations, not evidence of Actor progress.
             if issued[ai] == 'Policy':
                 arm.start = min(self.n_states-1, max(arm.floor, arm.start+1))
-            arm.cooldown = max(0, arm.cooldown-1)
+            # Exactly 32 completed Policy cycles; safety override and expert
+            # steps neither spend cooldown nor advance the Policy window.
+            if issued[ai] == 'Policy':
+                arm.cooldown = max(0, arm.cooldown-1)
+            if issued[ai] == BOUNDARY_GUARD:
+                arm.boundary_guard_streak += 1
+                arm.boundary_guard_total += 1
+                self.boundary_guard_steps += 1
+                self.events.append(dict(event='boundary_guard_completed',
+                    arm=ARMS[ai], cooldown_remaining=int(arm.cooldown),
+                    consecutive=int(arm.boundary_guard_streak)))
+            elif arm.boundary_guard_streak:
+                self.events.append(dict(event='boundary_guard_cleared',
+                    arm=ARMS[ai], consecutive=int(arm.boundary_guard_streak)))
+                arm.boundary_guard_streak = 0
             if issued[ai] in EXPERT:
                 self._touched.add(ai); arm.age += 1
             if self.stop_reason:
@@ -690,10 +791,12 @@ class SimpleBimanualAutoSERL:
         error_after = float(np.mean(distances)) if distances else 0.
         return dict(handback=bool(handbacks), safe_handback=bool(handbacks), handbacks=handbacks,
             takeover_id=self._segment, indices=self.indices(),
-            task_quality=dict(eligible=not self.stop_reason and any(s in EXPERT for s in issued),
+            task_quality=dict(eligible=not self.stop_reason and any(s in EXPERT for s in issued) and not any(s in SAFETY_ONLY for s in issued),
                               error_before_m=self._error_before, error_after_m=error_after, handoff_confirmed=bool(handbacks)),
             per_arm_modes=[a.mode for a in self.arms],
             per_arm_cooldown=[a.cooldown for a in self.arms],
+            boundary_guard_streak=[a.boundary_guard_streak for a in self.arms],
+            boundary_guard_total=[a.boundary_guard_total for a in self.arms],
             control_events=copy.deepcopy(self.events[self._event_cursor:]),
             stable_grasps=[ARMS[i] for i in sorted(self._stable_grasp)],
             settle_diagnostics=settle_diagnostics)
@@ -709,6 +812,7 @@ class SimpleBimanualAutoSERL:
                     autonomous_success=bool(success and not self.intervention_control_steps),
                     intervention_control_steps=self.intervention_control_steps,
                     intervention_events=self.episode_interventions,
-                    handbacks=sum(self.handbacks), disable_requested=request,
+                    handbacks=sum(self.handbacks), boundary_guard_steps=self.boundary_guard_steps,
+            disable_requested=request,
                     stable_grasp_arms=[ARMS[i] for i in sorted(self._stable_grasp)],
                     protocol=self.protocol)

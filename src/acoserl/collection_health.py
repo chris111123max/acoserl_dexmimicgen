@@ -22,7 +22,10 @@ class CollectionHealth:
    stage_recovery_completions={'A':{},'B':{}},
    guide_stall_to_stage_recovery={'A':0,'B':0},
    guide_exit_reasons={'A':{},'B':{}},
-   handbacks_by_arm={'A':0,'B':0})
+   handbacks_by_arm={'A':0,'B':0},
+   boundary_guard_complete={'A':0,'B':0},
+   boundary_guard_clear={'A':0,'B':0},
+   boundary_guard_issued={'A':0,'B':0})
   self.data=copy.deepcopy(defaults)
   if state:self.data.update(copy.deepcopy(state))
  def observe(self,p):
@@ -64,6 +67,12 @@ class CollectionHealth:
    elif event.get('event')=='stage_recovery_complete':
     key=str(event.get('anchor'))
     counts=d['stage_recovery_completions'][arm];counts[key]=counts.get(key,0)+1
+   elif event.get('event')=='boundary_guard_issued':
+    d['boundary_guard_issued'][arm]+=1
+   elif event.get('event')=='boundary_guard_completed':
+    d['boundary_guard_complete'][arm]+=1
+   elif event.get('event')=='boundary_guard_cleared':
+    d['boundary_guard_clear'][arm]+=1
    elif event.get('event')=='guide_exit_to_handoff':
     reason=str(event.get('reason'))
     counts=d['guide_exit_reasons'][arm];counts[reason]=counts.get(reason,0)+1
@@ -73,7 +82,7 @@ class CollectionHealth:
   d['nonzero_motion_steps']+=int(p.get('nonzero_physical_motion',False))
   d['policy_motion_steps']+=int(source=='Policy' and p.get('nonzero_physical_motion',False))
   d['projection_steps']+=int(source.startswith('Constrained_'))
-  d['task_intervention_steps']+=int(source.startswith(('Guide_','Recover_')))
+  d['task_intervention_steps']+=int(any(x in ('Guide','ReturnS0','ReturnP0','ReturnP1','Replay','Settle') for x in controls))
   d['safe_handbacks']+=int(bool((p.get('recovery_result') or {}).get('safe_handback')))
   episode=(p.get('env_id'),p.get('episode_id'))
   # Per-arm streaks must be tracked by environment; batch workers interleave.
