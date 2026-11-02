@@ -2,6 +2,7 @@
 import sys
 import types
 import unittest
+from collections import deque
 from unittest.mock import patch
 
 import numpy as np
@@ -76,6 +77,9 @@ class GuideProgressTests(unittest.TestCase):
 
     def _manager(self, can_return, improving=False, cooldown=0):
         manager = object.__new__(SimpleBimanualAutoSERL)
+        # __new__ bypasses the real constructor; snapshot/servo below are
+        # replaced by controlled stubs but choose() still reads manager.env.
+        manager.env = object()
         arm = ArmState(30, 57, mode='Guide', target=40, takeover=8,
                        age=45, cooldown=cooldown)
         for i in range(GUIDE_PROGRESS_WINDOW):
@@ -95,6 +99,12 @@ class GuideProgressTests(unittest.TestCase):
         manager._segment = 0
         manager._segment_signature = None
         manager._error_before = 0.
+        manager._issued_targets = [None, None]
+        manager._stable_grasp = set()
+        manager._touched = set()
+        manager._assembly_anchor = None
+        manager._assembly_rest = deque(maxlen=3)
+        manager.handbacks = [0, 0]
         manager.steps = 0
         manager.stop_reason = None
         manager.auto_disabled = False
@@ -108,6 +118,8 @@ class GuideProgressTests(unittest.TestCase):
                       for _ in ARMS],
             'actual_grasps': {'A': {'piece_1': False},
                               'B': {'piece_2': False}},
+            'official_metrics': {'first_piece_assembled': False,
+                                 'task': False},
         }
         contact = {'dynamic_A_B_coupled': False, 'edges': []}
         manager.contacts = types.SimpleNamespace(read=lambda: contact)
@@ -125,6 +137,25 @@ class GuideProgressTests(unittest.TestCase):
         fake_core.servo = lambda env, targets, grips, **kwargs: np.zeros(14)
         with patch.dict(sys.modules, {'acoserl.bimanual_core': fake_core}):
             return manager.choose(np.zeros(14, dtype=float))
+
+    def _after(self, manager, state):
+        fake_core = types.ModuleType('acoserl.bimanual_core')
+        fake_core.snapshot = lambda env: state
+        fake_core.errors = lambda actual, target: {
+            'position_m': .04, 'rotation_rad': .04}
+        with patch.dict(sys.modules, {'acoserl.bimanual_core': fake_core}):
+            return manager.after_step()
+
+    def _complete_policy_step(self, manager, state):
+        fake_core = types.ModuleType('acoserl.bimanual_core')
+        fake_core.snapshot = lambda env: state
+        fake_core.servo = lambda env, targets, grips, **kw: np.zeros(14)
+        fake_core.errors = lambda actual, target: {
+            'position_m': .04, 'rotation_rad': .04}
+        with patch.dict(sys.modules, {'acoserl.bimanual_core': fake_core}):
+            action, decision = manager.choose(np.zeros(14, dtype=float))
+            after = manager.after_step()
+        return action, decision, after
 
     def test_safe_guide_stall_enters_real_p0_state(self):
         manager, state = self._manager(can_return=True)
@@ -158,6 +189,38 @@ class GuideProgressTests(unittest.TestCase):
         self.assertEqual(manager.arms[0].mode, 'Policy')
         self.assertIsNone(manager.stop_reason)
 
+
+    def test_guide_80th_control_releases_without_episode_stop(self):
+        manager, state = self._manager(can_return=True)
+        manager.arms[0].age = 79
+        manager._issued = ('Guide', 'Policy')
+        manager._issued_targets = [40, None]
+        after = self._after(manager, state)
+        self.assertIsNone(manager.stop_reason)
+        self.assertEqual(manager.arms[0].mode, 'Policy')
+        self.assertEqual(manager.arms[0].cooldown, POLICY_AFTER_GUIDE_STEPS)
+        self.assertEqual(manager.arms[0].age, 0)
+        self.assertFalse(after['handback'])
+        self.assertEqual(after['handbacks'], [])
+        self.assertEqual(after['control_events'][-1]['event'],
+                         'guide_released_to_policy')
+        self.assertEqual(after['control_events'][-1]['reason'],
+                         'guide_max_controls')
+
+    def test_policy_cooldown_last_full_step_before_retakeover(self):
+        manager, state = self._manager(can_return=True)
+        manager.arms[0].mode = 'Policy'
+        manager.arms[0].cooldown = POLICY_AFTER_GUIDE_STEPS
+        for cycle in range(POLICY_AFTER_GUIDE_STEPS):
+            action, decision, after = self._complete_policy_step(manager, state)
+            self.assertEqual(decision['per_arm_control'], ['Policy', 'Policy'],
+                             f'premature takeover on policy step {cycle+1}')
+            self.assertEqual(manager.arms[0].mode, 'Policy')
+            self.assertIsNone(manager.stop_reason)
+        self.assertEqual(manager.arms[0].cooldown, 0)
+        action, decision = self._choose(manager, state)
+        self.assertEqual(decision['per_arm_control'], ['ReturnP0', 'Policy'])
+        self.assertEqual(manager.arms[0].mode, 'ReturnP0')
 
 class DemoQualityTests(unittest.TestCase):
     def setUp(self):
