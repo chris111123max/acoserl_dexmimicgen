@@ -30,6 +30,24 @@ https://github.com/rail-berkeley/serl/releases/tag/resnet10
 
 官方资产大小21,677,915字节。官方发布元数据没有公开SHA256，因此Codex下载后的自算hash只能作复现证据，不能被误写为官方独立认证的摘要。禁止任意第三方镜像；pickle有代码执行风险，只能在明确确认官方来源后转换。
 
+## 官方pickle实际结构更新（2026-11-02）
+
+服务器已使用隔离JAX/JAXlib 0.4.38反序列化用户手动上传的文件，并确认其顶层严格包含 `conv_init`、`norm_init`、`ResNetBlock_0`～`ResNetBlock_3` 和 **`output_head`**；`output_head` 子键为 `kernel`、`bias`。之前的转换器只允许主干6个顶层键，因此在读取真实官方文件后拒绝了合法的分类头。
+
+新版转换格式 `serl_official_resnet10_torch_v2` 不再忽略分类头，而是验证每一个键与精确维度，将JAX Dense kernel按 [输入维,分类数] → PyTorch Linear [分类数,输入维] 转置，保留 `output_head.weight`、`output_head.bias` 到安全的weights-only产物。要求ImageNet-1K类别数为1000。若真实张量维度仍与此不同，保持错误并报告真实形状，不改成静默过滤。
+
+**推理效率不变：**在线双臂RL仍只运行至stage2，保存完整的官方output_head但不执行它；该分类头也被冻结。转换文件必须包含四阶段主干和分类头，完整参与每个ResNet主干权重hash校验。
+
+本次上传文件的用户提供SHA256：
+
+`175745d43d30233eb01b5369465d1c24c11b8ee71ccb734cc1c1bca13e07f57b`
+
+这个值是已上传文件的观测摘要，不是独立的GitHub官方签名，不应混淆来源验证。用户已确认官方来源，未经独立验证的其他pickle不得加载。
+
+转换时复用现有隔离JAX环境；如当前解释器无法同时导入torch和jax，则报告依赖信息，不能动Ascend训练环境。原始权重不会被重下载或覆盖。再次运行真正的转换前，请检查固定缓存目录是否存在转换输出或.partial文件（不应擅自覆盖）。
+
+新版定向转换测试包含13项（旧7项+6项分类头相关检查），严禁把合成权重测试当成真实官方权重转换通过。
+
 ## Codex执行命令
 
 在仓库根目录执行：
@@ -50,7 +68,7 @@ python scripts/autoserl_baseline/prepare_serl_resnet10.py \
 
 ## 加载与训练
 
-默认视觉选项变为serl_resnet10_spatial84。模型文件缺失时在初始化16 worker前直接报错；训练使用torch.load(weights_only=True)加载转换权重，确认所有官方参数键、严格形状与源文件SHA一致。主干冻结，三路相机独立Linear适配层接受Critic梯度；Actor/Critic及10-Q照常更新。旧ResNet18训练模型不允许恢复到新视觉架构。
+默认视觉选项变为serl_resnet10_spatial84。模型文件缺失时在初始化16 worker前直接报错；训练使用torch.load(weights_only=True)加载转换权重，确认所有主干及output_head参数键、严格形状与源文件SHA一致。主干冻结，三路相机独立Linear适配层接受Critic梯度；Actor/Critic及10-Q照常更新。旧ResNet18训练模型不允许恢复到新视觉架构。
 
 测试阶段先运行：
 

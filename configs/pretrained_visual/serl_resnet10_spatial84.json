@@ -8,7 +8,7 @@
   "source_filename": "resnet10_params.pkl",
   "converted_filename": "serl_resnet10_torch.pt",
   "converter": "scripts/autoserl_baseline/prepare_serl_resnet10.py",
-  "conversion": "strict all four blocks, Flax HWIO->PyTorch OIHW, frozen GroupNorm4, JAX SAME padding",
+  "conversion": "strict official stem, all four residual blocks and ImageNet output_head (bias/kernel) with JAX Dense transpose; GroupNorm4 and SAME semantics",
   "native_resnet_input": "128x128 RGB float0..1 converted to official ImageNet normalization",
   "real_env_input": "3x84x84 RGB uint8 per camera, 3 independent cameras",
   "spatial_feature_stage": 2,
@@ -31,5 +31,19 @@
   "n_critics": 10,
   "source_integrity": "source SHA256 in conversion_manifest.json, rechecked at every load; converter only accepts exact official file byte length and complete parameter geometry",
   "not_equivalent_to_official": "Official Flax backbone weights and blocks, but intermediate spatial tokens for ResFiT RLPD; not a claim of matching full SERL inference/actor",
-  "no_automatic_download": true
+  "no_automatic_download": true,
+  "full_pretraining_output_head_loaded": true,
+  "full_pretraining_output_head_executed": false,
+  "full_pretraining_output_head_shape_expected": {
+    "kernel": [
+      512,
+      1000
+    ],
+    "bias": [
+      1000
+    ]
+  },
+  "converted_format_version": "serl_official_resnet10_torch_v2",
+  "pretraining_file_observed_sha256": "175745d43d30233eb01b5369465d1c24c11b8ee71ccb734cc1c1bca13e07f57b",
+  "sha256_note": "Observed hash from user-uploaded checkpoint; not a GitHub-signed independent release digest"
 }

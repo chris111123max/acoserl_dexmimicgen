@@ -22,7 +22,11 @@ def synthetic_flax_tree(model):
     norm = lambda key: {'scale': state[key+'.weight'].detach().numpy().copy(),
                         'bias': state[key+'.bias'].detach().numpy().copy()}
     result = {'conv_init':conv('conv_init.weight'),
-              'norm_init':norm('norm_init')}
+              'norm_init':norm('norm_init'),
+              'output_head':{
+                  'kernel': state['output_head.weight'].detach().numpy().T.copy(),
+                  'bias': state['output_head.bias'].detach().numpy().copy(),
+              }}
     for index in range(4):
         base = f'blocks.{index}'
         block = {
@@ -55,8 +59,55 @@ class SERLResNet10ConversionContract(unittest.TestCase):
     def test_invalid_or_partial_official_checkpoint_is_rejected(self):
         wrong = dict(self.synthetic_tree)
         wrong.pop('ResNetBlock_3')
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError, 'top-level keys mismatch'):
             official_weights_from_jax(wrong)
+
+    def test_missing_official_output_head_is_rejected(self):
+        wrong = dict(self.synthetic_tree)
+        wrong.pop('output_head')
+        with self.assertRaisesRegex(ValueError, 'output_head'):
+            official_weights_from_jax(wrong)
+
+    def test_unrecognized_top_level_parameter_is_rejected(self):
+        wrong = dict(self.synthetic_tree)
+        wrong['arbitrary_extra'] = {'kernel': np.zeros((1,), dtype=np.float32)}
+        with self.assertRaisesRegex(ValueError, 'arbitrary_extra'):
+            official_weights_from_jax(wrong)
+
+    def test_output_head_bad_nested_keys_are_rejected(self):
+        wrong = dict(self.synthetic_tree)
+        wrong['output_head'] = {'kernel': self.synthetic_tree['output_head']['kernel']}
+        with self.assertRaisesRegex(ValueError, 'output_head keys mismatch'):
+            official_weights_from_jax(wrong)
+
+    def test_output_head_wrong_class_count_is_rejected(self):
+        wrong = dict(self.synthetic_tree)
+        wrong['output_head'] = {
+            'kernel': np.zeros((512, 999), dtype=np.float32),
+            'bias': np.zeros((999,), dtype=np.float32),
+        }
+        with self.assertRaisesRegex(ValueError, 'output_head shape mismatch'):
+            official_weights_from_jax(wrong)
+
+    def test_output_head_nonfinite_weights_are_rejected(self):
+        wrong = dict(self.synthetic_tree)
+        broken = dict(wrong['output_head'])
+        broken['bias'] = broken['bias'].copy()
+        broken['bias'][0] = np.nan
+        wrong['output_head'] = broken
+        with self.assertRaisesRegex(ValueError, 'output_head must have finite'):
+            official_weights_from_jax(wrong)
+
+    def test_classifier_head_is_preserved_with_flax_dense_transpose(self):
+        mapped = official_weights_from_jax(self.synthetic_tree)
+        self.assertEqual(tuple(mapped['output_head.weight'].shape), (1000, 512))
+        self.assertEqual(tuple(mapped['output_head.bias'].shape), (1000,))
+        expected = torch.from_numpy(
+            self.synthetic_tree['output_head']['kernel'].T.copy())
+        self.assertTrue(torch.equal(mapped['output_head.weight'], expected))
+        self.assertTrue(torch.equal(
+            mapped['output_head.bias'],
+            torch.from_numpy(self.synthetic_tree['output_head']['bias'].copy())))
 
     def test_shape_mismatch_is_rejected(self):
         wrong = dict(self.synthetic_tree)

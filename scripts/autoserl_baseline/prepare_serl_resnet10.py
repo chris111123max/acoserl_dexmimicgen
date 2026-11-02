@@ -21,8 +21,9 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 
 from acoserl.serl_resnet10 import (
-    CONVERTED_FILE, FEATURE_STAGE, MODEL_VERSION, OFFICIAL_BYTES,
-    OFFICIAL_URL, SOURCE_FILE, file_sha256, official_weights_from_jax,
+    CONVERTED_FILE, FEATURE_STAGE, FULL_BACKBONE_CHANNELS, MODEL_VERSION,
+    OFFICIAL_BYTES, OFFICIAL_URL, PRETRAIN_CLASSES, SOURCE_FILE,
+    file_sha256, official_weights_from_jax,
 )
 
 
@@ -50,11 +51,19 @@ def main():
     with SOURCE_FILE.open("rb") as stream:
         tree = pickle.load(stream)
     weights = official_weights_from_jax(tree)
+    # Classification output_head is present in the real SERL release.
+    # It is strict-translated and stored rather than dropped, even though
+    # the spatial-token training forward bypasses that classifier.
+    assert 'output_head.weight' in weights and 'output_head.bias' in weights
     import torch
     payload = dict(version=MODEL_VERSION, origin=OFFICIAL_URL,
                    official_source_sha256=digest,
                    official_source_bytes=OFFICIAL_BYTES,
                    selected_spatial_stage=FEATURE_STAGE,
+                   official_top_level_keys=sorted(tree.keys()),
+                   official_output_head_preserved=True,
+                   official_output_head_classes=PRETRAIN_CLASSES,
+                   official_output_head_inputs=FULL_BACKBONE_CHANNELS,
                    conversion_tensors=len(weights), weights=weights)
     tmp = CONVERTED_FILE.with_name(CONVERTED_FILE.name + ".partial")
     if tmp.exists():
@@ -83,6 +92,12 @@ def main():
                 output_sha256=file_sha256(CONVERTED_FILE),
                 version=MODEL_VERSION, selected_spatial_stage=FEATURE_STAGE,
                 tensors=len(weights), source_trusted_by_operator=True,
+                official_top_level_keys=sorted(tree.keys()),
+                output_head_preserved=True,
+                output_head_shapes=dict(
+                    weight=list(weights['output_head.weight'].shape),
+                    bias=list(weights['output_head.bias'].shape)),
+                output_head_online_executed=False,
                 no_network_download_performed=True)
     manifest = CONVERTED_FILE.with_name("conversion_manifest.json")
     manifest.write_text(json.dumps(meta, indent=2, ensure_ascii=False)+"\n")

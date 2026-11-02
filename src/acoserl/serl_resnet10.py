@@ -1,7 +1,8 @@
 """SERL's official ImageNet-1K ResNet-10 backbone in native PyTorch.
 
 Uses the exact upstream 7x7 stem, 4-group GN, four basic blocks and JAX
-SAME padding. All four official pretrained stages are loaded and checked.
+SAME padding. All four official pretrained stages and the ImageNet-1K
+classification output_head are loaded and checked, with no parameter drops.
 For 84px bimanual grasping the frozen spatial feature is extracted after
 stage 2 (8x8x256 at the official 128px input), before stage 3 downsamples
 it to 4x4. This is a documented RLPD spatial-token ADAPTATION, not an
@@ -21,13 +22,15 @@ from torch.nn import functional as F
 
 OFFICIAL_URL = "https://github.com/rail-berkeley/serl/releases/download/resnet10/resnet10_params.pkl"
 OFFICIAL_BYTES = 21677915
-MODEL_VERSION = "serl_official_resnet10_torch_v1"
+MODEL_VERSION = "serl_official_resnet10_torch_v2"
 WEIGHT_DIR = Path(__file__).resolve().parents[2] / "cache/pretrained_visual/serl_resnet10_official"
 SOURCE_FILE = WEIGHT_DIR / "resnet10_params.pkl"
 CONVERTED_FILE = WEIGHT_DIR / "serl_resnet10_torch.pt"
 FEATURE_STAGE = 2
 FEATURE_CHANNELS = 256
 FEATURE_SIDE = 8
+PRETRAIN_CLASSES = 1000
+FULL_BACKBONE_CHANNELS = 512
 
 
 def file_sha256(path: Path) -> str:
@@ -78,7 +81,11 @@ class SERLBasicBlock(nn.Module):
 
 
 class SERLResNet10(nn.Module):
-    """The complete official 4-stage ResNet-10 module (4.9M parameters)."""
+    """The complete four-stage backbone and official ImageNet-1K output head.
+
+    The classifier weights remain present, strict-loaded and frozen, but the
+    online spatial-token RL forward exits at stage2, saving classifier work.
+    """
     def __init__(self):
         super().__init__()
         # Official JAX conv_init has EXPLICIT symmetric 3px padding.
@@ -90,6 +97,10 @@ class SERLResNet10(nn.Module):
             SERLBasicBlock(128, 256, 2),
             SERLBasicBlock(256, 512, 2),
         ))
+        # The official ImageNet-1K pickle additionally contains output_head.
+        # Preserve and strict-load BOTH kernel and bias rather than silently
+        # discarding them. This layer is not executed during spatial RL.
+        self.output_head = nn.Linear(FULL_BACKBONE_CHANNELS, PRETRAIN_CLASSES)
         self.register_buffer("mean", torch.tensor((.485, .456, .406)).view(1,3,1,1))
         self.register_buffer("std", torch.tensor((.229, .224, .225)).view(1,3,1,1))
 
@@ -115,8 +126,13 @@ class SERLResNet10(nn.Module):
 def official_weights_from_jax(tree):
     """Strictly translate all official Flax parameters; no untrained fallback."""
     import numpy as np
-    if set(tree) != {"conv_init", "norm_init", *(f"ResNetBlock_{i}" for i in range(4))}:
-        raise ValueError("official SERL checkpoint has unexpected top-level parameter keys")
+    expected_top = {"conv_init", "norm_init", "output_head",
+                    *(f"ResNetBlock_{i}" for i in range(4))}
+    observed_top = set(tree)
+    if observed_top != expected_top:
+        raise ValueError("official SERL checkpoint top-level keys mismatch: "
+                         f"missing={sorted(expected_top-observed_top)}, "
+                         f"extra={sorted(observed_top-expected_top)}")
     weights = {}
     def conv(key, data):
         if set(data) != {"kernel"}:
@@ -153,6 +169,29 @@ def official_weights_from_jax(tree):
             conv(base+".shortcut.0.weight", block["conv_proj"])
             norm(base+".shortcut.1", block["norm_proj"])
 
+    # Flax Dense(kernel) is [in_features,out_features], whereas PyTorch
+    # nn.Linear.weight is [out_features,in_features]. The observed official
+    # release also contains the ImageNet classification output head.
+    # Never ignore or silently filter the pretraining-only tensors.
+    output_head = tree["output_head"]
+    if set(output_head) != {"kernel", "bias"}:
+        raise ValueError("official SERL output_head keys mismatch: "
+                         f"expected=['bias','kernel'], got={sorted(output_head)}")
+    head_weight = torch.from_numpy(np.asarray(output_head["kernel"]).copy()).T.contiguous()
+    head_bias = torch.from_numpy(np.asarray(output_head["bias"]).copy()).contiguous()
+    if (tuple(head_weight.shape) != (PRETRAIN_CLASSES, FULL_BACKBONE_CHANNELS)
+            or tuple(head_bias.shape) != (PRETRAIN_CLASSES,)):
+        raise ValueError("official SERL output_head shape mismatch: "
+                         f"kernel={tuple(head_weight.shape)}, bias={tuple(head_bias.shape)}; "
+                         f"expected kernel=({PRETRAIN_CLASSES},{FULL_BACKBONE_CHANNELS}) "
+                         f"and bias=({PRETRAIN_CLASSES},)")
+    if (head_weight.dtype != torch.float32 or head_bias.dtype != torch.float32
+            or not torch.isfinite(head_weight).all()
+            or not torch.isfinite(head_bias).all()):
+        raise ValueError("official SERL output_head must have finite float32 tensors")
+    weights["output_head.weight"] = head_weight
+    weights["output_head.bias"] = head_bias
+
     backbone = SERLResNet10()
     expected_state = backbone.state_dict()
     for name in ("mean", "std"):
@@ -180,13 +219,22 @@ def load_verified_backbone() -> tuple[SERLResNet10, dict]:
         raise ValueError("SERL official checkpoint size does not match release")
     if pack.get("selected_spatial_stage") != FEATURE_STAGE:
         raise ValueError("SERL feature-stage protocol does not match converted checkpoint")
+    if (pack.get("official_output_head_preserved") is not True
+            or pack.get("official_output_head_classes") != PRETRAIN_CLASSES
+            or pack.get("official_output_head_inputs") != FULL_BACKBONE_CHANNELS):
+        raise ValueError("SERL converted file must preserve the exact official output_head")
     evidence = CONVERTED_FILE.with_name("conversion_manifest.json")
     if not evidence.is_file():
         raise FileNotFoundError("Missing SERL weight conversion_manifest.json")
     manifest = json.loads(evidence.read_text())
     if (manifest.get("official_source_sha256") != pack.get("official_source_sha256")
-            or manifest.get("output_sha256") != file_sha256(CONVERTED_FILE)):
-        raise ValueError("SERL conversion provenance or output file SHA256 mismatch")
+            or manifest.get("output_sha256") != file_sha256(CONVERTED_FILE)
+            or manifest.get("output_head_preserved") is not True
+            or manifest.get("output_head_shapes") != {
+                "weight": [PRETRAIN_CLASSES, FULL_BACKBONE_CHANNELS],
+                "bias": [PRETRAIN_CLASSES],
+            }):
+        raise ValueError("SERL conversion provenance, classifier or output SHA256 mismatch")
     if not SOURCE_FILE.is_file() or SOURCE_FILE.stat().st_size != OFFICIAL_BYTES:
         raise FileNotFoundError("Original official SERL checkpoint not found at fixed cache path")
     sha = file_sha256(SOURCE_FILE)
