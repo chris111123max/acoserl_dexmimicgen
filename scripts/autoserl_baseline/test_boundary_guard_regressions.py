@@ -15,7 +15,11 @@ import torch
 from acoserl.boundary_guard import evaluate, world_policy_displacement
 from acoserl.simple_autoserl import SimpleBimanualAutoSERL
 from acoserl.simple_replay import SimpleDemo, make_row
-from test_simple_progress_regressions import GuideProgressTests, row, decision
+# Import the existing fixture module, not its unittest.TestCase into this
+# module's global namespace: unittest.main() should discover exactly our
+# 13 BoundaryGuard tests, not re-run imported GuideProgressTests.
+import test_simple_progress_regressions as progress_fixtures
+from test_simple_progress_regressions import row, decision
 
 
 class RiskGeometryTests(unittest.TestCase):
@@ -53,7 +57,7 @@ class RiskGeometryTests(unittest.TestCase):
 
 class BoundaryOwnershipTests(unittest.TestCase):
     def fixture(self, b_guide=True):
-        base=GuideProgressTests()
+        base=progress_fixtures.GuideProgressTests()
         m, state=base._manager(can_return=True)
         m.cfg['boundary_guard_enabled']=True
         m.cfg['free_workspace_margin_m']=.12
@@ -160,6 +164,9 @@ class BoundaryOwnershipTests(unittest.TestCase):
                      supervisor_stop_reason=None,
                      auto_intervention=decision('BoundaryGuard','Guide',0,7))
         fake_row=row(3,mask=list(range(7,13)))
+        # make_row() mutates the raw_row's source marker, as production
+        # raw_row() always provides. Keep the contract intact in this mock.
+        fake_row['action_source']=torch.tensor(0,dtype=torch.long)
         with patch('acoserl.simple_replay.raw_row',return_value=fake_row):
             out=make_row({},torch.zeros(14),{},0.,False,False,payload)
         self.assertEqual(int(out['action_source']),9)
