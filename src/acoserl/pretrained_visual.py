@@ -89,13 +89,59 @@ class SpatialPretrainedEncoder(nn.Module):
   assert result.shape[1:]==(81,128)
   return result.flatten(1) if flatten else result
 
+
+class SERLResNet10SpatialEncoder(nn.Module):
+ """Frozen official SERL GroupNorm ResNet-10 with trainable RL spatial adapter.
+
+ The upstream JAX encoder is 128x128. A 64-token intermediate grid is used
+ here instead of its 4x4 last stage to retain precision for small grasps.
+ Full official 4-stage weights are loaded; stage 3 is frozen but not executed.
+ """
+ num_patch = 64
+ patch_repr_dim = 128
+ repr_dim = num_patch * patch_repr_dim
+
+ def __init__(self):
+  super().__init__()
+  from acoserl.serl_resnet10 import (
+   FEATURE_STAGE, FEATURE_CHANNELS, SOURCE_FILE, CONVERTED_FILE,
+   load_verified_backbone,
+  )
+  self.name = 'serl_resnet10_spatial84'
+  self.backbone, provenance = load_verified_backbone()
+  self.load_evidence = dict(
+   provenance, file=str(CONVERTED_FILE), source_file=str(SOURCE_FILE),
+   exact_official_weight_tensor_mapping=True,
+   executed_stage=FEATURE_STAGE,
+   spatial_adaptation='official_128px_input_stage2_8x8_tokens',
+   state_sha256=digest(self.backbone))
+  self.adapter = nn.Linear(FEATURE_CHANNELS, self.patch_repr_dim)
+
+ def train(self, mode=True):
+  super().train(mode)
+  self.backbone.eval()
+  return self
+
+ def forward(self, obs, flatten=True):
+  if obs.dtype == torch.uint8:
+   obs = obs.float() / 255.
+  with torch.no_grad():
+   frozen = self.backbone(obs, spatial=True)
+  features = frozen.flatten(2).transpose(1, 2).contiguous()
+  tokens = self.adapter(features)
+  if tokens.shape[1:] != (self.num_patch, self.patch_repr_dim):
+   raise AssertionError('SERL spatial adaptation feature mismatch')
+  return tokens.flatten(1) if flatten else tokens
+
 class PretrainedQAgent(QAgent):
  def __init__(self,*args,visual_name,**kwargs):
   self.visual_name=visual_name
   super().__init__(*args,**kwargs)
  def _build_encoders(self,obs_shape):
   assert obs_shape==(3,84,84)
-  return nn.ModuleList([SpatialPretrainedEncoder(self.visual_name).to(self.cfg.device) for _ in self.rl_cameras])
+  constructor = (SERLResNet10SpatialEncoder if self.visual_name=='serl_resnet10_spatial84'
+                 else lambda: SpatialPretrainedEncoder(self.visual_name))
+  return nn.ModuleList([constructor().to(self.cfg.device) for _ in self.rl_cameras])
 
 def make_agent(obs_shape,prop_shape,action_dim,cameras,cfg,visual_name='minivit'):
  if visual_name=='minivit':return QAgent(obs_shape,prop_shape,action_dim,cameras,cfg)
@@ -107,7 +153,9 @@ def manifest(agent):
  enc=agent.encoders
  hashes=[digest(e.backbone) for e in enc if hasattr(e,'backbone')]
  assert hashes==[e.load_evidence['state_sha256'] for e in enc if hasattr(e,'backbone')],'pretrained weights overwritten after load'
- return {'name':getattr(agent,'visual_name','minivit'),'feature_shape_per_camera':[81,128],
+ shapes=[(int(getattr(e,'num_patch',81)), int(getattr(e,'patch_repr_dim',128))) for e in enc]
+ if len(set(shapes)) != 1:raise AssertionError('camera encoder geometry differs')
+ return {'name':getattr(agent,'visual_name','minivit'),'feature_shape_per_camera':list(shapes[0]),
   'parameters_total':sum(p.numel() for p in agent.parameters()),
   'parameters_trainable':sum(p.numel() for p in agent.parameters() if p.requires_grad),
   'encoder_trainable':sum(p.numel() for p in enc.parameters() if p.requires_grad),

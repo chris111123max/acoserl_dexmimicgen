@@ -1,9 +1,14 @@
 {
-  "method": "ResFiT RLPD + Bimanual AutoSERL V1",
+  "method": "ResFiT RLPD + stage-aware bimanual recovery (official SERL ResNet-10)",
   "task": "TwoArmThreePieceAssembly",
   "demo": "demo_0",
   "offline_transitions": 224,
   "device": "npu:0",
+  "visual_encoder": "serl_resnet10_spatial84",
+  "visual_pretrained_origin": "https://github.com/rail-berkeley/serl/releases/download/resnet10/resnet10_params.pkl",
+  "visual_weights_directory": "cache/pretrained_visual/serl_resnet10_official",
+  "visual_backbone_frozen": true,
+  "visual_trainable_adapter_only": true,
   "num_envs": 16,
   "startup_groups": [
     4,

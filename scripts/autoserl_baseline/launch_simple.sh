@@ -23,9 +23,9 @@ if [[ -n "${ACOSERL_CHECKPOINT_MIRROR_ROOT:-}" ]]; then
 fi
 set -o noclobber
 printf '%s\n' "$$" > "$BASE/launcher_logs/$TAG.pid"
-printf 'RUNTIME=simple_bimanual_autoserl_v1\nRUN=%s\nLOG=%s\n' "$BASE/$TAG" "$BASE/launcher_logs/$TAG.log"
+printf 'RUNTIME=stage_aware_bimanual_recovery_v1\nRUN=%s\nLOG=%s\n' "$BASE/$TAG" "$BASE/launcher_logs/$TAG.log"
 exec python -u scripts/autoserl_baseline/train_simple.py --mode formal --method "$METHOD" \
-  --tag "$TAG" --output-root "$BASE" --visual resnet18_spatial84 --utd 1 \
+  --tag "$TAG" --output-root "$BASE" --visual serl_resnet10_spatial84 --utd 1 \
   --checkpoint-seconds "${ACOSERL_CHECKPOINT_SECONDS:-3600}" \
   --no-grasp-budget "${ACOSERL_NO_GRASP_BUDGET:-10000}" "${EXTRA[@]}" \
   > "$BASE/launcher_logs/$TAG.log" 2>&1

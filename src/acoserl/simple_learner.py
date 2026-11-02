@@ -67,11 +67,23 @@ def main():
     p.add_argument('--integration-steps',type=int,default=2048)
     p.add_argument('--integration-seconds',type=int,default=3600)
     p.add_argument('--utd',type=int,choices=(1,),default=1)
-    p.add_argument('--visual',choices=('resnet18_spatial84','minivit'),default='resnet18_spatial84')
+    p.add_argument('--visual',choices=('serl_resnet10_spatial84','resnet18_spatial84','minivit'),default='serl_resnet10_spatial84')
     p.add_argument('--checkpoint-seconds',type=int,default=3600)
     p.add_argument('--checkpoint-mirror-root',type=Path)
     p.add_argument('--no-grasp-budget',type=int,default=10000)
     a=p.parse_args()
+    if a.visual == 'serl_resnet10_spatial84':
+        # Fail before expensive offline materialization/NPU initialization and
+        # before any asynchronous MuJoCo workers are launched.
+        from acoserl.serl_resnet10 import (
+            SOURCE_FILE, CONVERTED_FILE, OFFICIAL_BYTES,
+        )
+        if (not SOURCE_FILE.is_file() or SOURCE_FILE.stat().st_size != OFFICIAL_BYTES
+                or not CONVERTED_FILE.is_file()):
+            p.error('Missing official SERL ResNet-10 weights. Download to '
+                    + str(SOURCE_FILE) + ' and run '
+                    'scripts/autoserl_baseline/prepare_serl_resnet10.py '
+                    'before launching a training run.')
     if not a.tag.replace('_','').replace('-','').isalnum():p.error('invalid tag')
     if not 16<=a.integration_steps<=2048 or not 60<=a.integration_seconds<=3600:
         p.error('invalid bounded integration budget')
@@ -89,7 +101,7 @@ def main():
                  sliding_window_clock='completed_policy_controls_only',
                  post_guide_policy_steps=32,
                  dynamic_demo_admission='verified_per_arm_handoff_v2')
-    cfg.update(method='ResFiT RLPD + independent AutoSERL baseline',purpose=a.mode,collector_protocol='simple_bimanual_collector_v1',utd=1,
+    cfg.update(method='ResFiT RLPD + stage-aware bimanual recovery (SERL ResNet-10)',purpose=a.mode,collector_protocol='simple_bimanual_collector_v1',utd=1,
                manager_config=manager,visual_encoder=a.visual,
                checkpoint_seconds=a.checkpoint_seconds,no_grasp_budget=a.no_grasp_budget,
                intervention_enabled=enabled,passive_hold_entry_gate_enabled=False,

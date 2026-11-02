@@ -1,0 +1,35 @@
+{
+  "name": "serl_resnet10_spatial84",
+  "origin": "SERL/HIL-SERL official ImageNet-1k pretrained ResNet-10",
+  "official_release": "https://github.com/rail-berkeley/serl/releases/tag/resnet10",
+  "source_url": "https://github.com/rail-berkeley/serl/releases/download/resnet10/resnet10_params.pkl",
+  "source_bytes": 21677915,
+  "fixed_cache": "cache/pretrained_visual/serl_resnet10_official",
+  "source_filename": "resnet10_params.pkl",
+  "converted_filename": "serl_resnet10_torch.pt",
+  "converter": "scripts/autoserl_baseline/prepare_serl_resnet10.py",
+  "conversion": "strict all four blocks, Flax HWIO->PyTorch OIHW, frozen GroupNorm4, JAX SAME padding",
+  "native_resnet_input": "128x128 RGB float0..1 converted to official ImageNet normalization",
+  "real_env_input": "3x84x84 RGB uint8 per camera, 3 independent cameras",
+  "spatial_feature_stage": 2,
+  "spatial_feature_shape": [
+    256,
+    8,
+    8
+  ],
+  "per_camera_spatial_tokens": [
+    64,
+    128
+  ],
+  "full_resnet_loaded": true,
+  "full_resnet_executed": false,
+  "reason_for_stage2": "Preserve 8x8 spatial localization for robotic fine grasping and avoid final stage 4x4 downsampling and extra frozen computation",
+  "backbone_trainable": false,
+  "adapter_trainable": true,
+  "training_signal": "Critic TD gradients update camera-specific spatial adapters; actor and critic update normally",
+  "utd": 1,
+  "n_critics": 10,
+  "source_integrity": "source SHA256 in conversion_manifest.json, rechecked at every load; converter only accepts exact official file byte length and complete parameter geometry",
+  "not_equivalent_to_official": "Official Flax backbone weights and blocks, but intermediate spatial tokens for ResFiT RLPD; not a claim of matching full SERL inference/actor",
+  "no_automatic_download": true
+}
