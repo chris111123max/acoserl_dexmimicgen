@@ -82,7 +82,10 @@ def main():
     manager=dict(runtime='simple_bimanual_autoserl_v1',method=a.method,
                  dynamic_demo_enabled=enabled,dynamic_capacity=5000,
                  original_quota=96 if enabled else 128,positive_quota=2,
-                 no_passive_hold=True,no_forward_grasp_extension=True)
+                 no_passive_hold=True,no_forward_grasp_extension=True,
+                 guide_stall_policy='reference_progress_and_20_step_target_error',
+                 post_guide_policy_steps=32,
+                 dynamic_demo_admission='verified_per_arm_handoff_v2')
     cfg.update(method='ResFiT RLPD + independent AutoSERL baseline',purpose=a.mode,collector_protocol='simple_bimanual_collector_v1',utd=1,
                manager_config=manager,visual_encoder=a.visual,
                checkpoint_seconds=a.checkpoint_seconds,no_grasp_budget=a.no_grasp_budget,
@@ -175,8 +178,12 @@ def main():
                         {k:torch.from_numpy(v[e]) for k,v in nxt.items()},reward[e],term[e],trunc[e],payload)
                     for item in assembler.append(row):on.add(item)
                     if manager['dynamic_demo_enabled']:
-                        dynamic.observe(row,handback=bool((payload.get('recovery_result') or {}).get('safe_handback')),
-                                        safe=not bool(payload.get('supervisor_stop_reason')))
+                        recovery_result = payload.get('recovery_result') or {}
+                        dynamic.observe(row,
+                            decision=payload.get('auto_intervention') or {},
+                            handbacks=recovery_result.get('handbacks', []),
+                            control_events=recovery_result.get('control_events', []),
+                            safe=not bool(payload.get('supervisor_stop_reason')))
                 else:
                     partial+=int(payload.get('partial_physics_step',False))
                     for item in assembler.close(e,bootstrap=bool(payload['bootstrap_allowed']),boundary_kind=payload['boundary_kind']):on.add(item)

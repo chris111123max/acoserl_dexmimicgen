@@ -3,13 +3,14 @@
 All tensors retain the existing ResFiT replay schema. Per-arm ownership is
 explicit, never inferred from whether Actor and expert happened to agree.
 """
+from collections import deque
 from pathlib import Path
 import copy
 import json
 import torch
 from acoserl.ascend_data import raw_row, replay
 from acoserl.isolated_nstep import IsolatedNStep
-from acoserl.simple_autoserl import EXPERT
+from acoserl.simple_autoserl import ARMS, EXPERT
 
 
 def make_row(obs, action, nxt, reward, term, trunc, payload):
@@ -42,8 +43,15 @@ def make_row(obs, action, nxt, reward, term, trunc, payload):
 
 
 class SimpleDemo:
-    """Official-style step admission, with isolated real n-step segments."""
-    protocol = 'simple_bimanual_demo_v1'
+    """Admit only actually executed interventions with a verified Policy handback.
+
+    The original demonstration remains available at all times. A bounded tail
+    of candidate expert actions is held per worker until all contributing
+    arms complete their own handbacks; failed or unqualified Guides never
+    become expert demos merely by running for many control steps.
+    """
+    protocol = 'simple_bimanual_demo_handback_v2'
+    pending_tail = 32
 
     def __init__(self, capacity=5000, gamma=.99, original_quota=96, positive_quota=2, seed=0):
         self.capacity, self.gamma = capacity, gamma
@@ -51,45 +59,132 @@ class SimpleDemo:
         self.buffer = replay(capacity, None)
         self.stream = IsolatedNStep(3, gamma)
         self.last = {}
+        self.pending = {}
+        self.pending_episode = {}
+        self.qualified = {}
         self.generator = torch.Generator().manual_seed(seed)
-        self.stats = dict(accepted_rows=0, rejected_rows=0, sampled_original=0, sampled_dynamic=0,
-                          expert_dimensions=0, dual_arm_rows=0)
+        self.stats = dict(accepted_rows=0, rejected_rows=0, sampled_original=0,
+            sampled_dynamic=0, expert_dimensions=0, dual_arm_rows=0,
+            staged_rows=0, policy_only_rows=0, expired_candidate_rows=0,
+            failed_guide_discarded_rows=0, unqualified_discarded_rows=0,
+            verified_handbacks=0, dropped_on_restore_rows=0)
         self.last_sample = {}
         self._positive = None
 
-    def close_episode(self, env, bootstrap=False, kind=4):
+    def _close_stream(self, env, bootstrap=False, kind=4):
         for row in self.stream.close(env, bootstrap=bootstrap, boundary_kind=kind):
             self.buffer.add(row)
-        self.stream.episodes.pop(env, None); self.stream.frames.pop(env, None)
-        self.stream.closed.discard(env); self.last.pop(env, None)
+        self.stream.episodes.pop(env, None)
+        self.stream.frames.pop(env, None)
+        self.stream.closed.discard(env)
+        self.last.pop(env, None)
 
-    def observe(self, row, **_):
-        env, episode, frame, segment = (int(row[k]) for k in ('env_id', 'episode', 'frame', 'takeover_id'))
+    def close_episode(self, env, bootstrap=False, kind=4):
+        """Close accepted n-step tails and discard unverified expert candidates."""
+        self._close_stream(env, bootstrap, kind)
+        self.stats['unqualified_discarded_rows'] += len(self.pending.pop(env, ()))
+        self.qualified.pop(env, None)
+        self.pending_episode.pop(env, None)
+
+    def _admit(self, row):
+        """Append one verified real row without crossing gaps or source changes."""
+        env, episode, frame, segment = (
+            int(row[k]) for k in ('env_id', 'episode', 'frame', 'takeover_id'))
         identity = (episode, frame, segment)
         previous = self.last.get(env)
         if previous == identity:
-            raise ValueError('duplicate real intervention transition')
-        if previous is not None and previous != (episode, frame-1, segment):
-            ended = bool(row['next', 'done'])
-            self.close_episode(env, bool(row['next', 'bootstrap_allowed']) if ended else True,
-                               int(row['next', 'boundary_kind']) if ended else 7)
-        complete = bool(row['complete_physics'])
-        dimensions = int(row['expert_action_mask'].sum())
-        if not complete or not bool(row['quality_validated']) or not 0 < dimensions <= 14:
-            self.stats['rejected_rows'] += 1
-            terminal = bool(row['next', 'done'])
-            self.close_episode(env, bool(row['next', 'bootstrap_allowed']) if terminal else complete,
-                               int(row['next', 'boundary_kind']) if terminal else 7)
-            return
-        item = row.clone(); item['source'].fill_(2)
+            raise ValueError('duplicate qualified intervention transition')
+        if previous is not None and previous != (episode, frame - 1, segment):
+            self._close_stream(env, bootstrap=True, kind=7)
+        item = row.clone()
+        item['source'].fill_(2)
+        # Evidence is from the eventual complete, safe Policy handback, not
+        # inferred from a mask or a nominal correction.
+        item['quality_handoff_confirmed'].fill_(True)
         for transition in self.stream.append(item):
             self.buffer.add(transition)
         self.last[env] = identity
         self.stats['accepted_rows'] += 1
+        dimensions = int(item['expert_action_mask'].sum())
         self.stats['expert_dimensions'] += dimensions
         self.stats['dual_arm_rows'] += int(dimensions > 7)
         if bool(row['next', 'done']):
-            self.close_episode(env, bool(row['next', 'bootstrap_allowed']), int(row['next', 'boundary_kind']))
+            self._close_stream(env, bool(row['next', 'bootstrap_allowed']),
+                               int(row['next', 'boundary_kind']))
+
+    def observe(self, row, *, decision=None, handbacks=None, control_events=None,
+                safe=True, **_):
+        env, episode = int(row['env_id']), int(row['episode'])
+        previous_episode = self.pending_episode.get(env)
+        if previous_episode is not None and previous_episode != episode:
+            # A worker reset without its expected episode-close event must
+            # never qualify candidates from the previous physical episode.
+            self.close_episode(env, bootstrap=True, kind=7)
+        self.pending_episode[env] = episode
+        safe = bool(safe and row['complete_physics'])
+
+        # A Guide abandoned due to stalled progress or exhausted controls is
+        # NOT a handback. Its rows, including dual-arm mixed rows, are invalid.
+        failed = set()
+        for event in control_events or ():
+            if event.get('event') == 'guide_released_to_policy':
+                failed.add((ARMS.index(event['arm']), int(event['takeover'])))
+            elif event.get('event') == 'guide_stall_to_p0':
+                failed.add((ARMS.index(event['arm']), int(event['from_takeover'])))
+        q = self.pending.get(env)
+        if failed and q:
+            retained = deque(maxlen=self.pending_tail)
+            for item, owners in q:
+                if owners & failed:
+                    self.stats['failed_guide_discarded_rows'] += 1
+                else:
+                    retained.append((item, owners))
+            self.pending[env] = retained
+
+        dimensions = int(row['expert_action_mask'].sum())
+        if dimensions and bool(row['quality_validated']) and safe:
+            if decision is None:
+                raise ValueError('cannot qualify intervention with missing per-arm provenance')
+            sources = decision.get('per_arm_control', ())
+            ids = decision.get('arm_takeover_ids', ())
+            if len(sources) != 2 or len(ids) != 2:
+                raise ValueError('incomplete per-arm takeover identity')
+            owners = frozenset((ai, int(ids[ai])) for ai, source in enumerate(sources)
+                               if source in EXPERT)
+            if not owners or any(takeover <= 0 for _, takeover in owners):
+                raise ValueError('unqualified expert takeover identity')
+            if not owners & failed:
+                q = self.pending.setdefault(env, deque(maxlen=self.pending_tail))
+                if len(q) == q.maxlen:
+                    q.popleft()
+                    self.stats['expired_candidate_rows'] += 1
+                q.append((row.clone(), owners))
+                self.stats['staged_rows'] += 1
+            else:
+                self.stats['failed_guide_discarded_rows'] += 1
+        elif dimensions:
+            self.stats['rejected_rows'] += 1
+        else:
+            self.stats['policy_only_rows'] += 1
+
+        if safe:
+            qualified = self.qualified.setdefault(env, set())
+            for handback in handbacks or ():
+                arm = handback['arm']
+                takeover = int(handback['takeover_id'])
+                if arm not in ARMS or takeover <= 0:
+                    raise ValueError('invalid physical handback record')
+                qualified.add((ARMS.index(arm), takeover))
+                self.stats['verified_handbacks'] += 1
+            q = self.pending.get(env)
+            # Process only a chronologically ordered qualified prefix. Mixed
+            # A/B actions wait for BOTH arm IDs; no bad-arm demo is relabeled.
+            while q and q[0][1].issubset(qualified):
+                item, _ = q.popleft()
+                self._admit(item)
+        if bool(row['next', 'done']):
+            self.close_episode(env, bool(row['next', 'bootstrap_allowed']),
+                               int(row['next', 'boundary_kind']))
 
     def sample_demo(self, original, count):
         if count != 128 or len(original) != 224:
@@ -117,11 +212,18 @@ class SimpleDemo:
         directory = Path(directory); directory.mkdir(exist_ok=False)
         if len(self.buffer):
             self.buffer.dumps(directory/'buffer')
+        # Live unverified candidate rows are intentionally NOT checkpointed:
+        # worker physics restarts from a new canonical episode.
+        pending_counts = {str(env): len(q) for env, q in self.pending.items() if q}
         torch.save(dict(protocol=self.protocol, capacity=self.capacity, gamma=self.gamma,
                         original_quota=self.original_quota, positive_quota=self.positive_quota,
-                        stream=self.stream, last=self.last, stats=self.stats, last_sample=self.last_sample,
+                        stream=self.stream, last=self.last, stats=self.stats,
+                        last_sample=self.last_sample, pending_counts=pending_counts,
                         generator=self.generator.get_state()), directory/'state.pt')
-        (directory/'metadata.json').write_text(json.dumps(dict(rows=len(self.buffer), protocol=self.protocol)))
+        (directory/'metadata.json').write_text(json.dumps(dict(
+            rows=len(self.buffer), protocol=self.protocol,
+            unqualified_candidate_rows=sum(pending_counts.values()),
+            pending_candidates_are_not_resumable=True)))
 
     def load(self, directory, discard_pending=True):
         directory = Path(directory)
@@ -129,12 +231,25 @@ class SimpleDemo:
         for key in ('protocol', 'capacity', 'gamma', 'original_quota', 'positive_quota'):
             if state[key] != getattr(self, key):
                 raise ValueError('incompatible simple Demo checkpoint: '+key)
+        dropped = sum(state.get('pending_counts', {}).values())
+        if dropped and not discard_pending:
+            raise ValueError('cannot resume unverified candidates across physical reset')
         self.buffer = replay(self.capacity, None)
         if (directory/'buffer').exists():
             self.buffer.loads(directory/'buffer')
         self.stream, self.last = state['stream'], state['last']
         self.stats, self.last_sample = state['stats'], state['last_sample']
         self.generator.set_state(state['generator'])
+        self.pending = {}
+        self.pending_episode = {}
+        self.qualified = {}
         if discard_pending:
-            for env in list(self.stream.queues):
-                self.close_episode(env, True, 6)
+            # Saved dynamic rows must match exactly on load. Uncommitted
+            # n-step tails cannot cross a worker physics reset, and are
+            # discarded with an explicit count rather than fabricated.
+            self.stats['dropped_on_restore_rows'] += dropped
+            self.stats['dropped_nstep_on_restore_rows'] = (
+                self.stats.get('dropped_nstep_on_restore_rows', 0)
+                + self.stream.pending())
+            self.stream = IsolatedNStep(3, self.gamma)
+            self.last = {}

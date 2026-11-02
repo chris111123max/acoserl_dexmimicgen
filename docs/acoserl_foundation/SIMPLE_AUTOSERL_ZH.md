@@ -112,6 +112,20 @@ nohup bash scripts/autoserl_baseline/launch_simple.sh "$TAG" \
 
 真实MuJoCo和Ascend验收尚须在服务器执行。此小修不恢复旧checkpoint，也不授权直接跳过未完成的干预验收。
 
+## 2026-11-02：49,085步诊断后的Guide状态机与动态Demo质量修正
+
+**问题依据（来自Terra的只读分析，非新训练结果）：**49,085个有效步中普通Guide占主导；115次原名`recovery_timeout_A/B`均发生于Guide累计80步，84次超时末步参考进度停滞；完整checkpoint中的5,000条动态Demo全部来自Guide，且无稳定抓取Episode或装配成功。仅凭这些数据不能断言摩擦、滑移或Actor架构是唯一根因。
+
+**调整1：Guide停滞可进入有资格的P0恢复。**新的`ArmState.guide_errors`记录固定Guide目标连续20步真实位置/旋转误差。只有同时满足最近示范进度停滞、位置误差在该窗口改善小于1mm、旋转误差改善小于0.01rad，且`nearest`处于对应P0–P1窗口、空手、无接触/耦合、目标物体仍位于原拾取位姿时，才会执行`Guide -> ReturnP0`。这是引用原有`_can_return`资格门禁，而非直接跳过安全检查；若仍在向目标明显移动则不触发该停滞转换。
+
+**调整2：Guide耗尽预算不再冒充Recovery失败。**Guide依然最多80步，但达到上限不再直接终止整个Episode：仅该臂主动退出Guide，恢复完整Policy动作，记录`guide_released_to_policy`及具体原因，不计为成功交还。若无合法P0路径，停滞Guide同样退出到Policy而非强行恢复。普通Guide成功、真实Handoff之后，单臂至少32个完整Policy控制周期内禁止重新触发Guide或ReturnP0；两臂各自独立执行，不制造Hold。原有真正Recovery总预算350步及所有物理停止条件不变。逐步`recovery_result.control_events`和`per_arm_cooldown`记录退出、转P0、成功交还的真实事件。
+
+**调整3：动态Demo实行真实交还确认。**全部成功执行的真实transition仍进入Online Replay；但动态Demo改为各worker最多32条候选干预尾部的有界暂存，只有候选动作涉及的**每只主动臂**在同一真实Episode中以匹配接管编号完成完整、未被安全停止的Policy交还，才会写入动态Demo。失败Guide（含退出Policy或改走新P0接管）及未验证完成的干预数据不进入动态Demo。双臂共同动作须等双方交还，不能把A成功误记成B也成功。无合格动态Demo时，RLPD仍使用原224条官方示范（Demo侧128/128）。此规则仅证明导引或Recovery阶段完成并安全交还，**不等价于物体抓取或装配成功**。所有动作掩码与真实14维执行动作保持不变。
+
+动态Demo新协议为`simple_bimanual_demo_handback_v2`，不得与旧版`simple_bimanual_demo_v1`缓存/checkpoint混用。内存中尚未获得安全交还的候选和未完成n-step尾部在重新建立canonical物理Episode时均不可跨断点恢复：仅保留已落盘的合格完整数据，记录丢弃计数以确保checkpoint中的Replay内容可核对一致。在线完整动作数据与RLPD、10-Q、UTD、真实稀疏奖励、不完整子步拒绝策略不变。
+
+**验证边界：**本提交只提供代码和定向回归契约测试；未连接当前远端训练进程，未重跑真实MuJoCo或Ascend NPU。旧训练必须先按原协议正常结束并保存；不要在旧进程运行期间于同一源码目录直接pull造成子worker使用不同版本。建议Codex在独立工作区测试新SHA，验证Guide停滞→资格P0、无资格→Policy、20步继续进展不误判、32步单臂Policy、双臂同时Guide和失败不入Demo、RLPD/Checkpoint以及实际物理保护。不可将单次软件检查冒充机器人抓取成功，也不得降低80N、工作空间、碰撞、0.5mm稳定性阈值。
+
 ## 本地审查范围
 
 本地执行了Python语法检查、Bash语法检查、合成状态的控制契约（双臂独立/同时Guide、P0回放、抓取确认、交还、硬限制拒绝、终止逻辑）和内存Replay替身的逐臂掩码/真实n-step边界契约。它们不是MuJoCo或TorchRL/NPU集成验收。没有报告真实机器人成功率或服务器吞吐提升。

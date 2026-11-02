@@ -17,6 +17,13 @@ from scipy.spatial.transform import Rotation
 ROOT = Path(__file__).resolve().parents[2]
 ARMS = ('A', 'B')
 EXPERT = frozenset(('Guide', 'ReturnP0', 'Replay', 'Settle'))
+# Non-safety control limits, kept separate from 350-step recovery and hard
+# physical protections. An abandoned Guide is NOT an expert handback.
+GUIDE_MAX_CONTROLS = 80
+GUIDE_PROGRESS_WINDOW = 20
+GUIDE_MIN_POSITION_PROGRESS_M = .001
+GUIDE_MIN_ROTATION_PROGRESS_RAD = .01
+POLICY_AFTER_GUIDE_STEPS = 32
 # Bounded task-adaptation settling; never relax the 10-step grasp criterion.
 SIMPLE_SETTLE_MAX_CONTROLS = 80
 
@@ -37,6 +44,7 @@ class ArmState:
     cooldown: int = 0
     handoff_holding: bool = False
     nearest: deque = field(default_factory=lambda: deque(maxlen=20))
+    guide_errors: deque = field(default_factory=lambda: deque(maxlen=GUIDE_PROGRESS_WINDOW))
     relative: deque = field(default_factory=lambda: deque(maxlen=10))
 
     @property
@@ -49,6 +57,7 @@ class ArmState:
         self.mode = 'Handoff'
         self.age = self.stable = 0
         self.nearest.clear()
+        self.guide_errors.clear()
 
 
 def forward_direction(positions, nearest, current, target):
@@ -122,6 +131,7 @@ class SimpleBimanualAutoSERL:
         self._error_before = 0.
         self._issued_targets = [None, None]
         self.events = []
+        self._event_cursor = 0
 
     def indices(self):
         return [min(x.end, self.n_states-1) for x in self.arms]
@@ -242,12 +252,47 @@ class SimpleBimanualAutoSERL:
         err = object_error(state['objects'][p['object']], ref)
         return err['position_m'] <= .003 and err['rotation_rad'] <= .035
 
+    @staticmethod
+    def _guide_no_progress(arm):
+        """Detect a plateau at a fixed Guide target, not merely a fixed nearest index.
+
+        A nearest reference index can remain fixed while the robot is still
+        meaningfully translating or rotating toward that target.
+        """
+        if len(arm.guide_errors) != GUIDE_PROGRESS_WINDOW:
+            return False
+        start_pos, start_rot = arm.guide_errors[0]
+        end_pos, end_rot = arm.guide_errors[-1]
+        return (start_pos - end_pos < GUIDE_MIN_POSITION_PROGRESS_M and
+                start_rot - end_rot < GUIDE_MIN_ROTATION_PROGRESS_RAD)
+
+    def _release_guide_to_policy(self, ai, reason):
+        """Return one arm to Policy without falsely declaring a safe handback.
+
+        No command is synthesized, no physical gate is bypassed and the active
+        Guide's unsuccessful actions are not treated as a completed recovery.
+        """
+        arm = self.arms[ai]
+        if arm.mode != 'Guide':
+            raise RuntimeError('only an active Guide may be released here')
+        prior_takeover = arm.takeover
+        arm.mode, arm.target = 'Policy', None
+        arm.age = arm.stable = 0
+        arm.cooldown = max(arm.cooldown, POLICY_AFTER_GUIDE_STEPS)
+        arm.nearest.clear()
+        arm.guide_errors.clear()
+        self.events.append(dict(event='guide_released_to_policy', arm=ARMS[ai],
+            reason=reason, takeover=prior_takeover,
+            policy_budget=POLICY_AFTER_GUIDE_STEPS))
+
     def _start(self, ai, mode, target):
         arm = self.arms[ai]
         self.sequence += 1
         arm.mode, arm.target, arm.takeover = mode, int(target), self.sequence
         arm.age = arm.stable = 0
         arm.relative.clear()
+        arm.nearest.clear()
+        arm.guide_errors.clear()
         self.episode_interventions += 1
         self.events.append(dict(event='start', arm=ARMS[ai], kind=mode, target=int(target), takeover=arm.takeover))
 
@@ -263,6 +308,7 @@ class SimpleBimanualAutoSERL:
         if danger:
             return self._refuse(policy, danger)
         self.steps += 1
+        self._event_cursor = len(self.events)
         enabled = self.cfg['intervention_enabled'] and not self.auto_disabled
         action = policy.copy()
         sources = ['Policy', 'Policy']
@@ -276,11 +322,26 @@ class SimpleBimanualAutoSERL:
             measurements.append(measurement)
             if not enabled:
                 continue
+            # A Guide that no longer advances along the reference may safely
+            # switch to P0 recovery. Qualify against both the reference and
+            # the actual target-error trend, then retain the original
+            # empty-gripper/contact/object-pose recovery requirements.
+            if arm.mode == 'Guide' and domain and not contact['dynamic_A_B_coupled']:
+                nearest, _, _, reference_stalled = measurement
+                if reference_stalled and self._guide_no_progress(arm):
+                    if arm.p0 <= nearest <= arm.p1 and self._can_return(state, contact, ai):
+                        previous_takeover = arm.takeover
+                        self._start(ai, 'ReturnP0', arm.p0)
+                        self.events.append(dict(event='guide_stall_to_p0', arm=ARMS[ai],
+                            from_takeover=previous_takeover, to_takeover=arm.takeover,
+                            nearest_index=int(nearest)))
+                    else:
+                        self._release_guide_to_policy(ai, 'stalled_no_qualified_p0')
             if arm.mode == 'Policy' and domain and not contact['dynamic_A_B_coupled']:
                 nearest, target, distance, stagnant = measurement
                 # Recovery has priority over ordinary window correction.
-                if (arm.p0 <= nearest <= arm.p1 and stagnant and
-                        self._can_return(state, contact, ai)):
+                if (arm.cooldown == 0 and arm.p0 <= nearest <= arm.p1 and
+                        stagnant and self._can_return(state, contact, ai)):
                     self._start(ai, 'ReturnP0', arm.p0)
                 elif (arm.cooldown == 0 and distance > self.cfg['trigger_position_m'] and
                       forward_direction(self.positions[:, ai], nearest, state['poses'][ai]['position'],
@@ -400,8 +461,11 @@ class SimpleBimanualAutoSERL:
                 continue
             if issued[ai] == 'Guide':
                 e = errors(state['poses'][ai], self.pose(ai, arm.target))
+                arm.guide_errors.append((float(e['position_m']), float(e['rotation_rad'])))
                 arm.stable = arm.stable+1 if e['position_m'] < .005 and e['rotation_rad'] < .02 else 0
                 if arm.stable >= 3:
+                    self.events.append(dict(event='guide_target_reached', arm=ARMS[ai],
+                        takeover=arm.takeover, guide_controls=arm.age))
                     arm.reset_intervention(held)
             elif issued[ai] == 'ReturnP0':
                 e = errors(state['poses'][ai], self.pose(ai, arm.p0))
@@ -445,8 +509,16 @@ class SimpleBimanualAutoSERL:
                     self.stop('handoff_grasp_lost_'+ARMS[ai]);continue
                 handbacks.append(dict(arm=ARMS[ai], takeover_id=arm.takeover))
                 self.handbacks[ai] += 1
-                arm.mode = 'Policy'; arm.cooldown = 4
-            if arm.age >= (80 if arm.mode == 'Guide' else self.cfg['max_recovery_steps']):
+                arm.mode = 'Policy'
+                arm.cooldown = max(arm.cooldown, POLICY_AFTER_GUIDE_STEPS)
+                self.events.append(dict(event='policy_handback_confirmed', arm=ARMS[ai],
+                    takeover=arm.takeover, policy_budget=arm.cooldown))
+            if self.stop_reason is None and arm.mode == 'Guide' and arm.age >= GUIDE_MAX_CONTROLS:
+                # A failed Guide is not a failed P0/P1 recovery. Release only
+                # this arm to normal Policy for a bounded exploration window.
+                self._release_guide_to_policy(ai, 'guide_max_controls')
+            elif (self.stop_reason is None and arm.mode in ('ReturnP0', 'Replay', 'Settle')
+                  and arm.age >= self.cfg['max_recovery_steps']):
                 self.stop('recovery_timeout_'+ARMS[ai])
         if self.completed[0] and state['official_metrics']['first_piece_assembled'] and self._assembly_anchor is None:
             self._assembly_rest.append(copy.deepcopy(state['objects']['piece_1']))
@@ -469,7 +541,10 @@ class SimpleBimanualAutoSERL:
             takeover_id=self._segment, indices=self.indices(),
             task_quality=dict(eligible=not self.stop_reason and any(s in EXPERT for s in issued),
                               error_before_m=self._error_before, error_after_m=error_after, handoff_confirmed=bool(handbacks)),
-            per_arm_modes=[a.mode for a in self.arms], stable_grasps=[ARMS[i] for i in sorted(self._stable_grasp)],
+            per_arm_modes=[a.mode for a in self.arms],
+            per_arm_cooldown=[a.cooldown for a in self.arms],
+            control_events=copy.deepcopy(self.events[self._event_cursor:]),
+            stable_grasps=[ARMS[i] for i in sorted(self._stable_grasp)],
             settle_diagnostics=settle_diagnostics)
 
     def set_global_capability(self, value):

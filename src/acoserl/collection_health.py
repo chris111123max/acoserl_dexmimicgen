@@ -14,7 +14,10 @@ class CollectionHealth:
    safe_handbacks=0,ends=0,short_ends=0,grasps={'A':0,'B':0},
    first_assembly=0,full_success=0,reasons={},stages={},
    grasp_streaks={'A':0,'B':0},stable_grasp_episodes={'A':0,'B':0},
-   grasp_episode_markers={'A':None,'B':None},dynamic_demo_rows=0,guide_candidates=0,candidate_refusals={},takeovers=0)
+   grasp_episode_markers={'A':None,'B':None},dynamic_demo_rows=0,guide_candidates=0,candidate_refusals={},takeovers=0,
+   per_arm_control_steps={'A':{},'B':{}},
+   guide_releases={'A':{},'B':{}},guide_stall_to_p0={'A':0,'B':0},
+   handbacks_by_arm={'A':0,'B':0})
   self.data=copy.deepcopy(defaults)
   if state:self.data.update(copy.deepcopy(state))
  def observe(self,p):
@@ -27,6 +30,25 @@ class CollectionHealth:
   d['takeovers']+=int(decision.get('recovery_step')==1 and str(decision.get('mode','')).startswith(('Guide_','Recover_')))
   if not p.get('executed'):return
   d['valid_steps']+=1;source=p.get('action_source','Policy')
+  # The combined Guide_AB label cannot distinguish arm ownership. Keep
+  # independent per-arm counts and explicit Guide release diagnostics.
+  controls=decision.get('per_arm_control', ['Policy','Policy'])
+  if len(controls)==2:
+   for arm,control in zip(('A','B'),controls):
+    counts=d['per_arm_control_steps'][arm]
+    counts[control]=counts.get(control,0)+1
+  recovery=p.get('recovery_result') or {}
+  for event in recovery.get('control_events',[]) or []:
+   arm=event.get('arm')
+   if arm not in ('A','B'):continue
+   if event.get('event')=='guide_released_to_policy':
+    reason=str(event.get('reason','unknown'))
+    causes=d['guide_releases'][arm];causes[reason]=causes.get(reason,0)+1
+   elif event.get('event')=='guide_stall_to_p0':
+    d['guide_stall_to_p0'][arm]+=1
+  for handback in recovery.get('handbacks',[]) or []:
+   arm=handback.get('arm')
+   if arm in ('A','B'):d['handbacks_by_arm'][arm]+=1
   d['nonzero_motion_steps']+=int(p.get('nonzero_physical_motion',False))
   d['policy_motion_steps']+=int(source=='Policy' and p.get('nonzero_physical_motion',False))
   d['projection_steps']+=int(source.startswith('Constrained_'))
