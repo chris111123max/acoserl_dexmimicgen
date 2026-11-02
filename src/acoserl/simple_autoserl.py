@@ -1,9 +1,9 @@
-"""Simulator-only dual-arm AutoSERL baseline; no V2/V3 control inheritance.
+"""Stage-aware dual-arm intervention and recovery for real MuJoCo rollouts.
 
-Reference: autoserl/AutoSERL auto_intervention_wrapper. Each arm owns its
-window, nearest-reference history, Guide and P0 -> P1 replay. Adaptations for
-this grasping task (explicit gripper actions, event barriers, bounded recovery
-and observed handback) are documented, not claimed to be upstream features.
+Borrow the sliding-window, convergence-based Guide exit, and stagnation
+recovery ideas from AutoSERL. This is a dual-arm training method, not an exact
+reproduction of the original. Every anchor move is a real, safety-supervised
+control sequence; no mid-episode physics state setters are used.
 """
 from __future__ import annotations
 from collections import deque
@@ -16,7 +16,8 @@ from scipy.spatial.transform import Rotation
 
 ROOT = Path(__file__).resolve().parents[2]
 ARMS = ('A', 'B')
-EXPERT = frozenset(('Guide', 'ReturnP0', 'Replay', 'Settle'))
+RETURN_MODES = frozenset(('ReturnS0', 'ReturnP0', 'ReturnP1'))
+EXPERT = frozenset(('Guide', 'ReturnS0', 'ReturnP0', 'ReturnP1', 'Replay', 'Settle'))
 # Non-safety control limits, kept separate from 350-step recovery and hard
 # physical protections. An abandoned Guide is NOT an expert handback.
 GUIDE_MAX_CONTROLS = 80
@@ -24,6 +25,12 @@ GUIDE_PROGRESS_WINDOW = 20
 GUIDE_MIN_POSITION_PROGRESS_M = .001
 GUIDE_MIN_ROTATION_PROGRESS_RAD = .01
 POLICY_AFTER_GUIDE_STEPS = 32
+# AutoSERL-style alternative Guide exit: only after real progress AND
+# convergence inside the permitted window, not merely 80 elapsed controls.
+GUIDE_MOTION_WINDOW = 3
+GUIDE_EXIT_PROGRESS_M = .005
+GUIDE_CONVERGED_POSITION_M = .001
+GUIDE_CONVERGED_ROTATION_RAD = .01
 # Bounded task-adaptation settling; never relax the 10-step grasp criterion.
 SIMPLE_SETTLE_MAX_CONTROLS = 80
 
@@ -43,8 +50,12 @@ class ArmState:
     stable: int = 0
     cooldown: int = 0
     handoff_holding: bool = False
+    recovery_anchor: int | None = None
+    recovery_goal: int | None = None
+    guide_origin: np.ndarray | None = None
     nearest: deque = field(default_factory=lambda: deque(maxlen=20))
     guide_errors: deque = field(default_factory=lambda: deque(maxlen=GUIDE_PROGRESS_WINDOW))
+    guide_motion: deque = field(default_factory=lambda: deque(maxlen=GUIDE_MOTION_WINDOW))
     relative: deque = field(default_factory=lambda: deque(maxlen=10))
 
     @property
@@ -58,6 +69,7 @@ class ArmState:
         self.age = self.stable = 0
         self.nearest.clear()
         self.guide_errors.clear()
+        self.guide_motion.clear()
 
 
 def forward_direction(positions, nearest, current, target):
@@ -83,7 +95,7 @@ class SimpleBimanualAutoSERL:
     None of its intervention eligibility, QP or certificate code is called.
     Actual force/workspace/collision checks and ActionOnly substeps remain on.
     """
-    protocol = 'simple_bimanual_autoserl_v1'
+    protocol = 'stage_aware_bimanual_recovery_v1'
 
     def __init__(self, env, config=None, intervention_enabled=True):
         from acoserl.bimanual_core import DEFAULT, Contacts
@@ -102,8 +114,9 @@ class SimpleBimanualAutoSERL:
             raise ValueError('inconsistent dual-arm reference')
         for arm in ARMS:
             p = self.points['arms'][arm]
-            if not 0 <= p['p0'] < p['first_grasp'] <= p['p1'] < self.n_states:
-                raise ValueError('invalid P0/P1 grasp interval')
+            p.setdefault('s0', 0)
+            if not 0 <= p['s0'] < p['p0'] < p['first_grasp'] <= p['p1'] < self.n_states:
+                raise ValueError('invalid S0/P0/P1 recovery anchors')
         self.contacts = Contacts(env)
         self.auto_disabled = False
         self.sequence = 0
@@ -241,6 +254,7 @@ class SimpleBimanualAutoSERL:
         return nearest, target, distance, stagnant
 
     def _can_return(self, state, contact, ai):
+        """Existing strict empty-gripper and P0 object-pose eligibility."""
         arm, p = ARMS[ai], self.points['arms'][ARMS[ai]]
         if (any(state['actual_grasps'][arm].values()) or self._active_contact(contact, ai) or
                 contact['dynamic_A_B_coupled']):
@@ -251,6 +265,96 @@ class SimpleBimanualAutoSERL:
                    quaternion_wxyz=self.trace['object_quaternions'][p['p0'], oi])
         err = object_error(state['objects'][p['object']], ref)
         return err['position_m'] <= .003 and err['rotation_rad'] <= .035
+
+    def _grasp_stable_now(self, ai):
+        """Current 10-step relative stability, never a historical success flag."""
+        arm = self.arms[ai]
+        if len(arm.relative) < arm.relative.maxlen or self.grasp_streak[ai] < 10:
+            return False
+        x0, r0 = arm.relative[0]
+        return all(np.linalg.norm(x-x0) < self.cfg['relative_grasp_motion_m']
+                   and Rotation.from_matrix(r@r0.T).magnitude() <= .035
+                   for x, r in arm.relative)
+
+    def _phase_name(self, state, contact, ai, nearest):
+        arm, p = self.arms[ai], self.points['arms'][ARMS[ai]]
+        if (self.completed[ai] or self._assembly_contact(state, contact, ai)
+                or (ai == 0 and state['official_metrics'].get('first_piece_assembled', False))
+                or (ai == 1 and state['official_metrics'].get('task', False))):
+            return 'assembly_contact'
+        if state['actual_grasps'][ARMS[ai]][p['object']]:
+            return 'carry' if self._grasp_stable_now(ai) else 'grasp_unstable'
+        return 'approach' if nearest < arm.p0 else 'grasp'
+
+    def _phase_anchor(self, state, contact, ai, nearest):
+        """Pick an anchor from observed task state, not only the sliding index."""
+        phase = self._phase_name(state, contact, ai, nearest)
+        arm, p = self.arms[ai], self.points['arms'][ARMS[ai]]
+        if phase == 'approach':
+            return 'ReturnS0', p['s0']
+        if phase == 'grasp':
+            return 'ReturnP0', arm.p0
+        if phase == 'carry':
+            return 'ReturnP1', arm.p1
+        return None  # Assembly/contact and unstable grasp cannot be rewound.
+
+    def _eligible_anchor(self, state, contact, ai, mode, anchor):
+        """Qualification does not turn an anchor into a teleport or a path proof."""
+        arm, p = ARMS[ai], self.points['arms'][ARMS[ai]]
+        if self.completed[ai] or contact['dynamic_A_B_coupled'] or self._assembly_contact(state, contact, ai):
+            return False
+        if mode in ('ReturnS0', 'ReturnP0'):
+            if not self._can_return(state, contact, ai):
+                return False
+            if mode == 'ReturnS0':
+                # Entire pregrasp prefix is reusable only while the object
+                # still occupies its measured pregrasp pick pose.
+                from acoserl.object_geometry import object_error
+                oi = ('base', 'piece_1', 'piece_2').index(p['object'])
+                ref = dict(position=self.trace['object_positions'][anchor, oi],
+                           quaternion_wxyz=self.trace['object_quaternions'][anchor, oi])
+                err = object_error(state['objects'][p['object']], ref)
+                return err['position_m'] <= .003 and err['rotation_rad'] <= .035
+            return True
+        if mode != 'ReturnP1':
+            return False
+        if not state['actual_grasps'][arm][p['object']] or not self._grasp_stable_now(ai):
+            return False
+        # Carry recovery preserves the actual grasp; permit contact only
+        # between the active arm and its own held object.
+        if any(arm in (edge['a'], edge['b']) and
+               ({edge['a'], edge['b']} - {arm}) != {p['object']}
+               for edge in contact['edges']):
+            return False
+        from acoserl.object_geometry import object_error
+        oi = ('base', 'piece_1', 'piece_2').index(p['object'])
+        ref = dict(position=self.trace['object_positions'][anchor, oi],
+                   quaternion_wxyz=self.trace['object_quaternions'][anchor, oi])
+        err = object_error(state['objects'][p['object']], ref)
+        return (err['position_m'] <= self.cfg['object_window_position_m']
+                and err['rotation_rad'] <= self.cfg['object_window_rotation_rad'])
+
+    def _qualified_stage_recovery(self, state, contact, ai, nearest):
+        plan = self._phase_anchor(state, contact, ai, nearest)
+        if plan is None:
+            return None
+        mode, anchor = plan
+        return plan if self._eligible_anchor(state, contact, ai, mode, anchor) else None
+
+    @staticmethod
+    def _guide_converged_after_progress(arm, current, cfg, pose_error):
+        """Borrow AutoSERL's convergence exit; do not accept static no-motion."""
+        if arm.guide_origin is None or len(arm.guide_motion) < arm.guide_motion.maxlen:
+            return False
+        if np.linalg.norm(current['position'] - arm.guide_origin) <= GUIDE_EXIT_PROGRESS_M:
+            return False
+        first_p, first_r = arm.guide_motion[0]
+        if not all(np.linalg.norm(p-first_p) < GUIDE_CONVERGED_POSITION_M
+                   and Rotation.from_matrix(r@first_r.T).magnitude() < GUIDE_CONVERGED_ROTATION_RAD
+                   for p, r in arm.guide_motion):
+            return False
+        return (pose_error['position_m'] < cfg['trigger_position_m']
+                and pose_error['rotation_rad'] < cfg['exit_rotation_rad'])
 
     @staticmethod
     def _guide_no_progress(arm):
@@ -281,20 +385,30 @@ class SimpleBimanualAutoSERL:
         arm.cooldown = max(arm.cooldown, POLICY_AFTER_GUIDE_STEPS)
         arm.nearest.clear()
         arm.guide_errors.clear()
+        arm.guide_motion.clear()
+        arm.guide_origin = None
         self.events.append(dict(event='guide_released_to_policy', arm=ARMS[ai],
             reason=reason, takeover=prior_takeover,
             policy_budget=POLICY_AFTER_GUIDE_STEPS))
 
-    def _start(self, ai, mode, target):
+    def _start(self, ai, mode, target, state=None):
         arm = self.arms[ai]
         self.sequence += 1
         arm.mode, arm.target, arm.takeover = mode, int(target), self.sequence
         arm.age = arm.stable = 0
-        arm.relative.clear()
+        arm.recovery_anchor = int(target) if mode in RETURN_MODES else None
+        arm.recovery_goal = arm.p1 if mode in RETURN_MODES else None
+        if mode != 'ReturnP1':
+            arm.relative.clear()
         arm.nearest.clear()
         arm.guide_errors.clear()
+        arm.guide_motion.clear()
+        arm.guide_origin = (np.asarray(state['poses'][ai]['position']).copy()
+                            if mode == 'Guide' and state is not None else None)
         self.episode_interventions += 1
-        self.events.append(dict(event='start', arm=ARMS[ai], kind=mode, target=int(target), takeover=arm.takeover))
+        self.events.append(dict(event='start', arm=ARMS[ai], kind=mode,
+            anchor=arm.recovery_anchor, goal=arm.recovery_goal,
+            target=int(target), takeover=arm.takeover))
 
     def choose(self, policy_action):
         from acoserl.bimanual_core import snapshot, servo
@@ -322,63 +436,72 @@ class SimpleBimanualAutoSERL:
             measurements.append(measurement)
             if not enabled:
                 continue
-            # A Guide that no longer advances along the reference may safely
-            # switch to P0 recovery. Qualify against both the reference and
-            # the actual target-error trend, then retain the original
-            # empty-gripper/contact/object-pose recovery requirements.
+            # A stalled Guide can recover using S0, P0 or P1 according to the
+            # actual arm/object stage. Never rewind across assembly contact.
             if arm.mode == 'Guide' and domain and not contact['dynamic_A_B_coupled']:
                 nearest, _, _, reference_stalled = measurement
                 if reference_stalled and self._guide_no_progress(arm):
-                    if arm.p0 <= nearest <= arm.p1 and self._can_return(state, contact, ai):
+                    plan = self._qualified_stage_recovery(state, contact, ai, nearest)
+                    if plan:
                         previous_takeover = arm.takeover
-                        self._start(ai, 'ReturnP0', arm.p0)
-                        self.events.append(dict(event='guide_stall_to_p0', arm=ARMS[ai],
+                        kind, anchor = plan
+                        self._start(ai, kind, anchor, state=state)
+                        self.events.append(dict(event='guide_stall_to_stage_recovery',
+                            arm=ARMS[ai], kind=kind, anchor=int(anchor),
                             from_takeover=previous_takeover, to_takeover=arm.takeover,
                             nearest_index=int(nearest)))
                     else:
-                        self._release_guide_to_policy(ai, 'stalled_no_qualified_p0')
+                        self._release_guide_to_policy(ai, 'stalled_no_qualified_anchor')
             if arm.mode == 'Policy' and domain and not contact['dynamic_A_B_coupled']:
                 nearest, target, distance, stagnant = measurement
-                # Recovery has priority over ordinary window correction.
-                if (arm.cooldown == 0 and arm.p0 <= nearest <= arm.p1 and
-                        stagnant and self._can_return(state, contact, ai)):
-                    self._start(ai, 'ReturnP0', arm.p0)
+                plan = (self._qualified_stage_recovery(state, contact, ai, nearest)
+                        if arm.cooldown == 0 and stagnant else None)
+                # Stage recovery has priority over ordinary Guide correction.
+                if plan:
+                    kind, anchor = plan
+                    self._start(ai, kind, anchor, state=state)
                 elif (arm.cooldown == 0 and distance > self.cfg['trigger_position_m'] and
                       forward_direction(self.positions[:, ai], nearest, state['poses'][ai]['position'],
                                         self.positions[target, ai])):
-                    self._start(ai, 'Guide', target)
+                    self._start(ai, 'Guide', target, state=state)
             if arm.mode in EXPERT:
                 incompatible = (arm.mode == 'Guide' and domain is not None and
                                 not domain[0] <= arm.target <= domain[1])
                 if domain is None or incompatible:
-                    # Do not plan a correction through an assembly event.
-                    arm.reset_intervention(state['actual_grasps'][ARMS[ai]][self.points['arms'][ARMS[ai]]['object']])
+                    # A domain change is not a completed recovery or a
+                    # verified expert handback. Never label it as one.
+                    if arm.mode == 'Guide':
+                        self._release_guide_to_policy(ai, 'guide_domain_changed')
+                    else:
+                        return self._refuse(policy, 'recovery_domain_changed_'+ARMS[ai])
                 else:
                     sources[ai] = arm.mode
-                    self._issued_targets[ai] = (arm.target if arm.mode == 'Guide' else arm.p0
-                        if arm.mode == 'ReturnP0' else arm.p1 if arm.mode == 'Settle' else arm.replay+1)
+                    self._issued_targets[ai] = (arm.target if arm.mode == 'Guide'
+                        else arm.recovery_anchor if arm.mode in RETURN_MODES
+                        else arm.p1 if arm.mode == 'Settle' else arm.replay+1)
                     if arm.mode == 'Guide':
                         targets[ai] = self.pose(ai, arm.target)
-                    elif arm.mode == 'ReturnP0':
-                        if not self._can_return(state, contact, ai):
-                            return self._refuse(policy, 'recovery_pregrasp_domain_changed_'+ARMS[ai])
-                        targets[ai] = self.pose(ai, arm.p0); grips[ai] = -1.
+                    elif arm.mode in RETURN_MODES:
+                        if not self._eligible_anchor(state, contact, ai, arm.mode, arm.recovery_anchor):
+                            return self._refuse(policy, 'recovery_anchor_domain_changed_'+ARMS[ai])
+                        targets[ai] = self.pose(ai, arm.recovery_anchor)
+                        grips[ai] = 1. if arm.mode == 'ReturnP1' else -1.
                     elif arm.mode == 'Settle':
                         targets[ai] = self.pose(ai, arm.p1); grips[ai] = 1.
                     else:
-                        # Reference indices designate states: replay actions
-                        # [P0, P1) to reach state P1, never an off-by-one replay.
+                        # Reference indices designate states. Replay real
+                        # actions [S0 or P0, P1) to reach state P1.
                         error = np.linalg.norm(state['poses'][ai]['position']-self.positions[arm.replay, ai])
                         if error > .02:
                             return self._refuse(policy, 'recovery_replay_tracking_'+ARMS[ai])
                         action[7*ai:7*ai+7] = self.trace['actions'][arm.replay, 7*ai:7*ai+7]
-        if any(s in ('Guide', 'ReturnP0', 'Settle') for s in sources):
+        if any(s == 'Guide' or s in RETURN_MODES or s == 'Settle' for s in sources):
             correction = servo(self.env, targets, grips,
                 max_position_step=self.cfg['position_command_cap_m'],
                 max_rotation_step=self.cfg['rotation_command_cap_rad'],
                 position_gain=self.cfg['position_gain'], rotation_gain=self.cfg['rotation_gain'])
             for ai, source in enumerate(sources):
-                if source in ('Guide', 'ReturnP0', 'Settle'):
+                if source == 'Guide' or source in RETURN_MODES or source == 'Settle':
                     action[7*ai:7*ai+6] = correction[7*ai:7*ai+6]
                     if source != 'Guide':
                         action[7*ai+6] = grips[ai]
@@ -409,6 +532,9 @@ class SimpleBimanualAutoSERL:
             executed_action=action.tolist(), intervention_action_proposed=action.tolist(),
             indices=self.indices(), takeover_id=self._segment, per_arm_control=sources,
             arm_takeover_ids=[a.takeover for a in self.arms], simple_protocol=self.protocol,
+            per_arm_phase=[self._phase_name(state, contact, i, m[0]) if m is not None
+                           else 'assembly_contact' for i, m in enumerate(measurements)],
+            recovery_anchor_indices=[a.recovery_anchor for a in self.arms],
             measurements=measurements, recovery_step=1 if any(s in EXPERT and a.age == 0 for s, a in zip(sources, self.arms)) else 2,
             stage=max((self._stage(state, i) for i in range(2)), key=lambda x: x != 'approach_pregrasp'))
         return action, self.last_decision
@@ -452,7 +578,10 @@ class SimpleBimanualAutoSERL:
                 nearest = self._measure(state, ai, domain)[0]
                 arm.nearest.append(nearest)
                 arm.floor = max(arm.floor, domain[0])
-            if issued[ai] not in ('Guide', 'ReturnP0'):
+            # The sliding reference window advances ONLY on a completed
+            # Policy control cycle. Guide, Return, Replay and even a long
+            # Settle are expert operations, not evidence of Actor progress.
+            if issued[ai] == 'Policy':
                 arm.start = min(self.n_states-1, max(arm.floor, arm.start+1))
             arm.cooldown = max(0, arm.cooldown-1)
             if issued[ai] in EXPERT:
@@ -462,19 +591,34 @@ class SimpleBimanualAutoSERL:
             if issued[ai] == 'Guide':
                 e = errors(state['poses'][ai], self.pose(ai, arm.target))
                 arm.guide_errors.append((float(e['position_m']), float(e['rotation_rad'])))
-                arm.stable = arm.stable+1 if e['position_m'] < .005 and e['rotation_rad'] < .02 else 0
-                if arm.stable >= 3:
-                    self.events.append(dict(event='guide_target_reached', arm=ARMS[ai],
+                arm.guide_motion.append((np.asarray(state['poses'][ai]['position']).copy(),
+                                         np.asarray(state['poses'][ai]['rotation']).copy()))
+                in_target = (e['position_m'] < self.cfg['exit_position_m']
+                             and e['rotation_rad'] < self.cfg['exit_rotation_rad'])
+                converged_progress = self._guide_converged_after_progress(
+                    arm, state['poses'][ai], self.cfg, e)
+                arm.stable = arm.stable+1 if (in_target or converged_progress) else 0
+                if arm.stable >= self.cfg['stable_exit_steps']:
+                    self.events.append(dict(event='guide_exit_to_handoff', arm=ARMS[ai],
+                        reason='target' if in_target else 'converged_after_progress',
                         takeover=arm.takeover, guide_controls=arm.age))
                     arm.reset_intervention(held)
-            elif issued[ai] == 'ReturnP0':
-                e = errors(state['poses'][ai], self.pose(ai, arm.p0))
-                arm.stable = arm.stable+1 if e['position_m'] < .001 and e['rotation_rad'] < .02 else 0
-                if arm.stable >= 3:
-                    arm.mode, arm.replay, arm.stable = 'Replay', arm.p0, 0
+            elif issued[ai] in RETURN_MODES:
+                e = errors(state['poses'][ai], self.pose(ai, arm.recovery_anchor))
+                position_tolerance = (.005 if issued[ai] == 'ReturnP1'
+                                      else self.cfg['p0_alignment_m'])
+                aligned = (e['position_m'] < position_tolerance
+                           and e['rotation_rad'] < self.cfg['exit_rotation_rad'])
+                arm.stable = arm.stable+1 if aligned else 0
+                if arm.stable >= self.cfg['stable_exit_steps']:
+                    if issued[ai] == 'ReturnP1':
+                        arm.mode = 'Settle'
+                    else:
+                        arm.mode, arm.replay = 'Replay', arm.recovery_anchor
+                    arm.stable = 0
             elif issued[ai] == 'Replay':
                 arm.replay += 1
-                if arm.replay >= arm.p1:
+                if arm.replay >= arm.recovery_goal:
                     arm.mode = 'Settle'; arm.stable = 0
             elif issued[ai] == 'Settle':
                 arm.stable += 1
@@ -497,7 +641,13 @@ class SimpleBimanualAutoSERL:
                     ready=ready)
                 if ready:
                     arm.floor = max(arm.floor, arm.p1)
-                    arm.start = max(arm.start, arm.p1)
+                    # Recovery restored real physics to P1. Rebase the
+                    # per-arm window there; pre-recovery clock drift must
+                    # not pretend the Actor already traversed the carry path.
+                    arm.start = arm.p1
+                    self.events.append(dict(event='stage_recovery_complete',
+                        arm=ARMS[ai], anchor=arm.recovery_anchor,
+                        goal=arm.p1, takeover=arm.takeover))
                     arm.reset_intervention(True)
                 elif arm.stable >= SIMPLE_SETTLE_MAX_CONTROLS:
                     # The overall max_recovery_steps check below remains
@@ -517,7 +667,8 @@ class SimpleBimanualAutoSERL:
                 # A failed Guide is not a failed P0/P1 recovery. Release only
                 # this arm to normal Policy for a bounded exploration window.
                 self._release_guide_to_policy(ai, 'guide_max_controls')
-            elif (self.stop_reason is None and arm.mode in ('ReturnP0', 'Replay', 'Settle')
+            elif (self.stop_reason is None and (arm.mode in RETURN_MODES or
+                   arm.mode in ('Replay', 'Settle'))
                   and arm.age >= self.cfg['max_recovery_steps']):
                 self.stop('recovery_timeout_'+ARMS[ai])
         if self.completed[0] and state['official_metrics']['first_piece_assembled'] and self._assembly_anchor is None:

@@ -7,6 +7,7 @@
   "reference_path": "configs/bimanual_autoserl/reference_trace.npz",
   "arms": {
     "A": {
+      "s0": 0,
       "object": "piece_1",
       "p0": 30,
       "p1": 57,
@@ -33,9 +34,34 @@
         "domain": "empty active gripper; target object at measured pick pose; no active contact/coupling; verified quasistatic passive hold; elevated corridor check; physical drift monitored every control step. Not a global path safety certificate."
       },
       "first_close_action": 45,
-      "first_release_action": 149
+      "first_release_action": 149,
+      "stage_recovery": {
+        "approach": {
+          "anchor": "S0",
+          "index": 0,
+          "replay_until": "P1",
+          "first_validation": "required_on_real_physics"
+        },
+        "grasp": {
+          "anchor": "P0",
+          "index": 30,
+          "replay_until": "P1",
+          "first_validation": "controlled_real_pass"
+        },
+        "carry": {
+          "anchor": "P1",
+          "index": 57,
+          "require": "real_10_step_stable_grasp_and_local_object_pose",
+          "first_validation": "required_on_real_physics"
+        },
+        "assembly_contact": {
+          "anchor": null,
+          "require": "no_unvalidated_rewind"
+        }
+      }
     },
     "B": {
+      "s0": 0,
       "object": "piece_2",
       "p0": 38,
       "p1": 70,
@@ -62,7 +88,31 @@
         "domain": "empty active gripper; target object at measured pick pose; no active contact/coupling; verified quasistatic passive hold; elevated corridor check; physical drift monitored every control step. Not a global path safety certificate."
       },
       "first_close_action": 58,
-      "first_release_action": 215
+      "first_release_action": 215,
+      "stage_recovery": {
+        "approach": {
+          "anchor": "S0",
+          "index": 0,
+          "replay_until": "P1",
+          "first_validation": "required_on_real_physics"
+        },
+        "grasp": {
+          "anchor": "P0",
+          "index": 38,
+          "replay_until": "P1",
+          "first_validation": "controlled_real_pass"
+        },
+        "carry": {
+          "anchor": "P1",
+          "index": 70,
+          "require": "real_10_step_stable_grasp_and_local_object_pose",
+          "first_validation": "required_on_real_physics"
+        },
+        "assembly_contact": {
+          "anchor": null,
+          "require": "no_unvalidated_rewind"
+        }
+      }
     }
   },
   "assembly": [
@@ -89,5 +139,11 @@
       "barrier": "No unilateral replay across assembly contact; do not rewind completed piece_1. No invented joint recovery."
     }
   ],
-  "reset_protocol": "Only canonical demo frame0; every intermediate state reached by actual control actions"
+  "reset_protocol": "Only canonical demo frame0; every intermediate state reached by actual control actions",
+  "recovery_policy": {
+    "mode": "stage_aware_asynchronous_per_arm_v1",
+    "trigger": "reference_stagnation plus 20-step Guide target-error plateau or Policy stagnation",
+    "guide_exit": "3-step 5mm / 0.02rad target OR 3-step motion convergence after >5mm physical progress while inside correction window",
+    "safety": "live physical substep preview and force/workspace/collision gates; no qpos/qvel setters"
+  }
 }

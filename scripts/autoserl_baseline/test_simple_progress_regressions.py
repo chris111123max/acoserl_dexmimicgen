@@ -88,7 +88,9 @@ class GuideProgressTests(unittest.TestCase):
         manager.arms = [arm, ArmState(38, 70)]
         manager.cfg = dict(intervention_enabled=True, trigger_position_m=.02,
             position_command_cap_m=.01, rotation_command_cap_rad=.02,
-            position_gain=2., rotation_gain=1., max_recovery_steps=350)
+            position_gain=2., rotation_gain=1., max_recovery_steps=350,
+            exit_position_m=.005, exit_rotation_rad=.02, stable_exit_steps=3,
+            p0_alignment_m=.001, relative_grasp_motion_m=.0005)
         manager.n_states = 230
         manager.positions = np.zeros((230, 2, 3))
         manager.sequence = 8
@@ -105,14 +107,15 @@ class GuideProgressTests(unittest.TestCase):
         manager._assembly_anchor = None
         manager._assembly_rest = deque(maxlen=3)
         manager.handbacks = [0, 0]
+        manager.intervention_control_steps = 0
         manager.steps = 0
         manager.stop_reason = None
         manager.auto_disabled = False
         manager.completed = [False, False]
         manager.grasp_streak = [0, 0]
         manager.points = {'arms': {
-            'A': {'object': 'piece_1'},
-            'B': {'object': 'piece_2'}}}
+            'A': {'object': 'piece_1', 's0': 0, 'p0': 30, 'p1': 57},
+            'B': {'object': 'piece_2', 's0': 0, 'p0': 38, 'p1': 70}}}
         state = {
             'poses': [dict(position=np.zeros(3), rotation=np.eye(3))
                       for _ in ARMS],
@@ -138,11 +141,11 @@ class GuideProgressTests(unittest.TestCase):
         with patch.dict(sys.modules, {'acoserl.bimanual_core': fake_core}):
             return manager.choose(np.zeros(14, dtype=float))
 
-    def _after(self, manager, state):
+    def _after(self, manager, state, position_error=.04, rotation_error=.04):
         fake_core = types.ModuleType('acoserl.bimanual_core')
         fake_core.snapshot = lambda env: state
         fake_core.errors = lambda actual, target: {
-            'position_m': .04, 'rotation_rad': .04}
+            'position_m': position_error, 'rotation_rad': rotation_error}
         with patch.dict(sys.modules, {'acoserl.bimanual_core': fake_core}):
             return manager.after_step()
 
@@ -222,6 +225,155 @@ class GuideProgressTests(unittest.TestCase):
         self.assertEqual(decision['per_arm_control'], ['ReturnP0', 'Policy'])
         self.assertEqual(manager.arms[0].mode, 'ReturnP0')
 
+    def test_s0_approach_stage_stall_chooses_initial_anchor(self):
+        manager, state = self._manager(can_return=True)
+        manager.arms[0].mode = 'Policy'
+        manager._measure = lambda s, ai, domain: (15, 15, .03, True)
+        manager._eligible_anchor = lambda s, c, ai, mode, anchor: True
+        _, d = self._choose(manager, state)
+        self.assertEqual(d['per_arm_control'], ['ReturnS0', 'Policy'])
+        self.assertEqual(manager.arms[0].recovery_anchor, 0)
+        self.assertEqual(manager.arms[0].recovery_goal, 57)
+
+    def test_stalled_guide_before_p0_chooses_s0(self):
+        manager, state = self._manager(can_return=True)
+        manager._measure = lambda s, ai, domain: (15, 15, .03, True)
+        manager._eligible_anchor = lambda s, c, ai, mode, anchor: True
+        _, d = self._choose(manager, state)
+        self.assertEqual(d['per_arm_control'], ['ReturnS0', 'Policy'])
+        self.assertEqual(manager.arms[0].recovery_anchor, 0)
+        self.assertTrue(any(e.get('event') == 'guide_stall_to_stage_recovery'
+                            and e['kind'] == 'ReturnS0' for e in manager.events))
+
+    def test_grasp_stage_stall_chooses_p0_anchor(self):
+        manager, state = self._manager(can_return=True)
+        manager.arms[0].mode = 'Policy'
+        _, d = self._choose(manager, state)
+        self.assertEqual(d['per_arm_control'], ['ReturnP0', 'Policy'])
+        self.assertEqual(manager.arms[0].recovery_anchor, 30)
+        self.assertEqual(manager.arms[0].recovery_goal, 57)
+
+    def test_carry_stage_stall_chooses_p1_without_clearing_grasp(self):
+        manager, state = self._manager(can_return=True)
+        manager.arms[0].mode = 'Policy'
+        state['actual_grasps']['A']['piece_1'] = True
+        manager.grasp_streak[0] = 10
+        for _ in range(10):
+            manager.arms[0].relative.append((np.zeros(3), np.eye(3)))
+        manager._eligible_anchor = lambda s, c, ai, mode, anchor: True
+        _, d = self._choose(manager, state)
+        self.assertEqual(d['per_arm_control'], ['ReturnP1', 'Policy'])
+        self.assertEqual(manager.arms[0].recovery_anchor, 57)
+        self.assertEqual(len(manager.arms[0].relative), 10)
+
+    def test_non_target_contact_forbids_p1_return(self):
+        manager, state = self._manager(can_return=True)
+        state['actual_grasps']['A']['piece_1'] = True
+        manager.grasp_streak[0] = 10
+        for _ in range(10):
+            manager.arms[0].relative.append((np.zeros(3), np.eye(3)))
+        contact = {'edges': [{'a':'A','b':'base'}],
+                   'dynamic_A_B_coupled': False}
+        self.assertFalse(manager._eligible_anchor(
+            state, contact, 0, 'ReturnP1', 57))
+
+    def test_unstable_carry_not_rewound_as_empty_gripper(self):
+        manager, state = self._manager(can_return=True)
+        manager.arms[0].mode = 'Policy'
+        state['actual_grasps']['A']['piece_1'] = True
+        manager.grasp_streak[0] = 1
+        self.assertIsNone(manager._phase_anchor(state, {'edges': [], 'dynamic_A_B_coupled': False}, 0, 35))
+        _, d = self._choose(manager, state)
+        self.assertEqual(d['per_arm_control'], ['Policy', 'Policy'])
+
+    def test_assembly_contact_no_unqualified_rewind(self):
+        manager, state = self._manager(can_return=True)
+        manager.arms[0].mode = 'Policy'
+        contact = {'edges': [{'a':'piece_1', 'b':'base'}], 'dynamic_A_B_coupled': False}
+        self.assertIsNone(manager._phase_anchor(state, contact, 0, 35))
+
+    def test_autoserl_convergence_exit_requires_real_displacement(self):
+        manager, state = self._manager(can_return=False)
+        manager.arms[0].guide_origin = np.array([-.006, 0, 0])
+        for _ in range(5):
+            manager._issued = ('Guide', 'Policy')
+            manager._issued_targets = [40, None]
+            observed = self._after(manager, state, .01, .01)
+        self.assertEqual(manager.arms[0].mode, 'Handoff')
+        self.assertEqual(observed['control_events'][-1]['event'], 'guide_exit_to_handoff')
+        self.assertEqual(observed['control_events'][-1]['reason'],
+                         'converged_after_progress')
+        self.assertFalse(observed['handback'])
+        self.assertIsNone(manager.stop_reason)
+
+    def test_autoserl_static_pose_does_not_claim_convergence_exit(self):
+        manager, state = self._manager(can_return=False)
+        manager.arms[0].guide_origin = np.zeros(3)
+        for _ in range(8):
+            manager._issued = ('Guide', 'Policy')
+            manager._issued_targets = [40, None]
+            self._after(manager, state, .01, .01)
+        self.assertEqual(manager.arms[0].mode, 'Guide')
+        self.assertEqual(manager.handbacks, [0, 0])
+
+    def test_stage_replay_end_is_true_p1(self):
+        manager, state = self._manager(can_return=True)
+        arm = manager.arms[0]
+        arm.mode = 'Replay'
+        arm.replay = 0
+        arm.recovery_anchor = 0
+        arm.recovery_goal = 57
+        initial_window_start = arm.start
+        for frame in range(57):
+            manager._issued = ('Replay', 'Policy')
+            manager._issued_targets = [arm.replay+1, None]
+            self._after(manager, state)
+        self.assertEqual(arm.replay, 57)
+        self.assertEqual(arm.mode, 'Settle')
+        self.assertEqual(arm.start, initial_window_start,
+                         'expert replay must never advance Actor sliding window')
+        self.assertIsNone(manager.stop_reason)
+
+
+
+    def test_s0_anchor_alignment_starts_demo_from_zero(self):
+        manager, state = self._manager(can_return=True)
+        arm = manager.arms[0]
+        arm.mode = 'ReturnS0'
+        arm.recovery_anchor = 0
+        arm.recovery_goal = 57
+        arm.start = 11
+        for _ in range(3):
+            manager._issued = ('ReturnS0', 'Policy')
+            manager._issued_targets = [0, None]
+            self._after(manager, state, position_error=.0005,
+                        rotation_error=.01)
+        self.assertEqual(arm.mode, 'Replay')
+        self.assertEqual(arm.replay, 0)
+        self.assertEqual(arm.start, 11)
+        self.assertIsNone(manager.stop_reason)
+
+    def test_p1_alignment_skips_replay_and_requires_settle(self):
+        manager, state = self._manager(can_return=True)
+        arm = manager.arms[0]
+        arm.mode = 'ReturnP1'
+        arm.recovery_anchor = 57
+        arm.recovery_goal = 57
+        state['actual_grasps']['A']['piece_1'] = True
+        state['objects'] = {'piece_1': {
+            'position': np.zeros(3),
+            'quaternion_wxyz': np.array([1., 0., 0., 0.])}}
+        for _ in range(3):
+            manager._issued = ('ReturnP1', 'Policy')
+            manager._issued_targets = [57, None]
+            self._after(manager, state, position_error=.003,
+                        rotation_error=.01)
+        self.assertEqual(arm.mode, 'Settle')
+        self.assertEqual(arm.recovery_anchor, 57)
+        self.assertIsNone(arm.replay)
+        self.assertIsNone(manager.stop_reason)
+
+
 class DemoQualityTests(unittest.TestCase):
     def setUp(self):
         self.bank = SimpleDemo(capacity=64, gamma=.99, seed=7)
@@ -272,6 +424,23 @@ class DemoQualityTests(unittest.TestCase):
         self.bank.close_episode(0, bootstrap=True, kind=7)
         self.assertEqual(len(self.bank.buffer), 0)
         self.assertEqual(self.bank.stats['failed_guide_discarded_rows'], 4)
+
+    def test_stage_recovery_does_not_certify_superseded_guide(self):
+        for i in range(3):
+            self.bank.observe(row(i, self.mask_a, segment=11),
+                decision=decision('Guide', 'Policy', 11, 0))
+        self.bank.observe(row(3, self.mask_a, segment=12),
+            decision=decision('ReturnP0', 'Policy', 12, 0),
+            control_events=[dict(event='guide_stall_to_stage_recovery',
+                arm='A', kind='ReturnP0', from_takeover=11,
+                to_takeover=12)])
+        self.bank.observe(row(4), decision=decision(),
+            handbacks=[dict(arm='A', takeover_id=12)])
+        self.bank.close_episode(0)
+        self.assertEqual(self.bank.stats['failed_guide_discarded_rows'], 3)
+        self.assertEqual(self.bank.stats['accepted_rows'], 1)
+        self.assertEqual(len(self.bank.buffer), 1)
+        self.assertEqual(int(self.bank.buffer[0]['frame']), 3)
 
     def test_pending_tail_is_bounded_per_worker(self):
         for i in range(40):

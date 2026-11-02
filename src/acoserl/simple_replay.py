@@ -129,7 +129,10 @@ class SimpleDemo:
         for event in control_events or ():
             if event.get('event') == 'guide_released_to_policy':
                 failed.add((ARMS.index(event['arm']), int(event['takeover'])))
-            elif event.get('event') == 'guide_stall_to_p0':
+            elif event.get('event') in ('guide_stall_to_p0', 'guide_stall_to_stage_recovery'):
+                # Any Guide replaced by a stage Recovery did not complete
+                # its own safe Policy handback. Its tail must never be
+                # implicitly certified by the subsequent Recovery handback.
                 failed.add((ARMS.index(event['arm']), int(event['from_takeover'])))
         q = self.pending.get(env)
         if failed and q:

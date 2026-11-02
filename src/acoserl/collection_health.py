@@ -16,7 +16,12 @@ class CollectionHealth:
    grasp_streaks={'A':0,'B':0},stable_grasp_episodes={'A':0,'B':0},
    grasp_episode_markers={'A':None,'B':None},dynamic_demo_rows=0,guide_candidates=0,candidate_refusals={},takeovers=0,
    per_arm_control_steps={'A':{},'B':{}},
+   per_arm_phase_steps={'A':{},'B':{}},
    guide_releases={'A':{},'B':{}},guide_stall_to_p0={'A':0,'B':0},
+   stage_recovery_starts={'A':{},'B':{}},
+   stage_recovery_completions={'A':{},'B':{}},
+   guide_stall_to_stage_recovery={'A':0,'B':0},
+   guide_exit_reasons={'A':{},'B':{}},
    handbacks_by_arm={'A':0,'B':0})
   self.data=copy.deepcopy(defaults)
   if state:self.data.update(copy.deepcopy(state))
@@ -37,6 +42,11 @@ class CollectionHealth:
    for arm,control in zip(('A','B'),controls):
     counts=d['per_arm_control_steps'][arm]
     counts[control]=counts.get(control,0)+1
+  phases=decision.get('per_arm_phase',[])
+  if len(phases)==2:
+   for arm,phase in zip(('A','B'),phases):
+    counts=d['per_arm_phase_steps'][arm]
+    counts[str(phase)]=counts.get(str(phase),0)+1
   recovery=p.get('recovery_result') or {}
   for event in recovery.get('control_events',[]) or []:
    arm=event.get('arm')
@@ -46,6 +56,17 @@ class CollectionHealth:
     causes=d['guide_releases'][arm];causes[reason]=causes.get(reason,0)+1
    elif event.get('event')=='guide_stall_to_p0':
     d['guide_stall_to_p0'][arm]+=1
+   elif event.get('event')=='guide_stall_to_stage_recovery':
+    d['guide_stall_to_stage_recovery'][arm]+=1
+   elif event.get('event')=='start' and event.get('kind') in ('ReturnS0','ReturnP0','ReturnP1'):
+    kind=str(event['kind'])
+    counts=d['stage_recovery_starts'][arm];counts[kind]=counts.get(kind,0)+1
+   elif event.get('event')=='stage_recovery_complete':
+    key=str(event.get('anchor'))
+    counts=d['stage_recovery_completions'][arm];counts[key]=counts.get(key,0)+1
+   elif event.get('event')=='guide_exit_to_handoff':
+    reason=str(event.get('reason'))
+    counts=d['guide_exit_reasons'][arm];counts[reason]=counts.get(reason,0)+1
   for handback in recovery.get('handbacks',[]) or []:
    arm=handback.get('arm')
    if arm in ('A','B'):d['handbacks_by_arm'][arm]+=1

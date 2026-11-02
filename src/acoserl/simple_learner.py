@@ -79,11 +79,14 @@ def main():
     cfg=json.loads((ROOT/'configs/ascend16/formal.json').read_text())
     manifest,dependency=source_manifest(),dependency_manifest()
     enabled=a.method=='autoserl'
-    manager=dict(runtime='simple_bimanual_autoserl_v1',method=a.method,
+    manager=dict(runtime='stage_aware_bimanual_recovery_v1',method=a.method,
                  dynamic_demo_enabled=enabled,dynamic_capacity=5000,
                  original_quota=96 if enabled else 128,positive_quota=2,
                  no_passive_hold=True,no_forward_grasp_extension=True,
-                 guide_stall_policy='reference_progress_and_20_step_target_error',
+                 guide_stall_policy='stage_anchor_and_20_step_target_error',
+                 recovery_anchors='S0_P0_P1',
+                 guide_exit='three_step_target_or_converged_after_real_progress',
+                 sliding_window_clock='completed_policy_controls_only',
                  post_guide_policy_steps=32,
                  dynamic_demo_admission='verified_per_arm_handoff_v2')
     cfg.update(method='ResFiT RLPD + independent AutoSERL baseline',purpose=a.mode,collector_protocol='simple_bimanual_collector_v1',utd=1,
