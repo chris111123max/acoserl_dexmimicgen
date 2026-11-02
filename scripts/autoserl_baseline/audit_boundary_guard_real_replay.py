@@ -199,6 +199,7 @@ def main():
                     if after_candidates:
                         fail(f'safety event left uncertified expert candidates {key}')
                     preserved_pending+=before_candidates
+                    report['guard_discarded_candidates']+=before_candidates
                     guard_evidence.append(dict(
                         env_id=env,episode_id=0,frame=int(payload['frame']),
                         per_arm_control=owners,
@@ -275,6 +276,10 @@ def main():
                 fail(f'Guard contamination in dynamic Demo {key}')
             if not bool(item['quality_handoff_confirmed']):
                 fail(f'Unverified handback in dynamic Demo {key}')
+    worker_discarded=sum(int(w['guard_discarded_candidates']) for w in per_worker)
+    if worker_discarded != preserved_pending:
+        fail(f'worker/global Guard candidate discard counts disagree: '
+             f'{worker_discarded} != {preserved_pending}')
     verified=bool(guard_keys and preserved_pending>0)
     report=dict(status='PASS' if verified else
                 'PARTIAL_NO_REAL_GUARD' if not guard_keys else
