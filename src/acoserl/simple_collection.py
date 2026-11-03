@@ -35,6 +35,31 @@ class SimpleFactory:
 
 class SimpleWorker(AutoSERLWorker):
     """Reuse observation/reset/I/O plumbing, not the enhanced control chain."""
+
+    def event(self, event, **extra):
+        """Keep the complete audit stream but avoid reopen/close per step.
+
+        Line buffering preserves each emitted record for crash diagnosis.
+        """
+        import resource
+        stream = getattr(self, '_audit_stream', None)
+        if stream is None:
+            stream = self.log.open('a', buffering=1)
+            self._audit_stream = stream
+        record = dict(event=event, time=time.time(), env_id=self.env_id,
+                      pid=os.getpid(), rss_kb=resource.getrusage(
+                          resource.RUSAGE_SELF).ru_max, **extra)
+        stream.write(json.dumps(record, default=lambda x: x.tolist()
+                                if hasattr(x, 'tolist') else str(x)) + '\n')
+
+    def close(self):
+        stream = getattr(self, '_audit_stream', None)
+        if stream is not None:
+            stream.flush()
+            stream.close()
+            self._audit_stream = None
+        return super().close()
+
     def __init__(self, cfg):
         for key in ('OMP_NUM_THREADS', 'OPENBLAS_NUM_THREADS', 'MKL_NUM_THREADS', 'NUMEXPR_NUM_THREADS'):
             os.environ[key] = '1'
