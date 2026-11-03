@@ -17,8 +17,13 @@ def make_row(obs, action, nxt, reward, term, trunc, payload):
     metadata = copy.deepcopy(payload)
     decision = metadata.get('auto_intervention') or {}
     sources = decision.get('per_arm_control', ['Policy', 'Policy'])
+    gripper_owners = decision.get('per_arm_gripper_control', [False, False])
     if len(sources) != 2 or any(s not in EXPERT | SAFETY_ONLY | {'Policy'} for s in sources):
         raise ValueError('unknown simple-baseline action owner')
+    if len(gripper_owners) != 2 or any(not isinstance(v, bool) for v in gripper_owners):
+        raise ValueError('invalid explicit Guide gripper ownership')
+    if any(gripper_owners[i] and sources[i] != 'Guide' for i in range(2)):
+        raise ValueError('non-Guide claims Guide gripper ownership')
     # raw_row creates the common tensor schema. It is not used to infer the
     # passive arm as Hold, which the simple baseline never executes.
     metadata['auto_intervention'] = dict(decision, mode='Normal')
@@ -36,8 +41,8 @@ def make_row(obs, action, nxt, reward, term, trunc, payload):
             pose[ai] = 1 if source == 'Guide' else 2
             mask[7*ai:7*ai+6] = True
             policy_owned[7*ai:7*ai+6] = False
-            if source != 'Guide':
-                grip[ai] = 2
+            if source != 'Guide' or gripper_owners[ai]:
+                grip[ai] = 1 if source == 'Guide' else 2
                 mask[7*ai+6] = True
                 policy_owned[7*ai+6] = False
     valid = bool(payload['executed'] and not payload.get('supervisor_stop_reason'))
@@ -52,6 +57,7 @@ def make_row(obs, action, nxt, reward, term, trunc, payload):
     row['pose_sources'] = torch.tensor(pose, dtype=torch.long)
     row['gripper_sources'] = torch.tensor(grip, dtype=torch.long)
     row['policy_dimension_mask'] = policy_owned
+    row['guide_gripper_owned'] = torch.tensor(gripper_owners, dtype=torch.bool)
     row['quality_validated'] = torch.tensor(valid and bool(mask.any()) and not safety_arms)
     return row
 
