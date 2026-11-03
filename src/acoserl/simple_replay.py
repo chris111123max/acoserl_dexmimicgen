@@ -69,8 +69,8 @@ class SimpleDemo:
     arms complete their own handbacks; failed or unqualified Guides never
     become expert demos merely by running for many control steps.
     """
-    protocol = 'simple_bimanual_demo_handback_v3_boundary_guard'
-    pending_tail = 32
+    protocol = 'simple_bimanual_demo_handback_v4_guide_gripper'
+    pending_tail = 96
 
     def __init__(self, capacity=5000, gamma=.99, original_quota=96, positive_quota=2, seed=0):
         self.capacity, self.gamma = capacity, gamma
