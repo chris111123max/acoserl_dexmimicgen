@@ -57,7 +57,6 @@ def make_row(obs, action, nxt, reward, term, trunc, payload):
     row['pose_sources'] = torch.tensor(pose, dtype=torch.long)
     row['gripper_sources'] = torch.tensor(grip, dtype=torch.long)
     row['policy_dimension_mask'] = policy_owned
-    row['guide_gripper_owned'] = torch.tensor(gripper_owners, dtype=torch.bool)
     row['quality_validated'] = torch.tensor(valid and bool(mask.any()) and not safety_arms)
     return row
 
