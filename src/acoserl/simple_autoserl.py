@@ -13,6 +13,7 @@ import copy
 import json
 import numpy as np
 from scipy.spatial.transform import Rotation
+from acoserl.gripper_events import DemoGripperEvents
 
 ROOT = Path(__file__).resolve().parents[2]
 ARMS = ('A', 'B')
@@ -101,7 +102,7 @@ class SimpleBimanualAutoSERL:
     None of its intervention eligibility, QP or certificate code is called.
     Actual force/workspace/collision checks and ActionOnly substeps remain on.
     """
-    protocol = 'stage_aware_bimanual_recovery_v3_full_horizon_gripper'
+    protocol = 'stage_aware_bimanual_recovery_v4_two_event_gripper'
 
     def __init__(self, env, config=None, intervention_enabled=True):
         from acoserl.bimanual_core import DEFAULT, Contacts
@@ -123,6 +124,7 @@ class SimpleBimanualAutoSERL:
             p.setdefault('s0', 0)
             if not 0 <= p['s0'] < p['p0'] < p['first_grasp'] <= p['p1'] < self.n_states:
                 raise ValueError('invalid S0/P0/P1 recovery anchors')
+        self.gripper_events = DemoGripperEvents(self.points, self.positions, self.rotations, self.cfg)
         self.contacts = Contacts(env)
         self.auto_disabled = False
         self.sequence = 0
@@ -141,7 +143,12 @@ class SimpleBimanualAutoSERL:
         self.handbacks = [0, 0]
         self.boundary_guard_steps = 0
         self.initial_snapshot = snapshot(self.env)
+        self.gripper_events.reset(self.initial_snapshot['poses'])
         self._issued = None
+        self._pending_gripper_phases = None
+        self._pending_gripper_poses = None
+        self._issued_gripper_overrides = (False, False)
+        self._issued_gripper_events = (None, None)
         self._segment_signature = None
         self._segment = 0
         self._touched = set()
@@ -176,6 +183,9 @@ class SimpleBimanualAutoSERL:
                 per_arm_control=['Rejected', 'Rejected'],
                 simple_protocol=self.protocol)
         self._issued = None
+        self._pending_gripper_phases = None
+        self._pending_gripper_poses = None
+        self._issued_gripper_overrides = (False, False)
         return None, self.last_decision
 
     def _stage(self, state, ai):
@@ -294,25 +304,9 @@ class SimpleBimanualAutoSERL:
         return (low, high) if low <= high else None
 
     def _guide_release_eligible(self, state, contact, ai):
-        """Real contact and official geometric prerequisites, not a pose-only release."""
-        name = ARMS[ai]
-        p = self.points['arms'][name]
-        if not state['actual_grasps'][name][p['object']]:
-            return False
-        if contact['dynamic_A_B_coupled'] or not self._expected_assembly_contact(state, contact, ai):
-            return False
-        objects = state['objects']
-        if ai == 0:
-            a = np.asarray(objects['piece_1']['position'])
-            b = np.asarray(objects['base']['position'])
-            return bool(np.linalg.norm(a[:2] - b[:2]) < .02)
-        if not state['official_metrics']['first_piece_assembled']:
-            return False
-        a = np.asarray(objects['piece_2']['position'])
-        b = np.asarray(objects['piece_1']['position'])
-        base = np.asarray(objects['base']['position'])
-        z_correct = float(base[2] + self.env.piece_2_size * 4)
-        return bool(np.linalg.norm(a[:2] - b[:2]) < .02 and abs(a[2] - z_correct) < .02)
+        """Robot-pose event only; never object truth or contact for release."""
+        return (self.gripper_events.phases[ai] == 'released' or
+                self.gripper_events.release_qualified(ai, state['poses'][ai]))
 
     def _guide_gripper_event(self, state, contact, ai, target):
         """The original demo supplies only two gripper event types: close/open.
@@ -334,9 +328,7 @@ class SimpleBimanualAutoSERL:
             angle = Rotation.from_matrix(self.rotations[start, ai].T @ rotation).magnitude()
             if distance < self.cfg['trigger_position_m'] and angle < .15:
                 return 'close'
-        if (held and index >= int(p['first_release_action']) and
-                self._guide_release_eligible(state, contact, ai)):
-            return 'open'
+        # Relative release is owned by the two-event arbiter.
         return None
 
     def _measure(self, state, ai, domain):
@@ -717,6 +709,36 @@ class SimpleBimanualAutoSERL:
                     action[7*ai:7*ai+6] = correction[7*ai:7*ai+6]
                     if source in RETURN_MODES or source == 'Settle' or (source == 'Guide' and guide_gripper_owned[ai]):
                         action[7*ai+6] = grips[ai]
+        # Final per-arm gripper arbitration, AFTER Guide/Replay/Policy composition.
+        # Only a qualified grasp or a quiet demonstrated release can flip jaws.
+        # Phase changes are staged until after a complete real physics cycle.
+        event_overrides = [False, False]
+        event_names = [None, None]
+        grip_owners = ['MotionGuide' if owned else source if source in EXPERT else 'Policy'
+                       for owned, source in zip(guide_gripper_owned, sources)]
+        next_phases = list(self.gripper_events.phases)
+        if enabled:
+            for ai, arm in enumerate(self.arms):
+                p = self.points['arms'][ARMS[ai]]
+                index = 7 * ai + 6
+                qualified_close = bool(
+                    (sources[ai] == 'Guide' and arm.guide_gripper_goal == 'close') or
+                    (sources[ai] == 'Replay' and arm.replay is not None and
+                     int(p['first_close_action']) <= arm.replay < int(p['first_grasp']) and
+                     action[index] > 0))
+                proposal = self.gripper_events.propose(
+                    ai, state['poses'][ai], action[index], qualified_close)
+                next_phases[ai] = proposal.next_phase
+                event_names[ai] = proposal.event
+                if proposal.overridden:
+                    action[index] = proposal.command
+                    guide_gripper_owned[ai] = True
+                    event_overrides[ai] = True
+                    grip_owners[ai] = 'EventGuide'
+        self._pending_gripper_phases = next_phases if enabled else None
+        self._pending_gripper_poses = (copy.deepcopy(state['poses']) if enabled else None)
+        self._issued_gripper_overrides = tuple(event_overrides)
+        self._issued_gripper_events = tuple(event_names)
         lo, hi = getattr(self, 'action_bounds', (-np.ones(14), np.ones(14)))
         # Bound expert outputs, never silently alter an independent Policy arm.
         for ai, source in enumerate(sources):
@@ -745,13 +767,16 @@ class SimpleBimanualAutoSERL:
         if signature != self._segment_signature:
             self._segment += 1; self._segment_signature = signature
         expert = [s in EXPERT for s in sources]
-        mode = ('Guide_AB' if any(expert) else
+        mode = ('Guide_AB' if any(expert) or any(event_overrides) else
                 'BoundarySafety' if any(s in SAFETY_ONLY for s in sources) else 'Normal')
         self.mode = mode
         self.last_decision = dict(mode=mode, execute=True, policy_action=policy.tolist(),
             executed_action=action.tolist(), intervention_action_proposed=action.tolist(),
             indices=self.indices(), takeover_id=self._segment, per_arm_control=sources,
             per_arm_gripper_control=guide_gripper_owned,
+            per_arm_gripper_source=grip_owners,
+            per_arm_gripper_event=event_names,
+            per_arm_gripper_phase=next_phases,
             per_arm_gripper_goal=[a.guide_gripper_goal if s == 'Guide' else None
                                   for a, s in zip(self.arms, sources)],
             arm_takeover_ids=[a.takeover for a in self.arms], simple_protocol=self.protocol,
@@ -768,6 +793,19 @@ class SimpleBimanualAutoSERL:
         if self._issued is None:
             raise RuntimeError('after_step requires a complete, accepted action')
         state, contact = snapshot(self.env), self.contacts.read()
+        # Commit gripper events only after a complete physical action.
+        if self._pending_gripper_phases is not None:
+            before = self.gripper_events.phases[:]
+            self.gripper_events.complete_step(
+                self._pending_gripper_phases, state['poses'], self._pending_gripper_poses)
+            for ai, (old, new) in enumerate(zip(before, self.gripper_events.phases)):
+                if old != new:
+                    self.episode_interventions += 1
+                    self.events.append(dict(event='gripper_event_executed',
+                        arm=ARMS[ai], kind='grasp' if new == 'holding' else 'release',
+                        from_phase=old, to_phase=new))
+        self._pending_gripper_phases = None
+        self._pending_gripper_poses = None
         danger = self.physical_danger(state, contact)
         if danger:
             self.stop(danger)
@@ -775,7 +813,9 @@ class SimpleBimanualAutoSERL:
         settle_diagnostics = {}
         # Boundary safety is non-autonomous too: never label its episode
         # as clean Policy success or prematurely disable the supervisor.
-        self.intervention_control_steps += int(any(s in EXPERT | SAFETY_ONLY for s in issued))
+        self.intervention_control_steps += int(
+            any(s in EXPERT | SAFETY_ONLY for s in issued) or
+            any(self._issued_gripper_overrides))
         for ai, arm in enumerate(self.arms):
             p = self.points['arms'][ARMS[ai]]
             held = bool(state['actual_grasps'][ARMS[ai]][p['object']])
