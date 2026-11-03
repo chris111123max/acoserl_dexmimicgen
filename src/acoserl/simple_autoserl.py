@@ -264,6 +264,11 @@ class SimpleBimanualAutoSERL:
         name = ARMS[ai]
         p, arm = self.points['arms'][name], self.arms[ai]
         if ai == 1 and state['official_metrics']['task']:
+            # Strict task success requires three completed control cycles.
+            # Do not tear down a verified release Guide on the first official
+            # success frame before the environment can confirm stability.
+            if arm.mode in ('Guide', 'Handoff') and arm.guide_gripper_goal == 'open':
+                return int(p['first_release_action']), self.n_states - 1
             return None
         if self.completed[ai]:
             first = int(p['first_release_action'])
