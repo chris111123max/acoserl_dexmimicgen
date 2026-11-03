@@ -92,7 +92,7 @@ def main():
     manifest,dependency=source_manifest(),dependency_manifest()
     enabled=a.method=='autoserl'
     manager=dict(runtime='stage_aware_bimanual_recovery_v3_full_horizon_gripper',method=a.method,
-                 dynamic_demo_enabled=enabled,dynamic_capacity=5000,
+                 dynamic_demo_enabled=enabled,dynamic_capacity=cfg['dynamic_demo_capacity'] if a.mode=='formal' else 2048,
                  original_quota=96 if enabled else 128,positive_quota=2,
                  no_passive_hold=True,no_forward_grasp_extension=True,
                  guide_stall_policy='stage_anchor_and_20_step_target_error',
