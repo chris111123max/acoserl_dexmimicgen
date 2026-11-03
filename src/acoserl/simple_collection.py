@@ -48,7 +48,7 @@ class SimpleWorker(AutoSERLWorker):
             self._audit_stream = stream
         record = dict(event=event, time=time.time(), env_id=self.env_id,
                       pid=os.getpid(), rss_kb=resource.getrusage(
-                          resource.RUSAGE_SELF).ru_max, **extra)
+                          resource.RUSAGE_SELF).ru_maxrss, **extra)
         stream.write(json.dumps(record, default=lambda x: x.tolist()
                                 if hasattr(x, 'tolist') else str(x)) + '\n')
 
