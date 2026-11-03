@@ -269,11 +269,19 @@ class SimpleBimanualAutoSERL:
             first = int(p['first_release_action'])
             low = first if arm.mode in ('Guide', 'Handoff') else first + 1
             return min(low, self.n_states - 1), self.n_states - 1
+        # Release can make the actual grasp disappear before the official
+        # three-step task success has settled. Preserve this active Guide's
+        # last release reference instead of jumping back to pre-grasp.
+        if arm.mode == 'Guide' and arm.guide_gripper_goal == 'open':
+            return int(p['first_release_action']), self.n_states - 1
         assembly = self._assembly_contact(state, contact, ai)
         if assembly and not self._expected_assembly_contact(state, contact, ai):
             return None
         if state['actual_grasps'][name][p['object']]:
-            low, high = int(p['first_grasp']), self.n_states - 1
+            low = (int(p['first_close_action']) if
+                   arm.mode == 'Guide' and arm.guide_gripper_goal == 'close'
+                   else int(p['first_grasp']))
+            high = self.n_states - 1
         else:
             low, high = 0, int(p['first_contact']) - 1
         if ai == 1 and not state['official_metrics']['first_piece_assembled']:
