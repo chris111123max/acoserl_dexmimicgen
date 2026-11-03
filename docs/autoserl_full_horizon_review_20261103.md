@@ -19,6 +19,7 @@ Status: **work in progress; not ready for formal retraining or merge**. Developm
 4. A Guide must not surrender the gripper immediately after the grasp disappears: it could reclose during the release-completion interval. Owned open action now persists until handback or termination.
 5. New per-arm gripper attribution MUST reuse the existing TensorDict schema. A proposed extra key was removed during review.
 6. The B release Guide persists over the first official task-completion observation to allow strict multi-step success verification.
+7. A close Guide cannot remain permanently anchored to the pre-close TCP once the actual grasp is established; it now advances to the original measured first-grasp reference while retaining the takeover ID.
 
 ## Blocking items before training
 - **No runtime tests conducted here:** server has not been accessed; MuJoCo/robosuite, NPU and TorchRL execution are unverified. Require source-bound targeted tests of both arms' full reference trajectory, gripper ownership, assisted-success terminal Demo admissions, stop/refusal semantics, and disabled-intervention equivalence. These are targeted functional tests, not smoke tests.
