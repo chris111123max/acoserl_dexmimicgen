@@ -14,6 +14,7 @@ import json
 import numpy as np
 from scipy.spatial.transform import Rotation
 from acoserl.gripper_events import DemoGripperEvents
+from acoserl.relative_guide import RelativeGuideReference
 
 ROOT = Path(__file__).resolve().parents[2]
 ARMS = ('A', 'B')
@@ -125,6 +126,12 @@ class SimpleBimanualAutoSERL:
             if not 0 <= p['s0'] < p['p0'] < p['first_grasp'] <= p['p1'] < self.n_states:
                 raise ValueError('invalid S0/P0/P1 recovery anchors')
         self.gripper_events = DemoGripperEvents(self.points, self.positions, self.rotations, self.cfg)
+        self.relative_reference = RelativeGuideReference(
+            self.positions, self.rotations, self.points, self.gripper_events, self.cfg)
+        # Sliding-window search, direction, and pose() share active references.
+        # The offline demo and grasp event reference stay immutable.
+        self.positions = self.relative_reference.positions
+        self.rotations = self.relative_reference.rotations
         self.contacts = Contacts(env)
         self.auto_disabled = False
         self.sequence = 0
@@ -144,6 +151,7 @@ class SimpleBimanualAutoSERL:
         self.boundary_guard_steps = 0
         self.initial_snapshot = snapshot(self.env)
         self.gripper_events.reset(self.initial_snapshot['poses'])
+        self.relative_reference.reset()
         self._issued = None
         self._pending_gripper_phases = None
         self._pending_gripper_poses = None
@@ -210,8 +218,7 @@ class SimpleBimanualAutoSERL:
             return 'robot_force_limit'
         for ai, arm in enumerate(ARMS):
             p = np.asarray(state['poses'][ai]['position'])
-            lo = self.positions[:, ai].min(0)-self.cfg['free_workspace_margin_m']
-            hi = self.positions[:, ai].max(0)+self.cfg['free_workspace_margin_m']
+            lo, hi = self.relative_reference.workspace_bounds(ai)
             if not np.isfinite(p).all() or np.any(p < lo) or np.any(p > hi):
                 return 'workspace_exit_'+arm
             if any(h for obj, h in state['actual_grasps'][arm].items()
@@ -273,6 +280,12 @@ class SimpleBimanualAutoSERL:
         """
         name = ARMS[ai]
         p, arm = self.points['arms'][name], self.arms[ai]
+        # A randomized pick has no trusted world-frame pregrasp reference.
+        # After a verified real grasp, use the re-anchored demo trajectory.
+        # A conflict between A-anchored and B-anchored release disables B
+        # correction rather than steering toward a contradictory target.
+        if not self.relative_reference.can_guide(ai):
+            return None
         if ai == 1 and state['official_metrics']['task']:
             # Strict task success requires three completed control cycles.
             # Do not tear down a verified release Guide on the first official
@@ -517,8 +530,7 @@ class SimpleBimanualAutoSERL:
                 or not self.cfg['intervention_enabled'] or self.auto_disabled):
             return None
         pos = np.asarray(state['poses'][ai]['position'], dtype=float)
-        lo = self.positions[:, ai].min(0) - self.cfg['free_workspace_margin_m']
-        hi = self.positions[:, ai].max(0) + self.cfg['free_workspace_margin_m']
+        lo, hi = self.relative_reference.workspace_bounds(ai)
         robot = self.env.robots[ai]
         name = self.env.sim.model.site_id2name(robot.eef_site_id['right'])
         vel = np.asarray(self.env.sim.data.get_site_xvelp(name), dtype=float)
@@ -793,19 +805,6 @@ class SimpleBimanualAutoSERL:
         if self._issued is None:
             raise RuntimeError('after_step requires a complete, accepted action')
         state, contact = snapshot(self.env), self.contacts.read()
-        # Commit gripper events only after a complete physical action.
-        if self._pending_gripper_phases is not None:
-            before = self.gripper_events.phases[:]
-            self.gripper_events.complete_step(
-                self._pending_gripper_phases, state['poses'], self._pending_gripper_poses)
-            for ai, (old, new) in enumerate(zip(before, self.gripper_events.phases)):
-                if old != new:
-                    self.episode_interventions += 1
-                    self.events.append(dict(event='gripper_event_executed',
-                        arm=ARMS[ai], kind='grasp' if new == 'holding' else 'release',
-                        from_phase=old, to_phase=new))
-        self._pending_gripper_phases = None
-        self._pending_gripper_poses = None
         danger = self.physical_danger(state, contact)
         if danger:
             self.stop(danger)
@@ -816,16 +815,57 @@ class SimpleBimanualAutoSERL:
         self.intervention_control_steps += int(
             any(s in EXPERT | SAFETY_ONLY for s in issued) or
             any(self._issued_gripper_overrides))
+        # Refresh the EXISTING 10-control grasp evidence before committing
+        # Holding. A completed close command is not a stable grasp.
+        grasp_confirmed = []
         for ai, arm in enumerate(self.arms):
             p = self.points['arms'][ARMS[ai]]
             held = bool(state['actual_grasps'][ARMS[ai]][p['object']])
-            self.grasp_streak[ai] = self.grasp_streak[ai]+1 if held else 0
-            completed = state['official_metrics'].get('first_piece_assembled' if ai == 0 else 'task', False)
-            self.completed[ai] |= bool(completed and not held)
+            self.grasp_streak[ai] = self.grasp_streak[ai] + 1 if held else 0
             if held:
                 arm.relative.append(relative_pose(state, ai, p['object']))
             else:
                 arm.relative.clear()
+            command = np.asarray(self.env.robots[ai].gripper['right'].current_action)
+            closed = (command.shape == (2,) and
+                      np.allclose(command, [-1., 1.], atol=1e-6, rtol=0))
+            grasp_confirmed.append(bool(closed and self._grasp_stable_now(ai)))
+        if self._pending_gripper_phases is not None:
+            outcome = self.gripper_events.complete_step(
+                self._pending_gripper_phases, state['poses'],
+                self._pending_gripper_poses, grasp_confirmed=tuple(grasp_confirmed))
+            for ai, kind in outcome['events']:
+                self.events.append(dict(event='gripper_event_executed',
+                                        arm=ARMS[ai], kind=kind))
+                if kind == 'grasp_confirmed':
+                    self.episode_interventions += 1
+                    if self.relative_reference.activate(ai):
+                        first = int(self.points['arms'][ARMS[ai]]['first_grasp'])
+                        self.arms[ai].floor = max(self.arms[ai].floor, first)
+                        self.arms[ai].start = max(self.arms[ai].start, first)
+                        self.events.append(dict(
+                            event='relative_reference_activated', arm=ARMS[ai],
+                            grasp_anchor=self.gripper_events.grasp_anchor[ai]['position'].tolist()))
+                    else:
+                        self.events.append(dict(
+                            event='relative_reference_rejected', arm=ARMS[ai],
+                            reason=self.relative_reference.rejected[ai]))
+                elif kind == 'release':
+                    self.episode_interventions += 1
+            for ai in outcome['grasp_timeouts']:
+                self.stop('gripper_grasp_not_established_' + ARMS[ai])
+        self._pending_gripper_phases = None
+        self._pending_gripper_poses = None
+        for ai, name in enumerate(ARMS):
+            if (self.gripper_events.phases[ai] == 'holding' and
+                    not state['actual_grasps'][name][self.points['arms'][name]['object']]
+                    and not self.completed[ai]):
+                self.stop('gripper_confirmed_grasp_lost_' + name)
+        for ai, arm in enumerate(self.arms):
+            p = self.points['arms'][ARMS[ai]]
+            held = bool(state['actual_grasps'][ARMS[ai]][p['object']])
+            completed = state['official_metrics'].get('first_piece_assembled' if ai == 0 else 'task', False)
+            self.completed[ai] |= bool(completed and not held)
             stable = len(arm.relative) == arm.relative.maxlen
             relative_translation_span_m = None
             relative_rotation_span_rad = None
