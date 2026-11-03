@@ -164,7 +164,43 @@ class SimpleWorker(AutoSERLWorker):
 
 
 class SimplePool(FourByFour):
-    """Same asynchronous groups and normalization as the retained learner."""
+    """Same asynchronous groups and normalization as the retained learner.
+
+    The learner may update on NPU while CPU workers execute previously
+    inferred actions. Only one outstanding vector step is permitted.
+    """
+    def step_async(self, actions):
+        if getattr(self, '_step_inflight', False):
+            raise RuntimeError('collector step already in flight')
+        if np.shape(actions) != (16, 14):
+            raise ValueError('expected 16 per-arm-composed actions')
+        dispatch = []
+        for g, v in enumerate(self.groups):
+            dispatch.append(time.time())
+            v.step_async(actions[4*g:4*g+4])
+        self.last_dispatch = dispatch
+        self._step_inflight = True
+
+    def step_wait(self):
+        if not getattr(self, '_step_inflight', False):
+            raise RuntimeError('collector step_wait without step_async')
+        try:
+            result = [v.step_wait(timeout=300) for v in self.groups]
+            obs = {k: np.concatenate([r[0][k] for r in result])
+                   for k in self.observation}
+            rewards = np.concatenate([r[1] for r in result])
+            terms = np.concatenate([r[2] for r in result])
+            truncs = np.concatenate([r[3] for r in result])
+            payload = [json.loads(item) for r in result for item in r[4]['payload']]
+            self.observation = obs
+            return obs, rewards, terms, truncs, payload
+        finally:
+            self._step_inflight = False
+
+    def step(self, actions):
+        self.step_async(actions)
+        return self.step_wait()
+
     def __init__(self, seed, normalization, directory, enabled=True, resume_workers=None, **_):
         self.groups = []; self.directory = Path(directory)
         self.directory.mkdir(parents=True, exist_ok=False)
