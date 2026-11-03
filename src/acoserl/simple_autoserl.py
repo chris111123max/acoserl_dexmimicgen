@@ -659,11 +659,13 @@ class SimpleBimanualAutoSERL:
                             grips[ai] = 1.
                             guide_gripper_owned[ai] = True
                         elif arm.guide_gripper_goal == 'open':
-                            if held:
-                                if not self._guide_release_eligible(state, contact, ai):
-                                    return self._refuse(policy, 'guide_release_lost_qualification_'+ARMS[ai])
-                                grips[ai] = -1.
-                                guide_gripper_owned[ai] = True
+                            if held and not self._guide_release_eligible(state, contact, ai):
+                                return self._refuse(policy, 'guide_release_lost_qualification_'+ARMS[ai])
+                            # Keep the jaw open after the real grasp disappears:
+                            # returning ownership to Policy for one step here
+                            # can re-close and undo the assembly before handback.
+                            grips[ai] = -1.
+                            guide_gripper_owned[ai] = True
                         elif held:
                             # A pose-only Guide must not accidentally release
                             # a carried object using a random Policy gripper
