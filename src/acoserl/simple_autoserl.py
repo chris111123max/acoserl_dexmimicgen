@@ -648,6 +648,21 @@ class SimpleBimanualAutoSERL:
                         else arm.recovery_anchor if arm.mode in RETURN_MODES
                         else arm.p1 if arm.mode == 'Settle' else arm.replay+1)
                     if arm.mode == 'Guide':
+                        # The original close event precedes the first real
+                        # grasp reference. As soon as physics confirms grasp,
+                        # move the Guide target forward to the corresponding
+                        # recorded grasp frame; otherwise Guide would keep
+                        # pulling the held object back to the pre-close TCP.
+                        if (arm.guide_gripper_goal == 'close' and
+                                state['actual_grasps'][ARMS[ai]][self.points['arms'][ARMS[ai]]['object']] and
+                                arm.target < int(self.points['arms'][ARMS[ai]]['first_grasp'])):
+                            old_target = int(arm.target)
+                            arm.target = int(self.points['arms'][ARMS[ai]]['first_grasp'])
+                            arm.guide_errors.clear()
+                            arm.guide_motion.clear()
+                            self.events.append(dict(event='guide_close_grasp_target_advanced',
+                                                    arm=ARMS[ai], previous=old_target,
+                                                    target=arm.target, takeover=arm.takeover))
                         targets[ai] = self.pose(ai, arm.target)
                         if arm.guide_gripper_goal is None:
                             goal = self._guide_gripper_event(state, contact, ai, arm.target)
