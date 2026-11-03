@@ -86,7 +86,8 @@ class SimpleDemo:
             sampled_dynamic=0, expert_dimensions=0, dual_arm_rows=0,
             staged_rows=0, policy_only_rows=0, expired_candidate_rows=0,
             failed_guide_discarded_rows=0, unqualified_discarded_rows=0,
-            verified_handbacks=0, dropped_on_restore_rows=0,
+            verified_handbacks=0, strict_terminal_qualifications=0,
+            dropped_on_restore_rows=0,
             boundary_guard_rows=0, boundary_guard_discarded_candidate_rows=0)
         self.last_sample = {}
         self._positive = None
@@ -214,6 +215,17 @@ class SimpleDemo:
                 qualified.add((ARMS.index(arm), takeover))
                 self.stats['verified_handbacks'] += 1
             q = self.pending.get(env)
+            # An episode reaching strict physical success terminates without
+            # another control step to confirm handback. The final verified
+            # successful transition qualifies genuine expert owners, but only
+            # if every action completed and no safety stop was raised.
+            strict_terminal_success = (bool(row['next', 'terminated']) and
+                                       float(row['next', 'reward']) > 0 and
+                                       safe and not bool(row['next', 'bootstrap_allowed']))
+            if strict_terminal_success and q:
+                for _, owners in q:
+                    qualified.update(owners)
+                self.stats['strict_terminal_qualifications'] += 1
             # Process only a chronologically ordered qualified prefix. Mixed
             # A/B actions wait for BOTH arm IDs; no bad-arm demo is relabeled.
             while q and q[0][1].issubset(qualified):
