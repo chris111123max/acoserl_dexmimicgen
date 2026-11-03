@@ -247,11 +247,11 @@ class SimpleDemo:
         parts = []
         if forced:
             idx = self._positive[torch.randint(len(self._positive), (forced,), generator=self.generator)]
-            parts.append(original[idx].clone())
+            parts.append(original[idx])
         if n > forced:
-            parts.append(original[torch.randint(len(original), (n-forced,), generator=self.generator)].clone())
+            parts.append(original[torch.randint(len(original), (n-forced,), generator=self.generator)])
         if n < count:
-            parts.append(self.buffer[torch.randint(len(self.buffer), (count-n,), generator=self.generator)].clone())
+            parts.append(self.buffer[torch.randint(len(self.buffer), (count-n,), generator=self.generator)])
         batch = torch.cat(parts, 0)
         self.stats['sampled_original'] += n; self.stats['sampled_dynamic'] += count-n
         self.last_sample = dict(original=n, dynamic=count-n, forced_positive=forced)
