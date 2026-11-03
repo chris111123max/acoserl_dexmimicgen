@@ -91,20 +91,21 @@ def main():
     cfg=json.loads((ROOT/'configs/ascend16/formal.json').read_text())
     manifest,dependency=source_manifest(),dependency_manifest()
     enabled=a.method=='autoserl'
-    manager=dict(runtime='stage_aware_bimanual_recovery_v2_boundary_guard',method=a.method,
+    manager=dict(runtime='stage_aware_bimanual_recovery_v3_full_horizon_gripper',method=a.method,
                  dynamic_demo_enabled=enabled,dynamic_capacity=5000,
                  original_quota=96 if enabled else 128,positive_quota=2,
                  no_passive_hold=True,no_forward_grasp_extension=True,
                  guide_stall_policy='stage_anchor_and_20_step_target_error',
                  recovery_anchors='S0_P0_P1',
                  guide_exit='three_step_target_or_converged_after_real_progress',
+                 full_horizon_sliding_window=True,guide_gripper='event_gated_full_7d_per_arm',
                  sliding_window_clock='completed_policy_controls_only',
                  post_guide_policy_steps=32,
                  boundary_guard='policy_cooldown_only_25mm_entry_35mm_inward_target',
                  boundary_guard_controls_not_policy_steps=True,
                  boundary_guard_action_source='Constrained_A_or_B',
                  boundary_guard_demo_admission='never',
-                 dynamic_demo_admission='verified_per_arm_handoff_v3_boundary_guard_exclusion')
+                 dynamic_demo_admission='verified_per_arm_handoff_v4_guide_gripper_boundary_guard_exclusion')
     cfg.update(method='ResFiT RLPD + stage-aware bimanual recovery (SERL ResNet-10)',purpose=a.mode,collector_protocol='simple_bimanual_collector_v1',utd=1,
                manager_config=manager,visual_encoder=a.visual,
                checkpoint_seconds=a.checkpoint_seconds,no_grasp_budget=a.no_grasp_budget,
