@@ -88,8 +88,11 @@ class DemoGripperEvents:
         if self.grasp_anchor[ai] is None:
             return None
         p = self.points['arms']['AB'[ai]]
+        # The actual anchor is captured at *stable grasp confirmation*, so
+        # its demo counterpart must be the stable P1 frame (not the earlier
+        # first-close action, which occurred before the ten-step check).
         return compose_relative(self.grasp_anchor[ai],
-                                self.demo_pose(ai, int(p['first_close_action'])),
+                                self.demo_pose(ai, int(p['p1'])),
                                 self.demo_pose(ai, index))
 
     def release_reference(self, ai):
@@ -195,7 +198,9 @@ class DemoGripperEvents:
                 if grasp_confirmed[ai]:
                     if self.grasp_attempt_anchor[ai] is None:
                         raise ValueError('stable grasp without a close anchor')
-                    self.grasp_anchor[ai] = self._clone_pose(self.grasp_attempt_anchor[ai])
+                    # Use the pose measured AFTER the completing physical
+                    # control step. The pre-close pose remains diagnostic only.
+                    self.grasp_anchor[ai] = self._clone_pose(observed_poses[ai])
                     self.phases[ai] = 'holding'
                     events.append((ai, 'grasp_confirmed'))
                 elif self.grasp_attempt_steps[ai] >= self.grasp_confirm_max_steps:

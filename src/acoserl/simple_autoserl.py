@@ -309,6 +309,10 @@ class SimpleBimanualAutoSERL:
             low = (int(p['first_close_action']) if
                    arm.mode == 'Guide' and arm.guide_gripper_goal == 'close'
                    else int(p['first_grasp']))
+            if self.relative_reference.ready[ai]:
+                # Only post-P1 frames are rebased to the confirmation TCP.
+                # Any older active Guide target is no longer eligible.
+                low = max(low, int(p['p1']))
             high = self.n_states - 1
         else:
             low, high = 0, int(p['first_contact']) - 1
@@ -840,7 +844,9 @@ class SimpleBimanualAutoSERL:
                 if kind == 'grasp_confirmed':
                     self.episode_interventions += 1
                     if self.relative_reference.activate(ai):
-                        first = int(self.points['arms'][ARMS[ai]]['first_grasp'])
+                        # The confirmed TCP is aligned with demo P1.
+                        # Never rewind the sliding cursor to first_grasp.
+                        first = int(self.points['arms'][ARMS[ai]]['p1'])
                         self.arms[ai].floor = max(self.arms[ai].floor, first)
                         self.arms[ai].start = max(self.arms[ai].start, first)
                         self.events.append(dict(

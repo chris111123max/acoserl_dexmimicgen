@@ -14,8 +14,8 @@ def make(randomized=True, margin=.12):
     pos[:, 1, 0] = np.arange(6) * .12
     rot = np.broadcast_to(np.eye(3), (6, 2, 3, 3)).copy()
     points = {'arms': {
-        'A': {'first_close_action': 1, 'first_grasp': 2, 'first_release_action': 4},
-        'B': {'first_close_action': 2, 'first_grasp': 3, 'first_release_action': 5}}}
+        'A': {'first_close_action': 1, 'first_grasp': 2, 'p1': 2, 'first_release_action': 4},
+        'B': {'first_close_action': 2, 'first_grasp': 3, 'p1': 3, 'first_release_action': 5}}}
     cfg = {'fixed_initial_state': not randomized, 'free_workspace_margin_m': margin}
     ev = DemoGripperEvents(points, pos, rot, cfg)
     return ev, RelativeGuideReference(pos, rot, points, ev, cfg)
@@ -37,7 +37,7 @@ def test_rebase_updates_full_carry_reference_not_original():
     anchor(ev, 0, .15, .03)
     assert r.activate(0)
     assert r.can_guide(0)
-    assert np.allclose(r.positions[2, 0], [.25, .03, 0])
+    assert np.allclose(r.positions[2, 0], [.15, .03, 0])
     assert np.allclose(r.positions[4, 0], ev.release_reference(0)['position'])
     assert np.allclose(r.demo_positions[:, 0, 0], np.arange(6) * .1)
 
@@ -45,7 +45,7 @@ def test_rotated_rebase_tracks_pose():
     ev, r = make(margin=.7)
     anchor(ev, 0, .1, .01, yaw=.2)
     assert r.activate(0)
-    expected = np.array([.1, .01, 0.]) + Rotation.from_euler('z', .2).as_matrix() @ np.array([.3, 0., 0.])
+    expected = np.array([.1, .01, 0.]) + Rotation.from_euler('z', .2).as_matrix() @ np.array([.2, 0., 0.])
     assert np.allclose(r.positions[4, 0], expected)
     assert np.allclose(r.rotations[4, 0], Rotation.from_euler('z', .2).as_matrix())
 
@@ -79,3 +79,19 @@ def test_reset_discards_relative_changes():
     assert not r.can_guide(0)
     assert not any(r.ready)
     assert np.array_equal(r.positions, r.demo_positions)
+
+def test_rebase_p1_matches_confirmation_pose_not_preclose():
+    ev, ref = make(margin=.7)
+    attempted = pose(.10, 0)
+    confirmed = pose(.12, .015, yaw=.32)
+    ev.phases[0] = 'closing'
+    ev.grasp_attempt_anchor[0] = ev._clone_pose(attempted)
+    out = ev.complete_step(['closing', 'open'], [confirmed, pose()],
+                           [confirmed, pose()], grasp_confirmed=(True, False))
+    assert out['events'] == [(0, 'grasp_confirmed')]
+    assert ref.activate(0)
+    p1 = ev.points['arms']['A']['p1']
+    assert np.allclose(ref.positions[p1, 0], confirmed['position'])
+    assert np.allclose(ref.rotations[p1, 0], confirmed['rotation'])
+    assert np.allclose(ref.positions[4, 0], ev.release_reference(0)['position'])
+    assert np.allclose(ref.demo_positions[p1, 0], [.2, 0, 0])

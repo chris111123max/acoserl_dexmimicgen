@@ -48,7 +48,9 @@ class RelativeGuideReference:
         if self.events.phases[ai] != 'holding' or self.events.grasp_anchor[ai] is None:
             return False
         p = self.points['arms']['AB'[ai]]
-        start = int(p['first_grasp'])
+        # P1 is the stable-grasp demo anchor. Earlier frames are not
+        # part of this verified rebase; no correction back to pre-P1.
+        start = int(p['p1'])
         new_positions = []
         new_rotations = []
         for index in range(start, len(self.positions)):

@@ -9,11 +9,13 @@ def pose(x=0, y=0, z=0, yaw=0):
             'rotation': Rotation.from_euler('z', yaw).as_matrix()}
 
 def make(randomized=False, max_steps=80):
-    points = {'arms': {'A': {'first_close_action': 1, 'first_release_action': 3},
-                       'B': {'first_close_action': 2, 'first_release_action': 4}}}
+    points = {'arms': {'A': {'first_close_action': 1, 'first_grasp': 2, 'p1': 2, 'first_release_action': 3},
+                       'B': {'first_close_action': 2, 'first_grasp': 3, 'p1': 3, 'first_release_action': 4}}}
     pos = np.zeros((5, 2, 3))
     pos[1, 0] = [.2, 0, 0]
+    pos[2, 0] = [.25, 0, 0]
     pos[2, 1] = [.3, 0, 0]
+    pos[3, 1] = [.35, 0, 0]
     pos[3, 0] = [1, 0, 0]
     pos[4, 1] = [2, 0, 0]
     rot = np.broadcast_to(np.eye(3), (5, 2, 3, 3)).copy()
@@ -70,7 +72,7 @@ def test_random_actor_can_select_new_pick_but_fixed_rejects():
     assert g.propose(0, x, 1).next_phase == 'closing'
     begin(g, x)
     confirm(g, x)
-    assert np.allclose(g.relative_reference(0, 3)['position'], [1.4, .4, 0])
+    assert np.allclose(g.relative_reference(0, 3)['position'], [1.35, .4, 0])
 
 def test_rotation_and_reset():
     g = make(randomized=True)
@@ -78,7 +80,7 @@ def test_rotation_and_reset():
     begin(g, x)
     confirm(g, x)
     t = g.release_reference(0)
-    assert np.allclose(t['position'], [.5, .6, 0])
+    assert np.allclose(t['position'], [.5, .55, 0])
     g.reset([pose(), pose()])
     assert g.release_reference(0) is None
 
@@ -113,7 +115,7 @@ def test_second_release_waits_for_first_actual_anchor():
         commit(g, a=release, b=b)
     assert g.propose(0, release, -1).next_phase == 'released'
     commit(g, ['released', 'holding'], a=release, b=b)
-    assert np.allclose(g.release_reference(1)['position'], [2, 0, 0])
+    assert np.allclose(g.release_reference(1)['position'], [1.95, 0, 0])
 
 def test_se3_offset_rotates():
     q = compose_relative(pose(5, 6, yaw=np.pi/2), pose(1), pose(2))
@@ -122,3 +124,38 @@ def test_se3_offset_rotates():
 def test_forbidden_event_transition():
     with pytest.raises(ValueError):
         commit(make(), ['released', 'open'])
+
+def test_confirmed_anchor_observed_pose_not_preclose_with_rotation():
+    g = make(randomized=True)
+    attempt = pose(.2, 0, yaw=0)
+    confirmed = pose(.220, .007, yaw=.23)
+    begin(g, attempt)
+    confirm(g, confirmed)
+    assert np.allclose(g.grasp_attempt_anchor[0]['position'], attempt['position'])
+    assert np.allclose(g.grasp_anchor[0]['position'], confirmed['position'])
+    assert np.allclose(g.grasp_anchor[0]['rotation'], confirmed['rotation'])
+    p1 = g.points['arms']['A']['p1']
+    target = g.relative_reference(0, p1)
+    assert np.allclose(target['position'], confirmed['position'])
+    assert np.allclose(target['rotation'], confirmed['rotation'])
+    release = g.release_reference(0)
+    expected = confirmed['position'] + confirmed['rotation'] @ np.array([.75, 0., 0.])
+    assert np.allclose(release['position'], expected)
+
+
+def test_confirmed_anchor_is_independent_per_arm():
+    g = make(randomized=True)
+    attempt = pose(.3, 0)
+    confirmed = pose(.325, .009, yaw=-.18)
+    command = g.propose(1, attempt, 1.)
+    assert command.next_phase == 'closing'
+    commit(g, ['open', 'closing'], b=attempt)
+    for _ in range(9):
+        commit(g, b=confirmed)
+    commit(g, b=confirmed, stable=(False, True))
+    assert g.phases[1] == 'holding'
+    assert g.grasp_anchor[0] is None
+    assert np.allclose(g.grasp_anchor[1]['position'], confirmed['position'])
+    p1 = g.points['arms']['B']['p1']
+    assert np.allclose(g.relative_reference(1, p1)['position'], confirmed['position'])
+    assert np.allclose(g.relative_reference(1, p1)['rotation'], confirmed['rotation'])
