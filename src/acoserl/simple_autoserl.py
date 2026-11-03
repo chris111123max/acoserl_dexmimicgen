@@ -651,18 +651,26 @@ class SimpleBimanualAutoSERL:
                                 self.events.append(dict(event='guide_gripper_event', arm=ARMS[ai],
                                                         kind=goal, takeover=arm.takeover,
                                                         target=int(arm.target)))
+                        held = bool(state['actual_grasps'][ARMS[ai]][
+                            self.points['arms'][ARMS[ai]]['object']])
                         if arm.guide_gripper_goal == 'close':
-                            # Maintain closure until a true stable grasp, not a
-                            # single apparent gripper-position match.
+                            # Continue physical closure until a stable, real
+                            # grasp. This owned 7th dimension is recorded.
                             grips[ai] = 1.
                             guide_gripper_owned[ai] = True
                         elif arm.guide_gripper_goal == 'open':
-                            held = state['actual_grasps'][ARMS[ai]][self.points['arms'][ARMS[ai]]['object']]
                             if held:
                                 if not self._guide_release_eligible(state, contact, ai):
                                     return self._refuse(policy, 'guide_release_lost_qualification_'+ARMS[ai])
                                 grips[ai] = -1.
                                 guide_gripper_owned[ai] = True
+                        elif held:
+                            # A pose-only Guide must not accidentally release
+                            # a carried object using a random Policy gripper
+                            # command. Hold actual grasp until the verified
+                            # original-demo release event becomes eligible.
+                            grips[ai] = 1.
+                            guide_gripper_owned[ai] = True
                     elif arm.mode in RETURN_MODES:
                         if not self._eligible_anchor(state, contact, ai, arm.mode, arm.recovery_anchor):
                             return self._refuse(policy, 'recovery_anchor_domain_changed_'+ARMS[ai])
