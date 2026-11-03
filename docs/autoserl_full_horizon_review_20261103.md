@@ -1,6 +1,6 @@
 # Full-horizon dual-arm AutoSERL: implementation and self-review (2026-11-03)
 
-Status: **work in progress; not ready for formal retraining or merge**. Development branch only. Production `main` and running server training files are unchanged.
+Status: **implementation committed for review; no live Ascend/MuJoCo benchmark has been run**. Development branch only. Production `main` and running server training files are unchanged.
 
 ## Scope implemented
 - Extend per-arm AutoSERL Guide's reference domain through carry, assembly, controlled release, and retreat using the original recorded `demo_0` TCP trajectory, retaining per-arm sliding windows. Do not add object-relative action control or ContactGuide.
@@ -24,8 +24,11 @@ Status: **work in progress; not ready for formal retraining or merge**. Developm
 ## Blocking items before training
 - **No runtime tests conducted here:** server has not been accessed; MuJoCo/robosuite, NPU and TorchRL execution are unverified. Require source-bound targeted tests of both arms' full reference trajectory, gripper ownership, assisted-success terminal Demo admissions, stop/refusal semantics, and disabled-intervention equivalence. These are targeted functional tests, not smoke tests.
 - **Checkpoint migration is intentionally disallowed:** original v2 controller and v3 Demo checkpoints require a separately reviewed migration or a fresh run.
-- **Buffer capacity has NOT been increased yet.** Existing 3xRGB84 current/next uint8 observations imply ~25.4 GB of raw image payload per 200k-row replay buffer. Two such buffers plus copies/checkpoints can exceed available RAM and disk; a measured memory-efficient storage design is required before enabling 200k/200k.
-- **Speed optimizations have NOT been applied yet.** Existing profiling lacks confirmed live server timings; changing shadow simulation, collection scheduling or network update overlap without evidence could corrupt the 80 N/substep safety guarantee or the true UTD counter.
+- **Buffer expansion implemented in FORMAL configuration:** Online=100,000, Dynamic Demo=100,000, immutable original successful demonstration=224. Integration mode retains its bounded 2,048-row capacities. Per-buffer raw image estimate at 100k is ~12.7 GB (3 RGB84 uint8 cameras, obs+next); both buffers ~25.4 GB before replay metadata, duplicated allocations, checkpoint I/O, workers, OS and NPU usage. User states 180 GB RAM; actual available memory and storage remain unverified.
+- **Speed modifications implemented:** asynchronous dispatch of all 16 CPU MuJoCo environments, then NPU learner update credits earned by preceding accepted transitions while workers are running; wait for completed workers before consuming observations. Keep UTD=1, no physics/risk changes, and drain update budget before formal checkpoint/evaluation. Remove one Online sampling clone (torch.cat makes a new batch) and reuse per-worker line-buffered audit file handles. Actual measured speedup remains unknown until the user benchmarks on the server.
+- **Bounded policy lag:** action inference occurs before overlapping NPU updates. This introduces at most one collector batch of action-vs-updated-policy staleness under normal operation. It never changes which physical action was executed or the number of credited learner updates.
+- **Disk impact:** Full 100k buffers may cause large periodic checkpoint writes. Monitor free space, checkpoint duration and available memory; do not assert an unconstrained speedup.
+- **Server validation:** source-level self-review completed; dedicated functional inspection and runtime performance measurements remain advisable before replacing a formal checkpoint.
 - **Contact and release require physical verification.** A reference index is not evidence of a collision-safe continuous trajectory. Existing limits must never be disabled to make a Guide succeed.
 - **Candidate tail is 96, not unbounded.** Long recoveries (up to 350 steps) can still expire earlier candidates; observe expired_candidate_rows and qualify storage before changing.
 - **No `qpos`/`qvel` mid-episode teleportation; no new reward or learned controller; keep true sparse strict success.**
@@ -38,7 +41,9 @@ Status: **work in progress; not ready for formal retraining or merge**. Developm
 5. Verify `make_row` ownership mask for 6D Guide, 7D Guide, Recovery, BoundaryGuard, both-arm mixes, original Demo, and successful terminal episode.
 6. Check `torch.cat` for Online/Offline TensorDict schema match and 3-step n-step terminal semantics.
 7. Verify failure paths preserve logs and checkpoint compatibility rejection.
-8. Report exact source line, input state, expected/observed behavior, and evidence for any defect; do not push/merge or start formal retraining.
+8. Inspect asynchronous worker dispatch/wait while learner updates on NPU, exception/finalization and checkpoint/evaluation budget draining. Confirm expected update count never exceeds credited valid steps after warmup.
+9. Inspect 100k/100k capacity and artifact disk usage; report actual RSS, disk, CPU/NPU utilization and valid-steps/s from an existing formal rollout or an operator-approved run.
+10. Report exact source line, input state, expected/observed behavior, and evidence for any defect; do not push/merge or start formal retraining.
 
 ## Sources
 - Official AutoSERL `serl_robot_infra/franka_env/envs/wrappers.py`: sliding intervention, safety recovery, termination.
