@@ -40,40 +40,55 @@ def test_clearance_requires_real_lift_then_stable_hold_then_policy():
     g, s = gate(), state()
     g.on_grasp(0, s, "piece_1")
     g.arm(0, s, "piece_1")
-    p = g.propose(0, s, 0., True, True, False)
+    p = g.propose(0, s, 0., True, True)
     assert p["kind"] == "lift"
     s1 = state(obj_height=.802, wrist_height=.902)
     assert g.complete(0, p, s1, .006, False, True) is False
     assert g.phase(0) == "verify"
     for i in range(3):
-        p = g.propose(0, s1, .006, False, True, True)
+        p = g.propose(0, s1, .006, False, True)
         assert p["kind"] == "hold"
         assert g.complete(0, p, s1, .006, False, True) is False
-    assert g.phase(0) == "probe"
-    p = g.propose(0, s1, .006, False, True, True)
+    assert g.phase(0) == "ready"
+    p = g.propose(0, s1, .006, False, True)
     assert p["kind"] == "policy"
     assert g.complete(0, p, s1, .006, False, True) is True
     assert g.phase(0) == "done"
 
 
-def test_unqualified_policy_never_pretends_to_complete_handoff():
+def test_carry_ready_allows_unmodified_policy_motion():
     g, s = gate(), state()
     g.on_grasp(0, s, "piece_1")
     g.arm(0, s, "piece_1")
-    p = g.propose(0, s, .01, False, True, False)
     for _ in range(3):
+        p = g.propose(0, s, .01, False, True)
+        assert p["kind"] == "hold"
         g.complete(0, p, s, .01, False, True)
-        p = g.propose(0, s, .01, False, True, False)
-    assert g.phase(0) == "probe"
-    assert p["kind"] == "hold"
-    assert not g.complete(0, p, s, .01, False, True)
+    assert g.phase(0) == "ready"
+    p = g.propose(0, s, .01, False, True)
+    assert p["kind"] == "policy"
+    assert g.complete(0, p, s, .01, False, True)
+    assert g.phase(0) == "done"
+
+
+def test_carry_ready_still_rejects_failed_physical_clearance():
+    g, s = gate(), state()
+    g.on_grasp(0, s, "piece_1")
+    g.arm(0, s, "piece_1")
+    for _ in range(3):
+        p = g.propose(0, s, .01, False, True)
+        g.complete(0, p, s, .01, False, True)
+    p = g.propose(0, s, .01, False, True)
+    with pytest.raises(CarryGateError, match="clearance"):
+        g.complete(0, p, s, 0., True, True)
+    assert g.phase(0) == "ready"
 
 
 def test_no_false_handoff_on_failed_contact_or_slip():
     g, s = gate(), state()
     g.on_grasp(0, s, "piece_1")
     g.arm(0, s, "piece_1")
-    p = g.propose(0, s, 0., True, True, False)
+    p = g.propose(0, s, 0., True, True)
     with pytest.raises(CarryGateError, match="grasp"):
         g.complete(0, p, s, .006, False, False)
     moved = state(obj_height=.81, wrist_height=.9)
@@ -85,7 +100,7 @@ def test_partial_or_stale_control_does_not_count():
     g, s = gate(), state()
     g.on_grasp(0, s, "piece_1")
     g.arm(0, s, "piece_1")
-    p = g.propose(0, s, .01, False, True, False)
+    p = g.propose(0, s, .01, False, True)
     assert g.records[0]["controls"] == 0
     bad = dict(p, control=9)
     with pytest.raises(CarryGateError, match="stale"):
@@ -105,11 +120,12 @@ def test_budget_stops_but_never_credits_handoff():
     g.on_grasp(0, s, "piece_1")
     g.arm(0, s, "piece_1")
     for _ in range(g.max_controls):
-        p = g.propose(0, s, .01, False, True, False)
-        assert p["kind"] == "hold"
-        g.complete(0, p, s, .01, False, True)
+        # No measured lift progress: keep the finite safety budget.
+        p = g.propose(0, s, 0., True, True)
+        assert p["kind"] == "lift"
+        g.complete(0, p, s, 0., True, True)
     with pytest.raises(CarryGateError, match="budget"):
-        g.propose(0, s, .01, False, True, False)
+        g.propose(0, s, 0., True, True)
     assert g.phase(0) != "done"
 
 

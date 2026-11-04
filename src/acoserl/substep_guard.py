@@ -84,7 +84,7 @@ class WorkspacePreview:
             from acoserl.carry_handoff import CarryGateError, object_table_gap
             for ai, arm in enumerate(('A', 'B')):
                 phase = self.manager.carry_gate.phase(ai)
-                if phase not in ('verify', 'probe'):
+                if phase not in ('verify', 'ready'):
                     continue
                 obj = self.manager.points['arms'][arm]['object']
                 try:

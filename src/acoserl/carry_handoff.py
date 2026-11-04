@@ -22,7 +22,7 @@ class CarryGateError(ValueError):
 
 
 class CarryGate:
-    """Independent per-arm state: clearance -> verify -> Policy probe."""
+    """Independent per-arm state: clearance -> verify -> ready -> Policy."""
 
     def __init__(self, cfg):
         self.clearance = float(cfg.get("carry_table_clearance_m", .005))
@@ -104,7 +104,7 @@ class CarryGate:
                     table_clearance_m=float(clearance),
                     table_contact=bool(table_contact))
 
-    def propose(self, ai, state, clearance, table_contact, held, policy_eligible):
+    def propose(self, ai, state, clearance, table_contact, held):
         r = self.records[ai]
         if r is None or r["stage"] == "done":
             raise CarryGateError("carry handoff is not active")
@@ -118,8 +118,10 @@ class CarryGate:
             if rise + self.lift_step > self.max_rise + 1e-9:
                 raise CarryGateError("unverified lift would exceed maximum rise")
             kind = "lift"
-        elif r["stage"] == "probe":
-            kind = "policy" if policy_eligible else "hold"
+        elif r["stage"] == "ready":
+            # A confirmed stable carry may offer Policy actions to the
+            # original physical safety stack; no extra command preference.
+            kind = "policy"
         else:
             kind = "hold"
         return dict(kind=kind, stage=r["stage"], control=r["controls"] + 1,
@@ -146,9 +148,9 @@ class CarryGate:
                 raise CarryGateError("carry hold lost table clearance")
             r["checks"] += 1
             if r["checks"] >= self.stable_steps:
-                r["stage"] = "probe"
+                r["stage"] = "ready"
         elif kind == "policy":
-            if r["stage"] != "probe" or not clear:
+            if r["stage"] != "ready" or not clear:
                 raise CarryGateError("unqualified unmodified Policy handback")
             r["stage"] = "done"
             return True
@@ -216,24 +218,3 @@ def upward_osc_action(robot, step_m):
         raise CarryGateError("lift request outside legal physical action range")
     return command
 
-
-def policy_motion_eligible(robot, action7, table_gap_m, cfg):
-    """Conservative *command* screen; not a claim of physical prediction."""
-    from acoserl.boundary_guard import world_policy_displacement
-    a = np.asarray(action7, dtype=float)
-    # A Policy probe must own all seven action dimensions, including the
-    # gripper. An EventGuide-forced CLOSE is a protected action, not proof
-    # that Policy accepted responsibility for the held object.
-    if a.shape != (7,) or not np.isfinite(a).all() or a[6] < .95:
-        return False
-    try:
-        world = world_policy_displacement(robot, a)
-        ctl = robot.part_controllers["right"]
-        angular = np.asarray(ctl.output_max)[3:] * a[3:6]
-    except (ValueError, AttributeError, KeyError):
-        return False
-    if not np.isfinite(angular).all():
-        return False
-    return bool(np.linalg.norm(world) <= cfg["position_command_cap_m"] + 1e-9
-                and np.linalg.norm(angular) <= cfg["rotation_command_cap_rad"] + 1e-9
-                and world[2] >= -(table_gap_m - cfg["carry_table_clearance_m"]))

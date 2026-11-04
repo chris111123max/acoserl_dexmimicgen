@@ -20,7 +20,6 @@ from acoserl.carry_handoff import (
     CarryGate, CarryGateError, LIFT as CARRY_LIFT,
     VERIFY as CARRY_VERIFY, SOURCES as CARRY_SOURCES,
     object_table_gap, object_static_contact, upward_osc_action,
-    policy_motion_eligible,
 )
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -800,11 +799,9 @@ class SimpleBimanualAutoSERL:
                 try:
                     clearance = object_table_gap(self.env, obj)
                     touching = object_static_contact(contact, obj)
-                    eligible = policy_motion_eligible(
-                        self.env.robots[ai], action[7*ai:7*ai+7], clearance, self.cfg)
                     proposal = self.carry_gate.propose(
                         ai, state, clearance, touching,
-                        bool(state['actual_grasps'][name][obj]), eligible)
+                        bool(state['actual_grasps'][name][obj]))
                     if proposal['kind'] == 'lift':
                         _, hi = self.relative_reference.workspace_bounds(ai)
                         if state['poses'][ai]['position'][2] + self.carry_gate.lift_step > hi[2]:
@@ -846,13 +843,13 @@ class SimpleBimanualAutoSERL:
                     guide_gripper_owned[ai] = True
                     event_overrides[ai] = True
                     grip_owners[ai] = 'EventGuide'
-        # The genuine Policy probe must retain the confirmed grasp in
-        # addition to passing the six-dimensional motion screening. Do not
-        # certify a handback on a gripper transition to release.
+        # The six-dimensional Policy owner is independent of the gripper
+        # event owner. EventGuide may force CLOSE during safe motion transfer;
+        # keep the real per-dimension provenance and never bypass release.
         for ai, proposal in enumerate(carry_proposals):
             if proposal is not None and proposal['kind'] == 'policy' and (
-                    next_phases[ai] != 'holding' or event_overrides[ai]):
-                return self._refuse(policy, 'carry_policy_probe_gripper_not_owned_' + ARMS[ai])
+                    next_phases[ai] != 'holding'):
+                return self._refuse(policy, 'carry_policy_probe_release_' + ARMS[ai])
         self._pending_gripper_phases = next_phases if enabled else None
         self._pending_gripper_poses = (copy.deepcopy(state['poses']) if enabled else None)
         self._issued_gripper_overrides = tuple(event_overrides)
@@ -990,6 +987,10 @@ class SimpleBimanualAutoSERL:
                     arm=name, kind=proposal['kind'], phase=self.carry_gate.phase(ai),
                     clearance_m=gap, table_contact=touching,
                     relative_translation_m=self.carry_gate.drift(ai, state)[0]))
+                if self.carry_gate.phase(ai) == 'ready' and proposal['kind'] == 'hold':
+                    self.events.append(dict(event='carry_ready_confirmed',
+                        arm=name, clearance_m=gap, table_contact=False,
+                        verified_hold_steps=self.carry_gate.stable_steps))
                 if finished:
                     self.events.append(dict(event='carry_policy_probe_completed',
                         arm=name, complete_physics=True))
@@ -1143,7 +1144,9 @@ class SimpleBimanualAutoSERL:
                 arm.guide_gripper_goal = None
                 arm.cooldown = max(arm.cooldown, POLICY_AFTER_GUIDE_STEPS)
                 self.events.append(dict(event='policy_handback_confirmed', arm=ARMS[ai],
-                    takeover=arm.takeover, policy_budget=arm.cooldown))
+                    takeover=arm.takeover, policy_budget=arm.cooldown,
+                    motion_owner='Policy',
+                    gripper_owner=self.last_decision['per_arm_gripper_source'][ai]))
             if self.stop_reason is None and arm.mode == 'Guide' and arm.age >= GUIDE_MAX_CONTROLS:
                 # A failed Guide is not a failed P0/P1 recovery. Release only
                 # this arm to normal Policy for a bounded exploration window.
