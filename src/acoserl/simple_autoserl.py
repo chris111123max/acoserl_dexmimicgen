@@ -15,6 +15,7 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 from acoserl.gripper_events import DemoGripperEvents
 from acoserl.relative_guide import RelativeGuideReference
+from acoserl.handoff_motion import HandoffMotionGuard, HandoffBudgetExhausted, SOURCE as HANDOFF_GUARD
 
 ROOT = Path(__file__).resolve().parents[2]
 ARMS = ('A', 'B')
@@ -22,7 +23,9 @@ RETURN_MODES = frozenset(('ReturnS0', 'ReturnP0', 'ReturnP1'))
 EXPERT = frozenset(('Guide', 'ReturnS0', 'ReturnP0', 'ReturnP1', 'Replay', 'Settle'))
 # Never credit a boundary-safety override as an Actor or expert action.
 from acoserl.boundary_guard import SOURCE as BOUNDARY_GUARD, evaluate as boundary_risk, world_policy_displacement
-SAFETY_ONLY = frozenset((BOUNDARY_GUARD,))
+SAFETY_ONLY = frozenset((BOUNDARY_GUARD, HANDOFF_GUARD))
+# HandoffGuard is applied to the final Policy motion AFTER the OSC servo.
+MOTION_SERVO_SOURCES = (EXPERT | {BOUNDARY_GUARD}) - {'Replay'}
 # Non-safety control limits, kept separate from 350-step recovery and hard
 # physical protections. An abandoned Guide is NOT an expert handback.
 GUIDE_MAX_CONTROLS = 80
@@ -133,6 +136,7 @@ class SimpleBimanualAutoSERL:
         self.positions = self.relative_reference.positions
         self.rotations = self.relative_reference.rotations
         self.contacts = Contacts(env)
+        self.handoff_motion = HandoffMotionGuard(self.cfg)
         self.auto_disabled = False
         self.sequence = 0
         self.reset()
@@ -152,7 +156,10 @@ class SimpleBimanualAutoSERL:
         self.initial_snapshot = snapshot(self.env)
         self.gripper_events.reset(self.initial_snapshot['poses'])
         self.relative_reference.reset()
+        self.handoff_motion.reset()
         self._issued = None
+        self._issued_action = None
+        self._pending_handoff_motion = [None, None]
         self._pending_gripper_phases = None
         self._pending_gripper_poses = None
         self._issued_gripper_overrides = (False, False)
@@ -191,10 +198,37 @@ class SimpleBimanualAutoSERL:
                 per_arm_control=['Rejected', 'Rejected'],
                 simple_protocol=self.protocol)
         self._issued = None
+        self._issued_action = None
+        self._pending_handoff_motion = [None, None]
         self._pending_gripper_phases = None
         self._pending_gripper_poses = None
         self._issued_gripper_overrides = (False, False)
         return None, self.last_decision
+
+    def _arm_handoff_motion(self, ai, verified_held):
+        """Arm only after a completed Guide/Settle step entered Handoff.
+
+        Preserve the exact last executed six-dimensional physical command as
+        the slew origin; the first Policy proposal is never used as origin.
+        """
+        if not (verified_held and self.gripper_events.phases[ai] == 'holding'
+                and self.cfg['intervention_enabled'] and not self.auto_disabled):
+            return
+        if self._issued_action is None:
+            self.stop('handoff_motion_guard_missing_executed_action_' + ARMS[ai])
+            return
+        previous = self._issued_action[7*ai:7*ai+6]
+        try:
+            armed = self.handoff_motion.arm(ai, previous)
+        except ValueError:
+            self.stop('handoff_motion_guard_invalid_previous_action_' + ARMS[ai])
+            return
+        if armed:
+            self.events.append(dict(event='handoff_motion_guard_armed',
+                arm=ARMS[ai], last_executed_motion=previous.tolist(),
+                max_action_delta=self.handoff_motion.delta,
+                min_controls=self.handoff_motion.minimum,
+                max_controls=self.handoff_motion.maximum))
 
     def _stage(self, state, ai):
         if self.completed[ai]:
@@ -715,16 +749,38 @@ class SimpleBimanualAutoSERL:
                         if error > .02:
                             return self._refuse(policy, 'recovery_replay_tracking_'+ARMS[ai])
                         action[7*ai:7*ai+7] = self.trace['actions'][arm.replay, 7*ai:7*ai+7]
-        if any(s in ((EXPERT | SAFETY_ONLY) - {'Replay'}) for s in sources):
+        if any(s in MOTION_SERVO_SOURCES for s in sources):
             correction = servo(self.env, targets, grips,
                 max_position_step=self.cfg['position_command_cap_m'],
                 max_rotation_step=self.cfg['rotation_command_cap_rad'],
                 position_gain=self.cfg['position_gain'], rotation_gain=self.cfg['rotation_gain'])
             for ai, source in enumerate(sources):
-                if source in ((EXPERT | SAFETY_ONLY) - {'Replay'}):
+                if source in MOTION_SERVO_SOURCES:
                     action[7*ai:7*ai+6] = correction[7*ai:7*ai+6]
                     if source in RETURN_MODES or source == 'Settle' or (source == 'Guide' and guide_gripper_owned[ai]):
                         action[7*ai+6] = grips[ai]
+        # Complete-physics-only handoff slew, per arm. Existing BoundaryGuard
+        # (if selected earlier) has higher priority; it is not overwritten.
+        # Gripper commands are not touched by this six-dimensional guard.
+        handoff_motion_proposals = [None, None]
+        if enabled:
+            for ai, source in enumerate(sources):
+                if source != 'Policy' or not self.handoff_motion.active(ai):
+                    continue
+                arm_name = ARMS[ai]
+                own = self.points['arms'][arm_name]['object']
+                if (self.gripper_events.phases[ai] != 'holding' or
+                        not state['actual_grasps'][arm_name][own]):
+                    return self._refuse(policy, 'handoff_motion_guard_grasp_not_verified_'+arm_name)
+                try:
+                    proposal = self.handoff_motion.propose(ai, action[7*ai:7*ai+6])
+                except HandoffBudgetExhausted:
+                    return self._refuse(policy, 'handoff_motion_guard_budget_exhausted_'+arm_name)
+                except ValueError:
+                    return self._refuse(policy, 'handoff_motion_guard_invalid_policy_motion_'+arm_name)
+                action[7*ai:7*ai+6] = proposal['executed']
+                sources[ai] = HANDOFF_GUARD
+                handoff_motion_proposals[ai] = proposal
         # Final per-arm gripper arbitration, AFTER Guide/Replay/Policy composition.
         # Only a qualified grasp or a quiet demonstrated release can flip jaws.
         # Phase changes are staged until after a complete real physics cycle.
@@ -784,6 +840,7 @@ class SimpleBimanualAutoSERL:
             self._segment += 1; self._segment_signature = signature
         expert = [s in EXPERT for s in sources]
         mode = ('Guide_AB' if any(expert) or any(event_overrides) else
+                'HandoffGuard' if HANDOFF_GUARD in sources else
                 'BoundarySafety' if any(s in SAFETY_ONLY for s in sources) else 'Normal')
         self.mode = mode
         self.last_decision = dict(mode=mode, execute=True, policy_action=policy.tolist(),
@@ -800,8 +857,11 @@ class SimpleBimanualAutoSERL:
                            else 'assembly_contact' for i, m in enumerate(measurements)],
             recovery_anchor_indices=[a.recovery_anchor for a in self.arms],
             measurements=measurements, boundary_safety=copy.deepcopy(self._boundary_risks),
+            handoff_motion_guard=copy.deepcopy(handoff_motion_proposals),
             recovery_step=1 if any(s in EXPERT and a.age == 0 for s, a in zip(sources, self.arms)) else 2,
             stage=max((self._stage(state, i) for i in range(2)), key=lambda x: x != 'approach_pregrasp'))
+        self._issued_action = action.copy()
+        self._pending_handoff_motion = handoff_motion_proposals
         return action, self.last_decision
 
     def after_step(self):
@@ -819,6 +879,30 @@ class SimpleBimanualAutoSERL:
         self.intervention_control_steps += int(
             any(s in EXPERT | SAFETY_ONLY for s in issued) or
             any(self._issued_gripper_overrides))
+        # Commit handoff motions only for COMPLETE physical steps. Do not
+        # treat guarded actions as Policy window progress, cooldown, or Demo.
+        for ai, source in enumerate(issued):
+            if source == HANDOFF_GUARD:
+                proposal = self._pending_handoff_motion[ai]
+                try:
+                    if proposal is None or self._issued_action is None:
+                        raise ValueError('missing handoff motion proposal')
+                    finished = self.handoff_motion.complete_step(
+                        ai, proposal, self._issued_action[7*ai:7*ai+6])
+                except ValueError:
+                    self.stop('handoff_motion_guard_commit_mismatch_'+ARMS[ai])
+                else:
+                    if finished:
+                        self.events.append(dict(event='handoff_motion_guard_complete',
+                            arm=ARMS[ai], controls=proposal['control']))
+            elif source == BOUNDARY_GUARD and self.handoff_motion.active(ai):
+                try:
+                    self.handoff_motion.note_external(
+                        ai, self._issued_action[7*ai:7*ai+6])
+                except ValueError:
+                    self.stop('handoff_motion_guard_external_action_invalid_'+ARMS[ai])
+            elif source in EXPERT and self.handoff_motion.active(ai):
+                self.handoff_motion.cancel(ai)
         # Refresh the EXISTING 10-control grasp evidence before committing
         # Holding. A completed close command is not a stable grasp.
         grasp_confirmed = []
@@ -942,6 +1026,7 @@ class SimpleBimanualAutoSERL:
                         reason='target' if in_target else 'converged_after_progress',
                         takeover=arm.takeover, guide_controls=arm.age))
                     arm.reset_intervention(held)
+                    self._arm_handoff_motion(ai, held)
             elif issued[ai] in RETURN_MODES:
                 e = errors(state['poses'][ai], self.pose(ai, arm.recovery_anchor))
                 position_tolerance = (.005 if issued[ai] == 'ReturnP1'
@@ -988,6 +1073,7 @@ class SimpleBimanualAutoSERL:
                         arm=ARMS[ai], anchor=arm.recovery_anchor,
                         goal=arm.p1, takeover=arm.takeover))
                     arm.reset_intervention(True)
+                    self._arm_handoff_motion(ai, True)
                 elif arm.stable >= SIMPLE_SETTLE_MAX_CONTROLS:
                     # The overall max_recovery_steps check below remains
                     # authoritative. Never report an unstable grasp as a
@@ -1023,6 +1109,8 @@ class SimpleBimanualAutoSERL:
         elif not state['official_metrics']['first_piece_assembled']:
             self._assembly_rest.clear()
         self._issued = None
+        self._issued_action = None
+        self._pending_handoff_motion = [None, None]
         if self.stop_reason:
             for item in handbacks:
                 self.handbacks[ARMS.index(item['arm'])] -= 1

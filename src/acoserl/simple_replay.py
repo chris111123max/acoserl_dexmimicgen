@@ -11,6 +11,8 @@ import torch
 from acoserl.ascend_data import raw_row, replay
 from acoserl.isolated_nstep import IsolatedNStep
 from acoserl.simple_autoserl import ARMS, EXPERT, SAFETY_ONLY
+from acoserl.boundary_guard import SOURCE as BOUNDARY_GUARD
+from acoserl.handoff_motion import SOURCE as HANDOFF_GUARD
 
 
 def make_row(obs, action, nxt, reward, term, trunc, payload):
@@ -18,12 +20,18 @@ def make_row(obs, action, nxt, reward, term, trunc, payload):
     decision = metadata.get('auto_intervention') or {}
     sources = decision.get('per_arm_control', ['Policy', 'Policy'])
     gripper_owners = decision.get('per_arm_gripper_control', [False, False])
+    gripper_sources = decision.get('per_arm_gripper_source', ['Policy', 'Policy'])
     if len(sources) != 2 or any(s not in EXPERT | SAFETY_ONLY | {'Policy'} for s in sources):
         raise ValueError('unknown simple-baseline action owner')
     if len(gripper_owners) != 2 or any(not isinstance(v, bool) for v in gripper_owners):
         raise ValueError('invalid explicit Guide gripper ownership')
-    if any(gripper_owners[i] and sources[i] != 'Guide' for i in range(2)):
-        raise ValueError('non-Guide claims Guide gripper ownership')
+    if len(gripper_sources) != 2:
+        raise ValueError('invalid explicit gripper source')
+    # EventGuide can enforce a closed jaw during a motion-only safety
+    # handback. This is a safety gripper override, not a new expert demo.
+    if any(gripper_owners[i] and sources[i] != 'Guide' and
+           gripper_sources[i] != 'EventGuide' for i in range(2)):
+        raise ValueError('unexpected non-Guide gripper ownership')
     # raw_row creates the common tensor schema. It is not used to infer the
     # passive arm as Hold, which the simple baseline never executes.
     metadata['auto_intervention'] = dict(decision, mode='Normal')
@@ -32,7 +40,10 @@ def make_row(obs, action, nxt, reward, term, trunc, payload):
     mask = torch.zeros(14, dtype=torch.bool)
     policy_owned = torch.ones(14, dtype=torch.bool)
     pose, grip = [0, 0], [0, 0]
-    safety_arms = [ai for ai, source in enumerate(sources) if source in SAFETY_ONLY]
+    safety_arms = [ai for ai, source in enumerate(sources)
+                   if source in SAFETY_ONLY or
+                   (source == 'Policy' and gripper_owners[ai] and
+                    gripper_sources[ai] == 'EventGuide')]
     for ai, source in enumerate(sources):
         if source in SAFETY_ONLY:
             pose[ai] = 4  # SafetyProjection, NEVER expert or Policy.
@@ -45,6 +56,9 @@ def make_row(obs, action, nxt, reward, term, trunc, payload):
                 grip[ai] = 1 if source == 'Guide' else 2
                 mask[7*ai+6] = True
                 policy_owned[7*ai+6] = False
+        if gripper_owners[ai] and gripper_sources[ai] == 'EventGuide' and source not in EXPERT:
+            grip[ai] = 4  # Event-only safety grip command; not Policy or Demo.
+            policy_owned[7*ai+6] = False
     valid = bool(payload['executed'] and not payload.get('supervisor_stop_reason'))
     # Off-policy Online Replay retains the genuine complete action with
     # provenance; the safety intervention never acquires demo eligibility.
@@ -88,7 +102,8 @@ class SimpleDemo:
             failed_guide_discarded_rows=0, unqualified_discarded_rows=0,
             verified_handbacks=0, strict_terminal_qualifications=0,
             dropped_on_restore_rows=0,
-            boundary_guard_rows=0, boundary_guard_discarded_candidate_rows=0)
+            boundary_guard_rows=0, boundary_guard_discarded_candidate_rows=0,
+            handoff_guard_rows=0)
         self.last_sample = {}
         self._positive = None
 
@@ -144,10 +159,9 @@ class SimpleDemo:
         self.pending_episode[env] = episode
         safe = bool(safe and row['complete_physics'])
         source_controls = (decision or {}).get('per_arm_control', ())
-        if any(source in SAFETY_ONLY for source in source_controls):
-            # No safety override (even with B Guide) can be admitted as a
-            # dynamic expert demonstration. Discard all pending segments that
-            # might otherwise be certified by an unrelated later handback.
+        if any(source == BOUNDARY_GUARD for source in source_controls):
+            # BoundaryGuard's unqualified contact / independent safety
+            # intervention invalidates pending candidate segments.
             self.stats['boundary_guard_rows'] += 1
             self.stats['boundary_guard_discarded_candidate_rows'] += len(self.pending.get(env, ()))
             self.pending.pop(env, None)
@@ -157,6 +171,12 @@ class SimpleDemo:
                 self.close_episode(env, bool(row['next','bootstrap_allowed']),
                                    int(row['next','boundary_kind']))
             return
+        if any(source == HANDOFF_GUARD for source in source_controls):
+            # The guarded row itself has no expert dimensions and cannot be
+            # admitted to Dynamic Demo. However, a *previously executed*
+            # Guide/Settle tail still needs this completed physical Handoff
+            # step to verify its handback; do not discard it here.
+            self.stats['handoff_guard_rows'] += 1
 
         # A Guide abandoned due to stalled progress or exhausted controls is
         # NOT a handback. Its rows, including dual-arm mixed rows, are invalid.

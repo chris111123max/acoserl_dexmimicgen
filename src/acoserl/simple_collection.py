@@ -16,6 +16,8 @@ import time
 import numpy as np
 import gymnasium as gym
 from acoserl.parallel_autoserl import AutoSERLWorker, FourByFour, SpaceOnly, spaces, IMAGES
+from acoserl.boundary_guard import SOURCE as BOUNDARY_GUARD
+from acoserl.handoff_motion import SOURCE as HANDOFF_GUARD
 
 
 @dataclass
@@ -158,7 +160,11 @@ class SimpleWorker(AutoSERLWorker):
                                    executed, bool(info.get('partial_physics_step', False)))
         decision = info.get('auto_intervention') or {}
         controls = decision.get('per_arm_control', ('Policy', 'Policy'))
-        safety = [ai for ai, source in enumerate(controls) if source == 'BoundaryGuard']
+        grip_sources = decision.get('per_arm_gripper_source', ('Policy', 'Policy'))
+        safety = [ai for ai, source in enumerate(controls)
+                  if source in (BOUNDARY_GUARD, HANDOFF_GUARD) or
+                  (source == 'Policy' and len(grip_sources) == 2 and
+                   grip_sources[ai] == 'EventGuide')]
         executed_source = ('Constrained_Joint' if len(safety) == 2 else
                            'Constrained_A' if safety == [0] else
                            'Constrained_B' if safety == [1] else
