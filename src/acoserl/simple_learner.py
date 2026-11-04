@@ -91,7 +91,7 @@ def main():
     cfg=json.loads((ROOT/'configs/ascend16/formal.json').read_text())
     manifest,dependency=source_manifest(),dependency_manifest()
     enabled=a.method=='autoserl'
-    manager=dict(runtime='stage_aware_bimanual_recovery_v3_full_horizon_gripper',method=a.method,
+    manager=dict(runtime='stage_aware_bimanual_recovery_v5_carry_gated_handoff',method=a.method,
                  dynamic_demo_enabled=enabled,dynamic_capacity=cfg['dynamic_demo_capacity'] if a.mode=='formal' else 2048,
                  original_quota=96 if enabled else 128,positive_quota=2,
                  no_passive_hold=True,no_forward_grasp_extension=True,
@@ -105,7 +105,7 @@ def main():
                  boundary_guard_controls_not_policy_steps=True,
                  boundary_guard_action_source='Constrained_A_or_B',
                  boundary_guard_demo_admission='never',
-                 dynamic_demo_admission='verified_per_arm_handoff_v4_guide_gripper_boundary_guard_exclusion')
+                 dynamic_demo_admission='verified_completed_policy_probe_v5_carry_gate_safety_exclusion')
     cfg.update(method='ResFiT RLPD + stage-aware bimanual recovery (SERL ResNet-10)',purpose=a.mode,collector_protocol='simple_bimanual_collector_v1',utd=1,
                manager_config=manager,visual_encoder=a.visual,
                checkpoint_seconds=a.checkpoint_seconds,no_grasp_budget=a.no_grasp_budget,

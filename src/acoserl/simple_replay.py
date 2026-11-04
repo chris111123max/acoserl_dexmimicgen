@@ -13,6 +13,7 @@ from acoserl.isolated_nstep import IsolatedNStep
 from acoserl.simple_autoserl import ARMS, EXPERT, SAFETY_ONLY
 from acoserl.boundary_guard import SOURCE as BOUNDARY_GUARD
 from acoserl.handoff_motion import SOURCE as HANDOFF_GUARD
+from acoserl.carry_handoff import SOURCES as CARRY_SOURCES
 
 
 def make_row(obs, action, nxt, reward, term, trunc, payload):
@@ -83,7 +84,7 @@ class SimpleDemo:
     arms complete their own handbacks; failed or unqualified Guides never
     become expert demos merely by running for many control steps.
     """
-    protocol = 'simple_bimanual_demo_handback_v4_guide_gripper'
+    protocol = 'simple_bimanual_demo_handback_v5_carry_gated'
     pending_tail = 96
 
     def __init__(self, capacity=5000, gamma=.99, original_quota=96, positive_quota=2, seed=0):
@@ -103,7 +104,7 @@ class SimpleDemo:
             verified_handbacks=0, strict_terminal_qualifications=0,
             dropped_on_restore_rows=0,
             boundary_guard_rows=0, boundary_guard_discarded_candidate_rows=0,
-            handoff_guard_rows=0)
+            handoff_guard_rows=0, carry_gate_rows=0)
         self.last_sample = {}
         self._positive = None
 
@@ -172,11 +173,13 @@ class SimpleDemo:
                                    int(row['next','boundary_kind']))
             return
         if any(source == HANDOFF_GUARD for source in source_controls):
-            # The guarded row itself has no expert dimensions and cannot be
-            # admitted to Dynamic Demo. However, a *previously executed*
-            # Guide/Settle tail still needs this completed physical Handoff
-            # step to verify its handback; do not discard it here.
+            # Legacy limiter retained for schema compatibility only.
             self.stats['handoff_guard_rows'] += 1
+        if any(source in CARRY_SOURCES for source in source_controls):
+            # Lift/Verify is Online Replay, NEVER a dynamic expert demo.
+            # Preserve an eligible earlier Guide/Settle tail until a truly
+            # unmodified Policy probe completes and confirms handback.
+            self.stats['carry_gate_rows'] += 1
 
         # A Guide abandoned due to stalled progress or exhausted controls is
         # NOT a handback. Its rows, including dual-arm mixed rows, are invalid.

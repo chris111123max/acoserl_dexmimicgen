@@ -73,3 +73,20 @@ def test_gripper_only_safety_override_not_mislabeled_as_policy(monkeypatch):
 def test_guard_does_not_turn_failure_into_qualified_demo(monkeypatch):
     row = _row(monkeypatch, ['HandoffGuard', 'Policy'], failed=True)
     assert not row['quality_validated'] and not row['expert_action_mask'].any()
+
+
+def test_carry_lift_is_online_safety_action_not_policy_or_expert(monkeypatch):
+    row = _row(monkeypatch, ['CarryLift', 'Policy'])
+    assert int(row['action_source']) == 9
+    assert row['pose_sources'].tolist() == [4, 0]
+    assert row['policy_dimension_mask'].tolist() == [False]*6 + [True]*8
+    assert not row['expert_action_mask'].any()
+    assert not row['quality_validated']
+
+
+def test_carry_verify_preserves_other_arm_independence(monkeypatch):
+    row = _row(monkeypatch, ['Policy', 'CarryVerify'])
+    assert int(row['action_source']) == 10
+    assert row['pose_sources'].tolist() == [0, 4]
+    assert row['policy_dimension_mask'].tolist() == [True]*7 + [False]*6 + [True]
+    assert not row['expert_action_mask'].any()

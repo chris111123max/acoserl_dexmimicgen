@@ -18,6 +18,7 @@ import gymnasium as gym
 from acoserl.parallel_autoserl import AutoSERLWorker, FourByFour, SpaceOnly, spaces, IMAGES
 from acoserl.boundary_guard import SOURCE as BOUNDARY_GUARD
 from acoserl.handoff_motion import SOURCE as HANDOFF_GUARD
+from acoserl.carry_handoff import SOURCES as CARRY_SOURCES
 
 
 @dataclass
@@ -91,7 +92,7 @@ class SimpleWorker(AutoSERLWorker):
                           reasons={}, episode_length_sum=0, episode_length_histogram={},
                           assisted_successes=0, autonomous_successes=0, intervention_steps=0)
         np.random.seed(cfg.seed)
-        self.event('construct_start', runtime='stage_aware_bimanual_recovery_v4_two_event_gripper')
+        self.event('construct_start', runtime='stage_aware_bimanual_recovery_v5_carry_gated_handoff')
         self.w = StrictAssemblyEnv(camera_size=84, env_id=self.env_id)
         n = cfg.normalization
         self.standardizer = StateStandardizer(torch.tensor(n['state_mean']), torch.tensor(n['state_std_population']), min_std=.1)
@@ -162,7 +163,7 @@ class SimpleWorker(AutoSERLWorker):
         controls = decision.get('per_arm_control', ('Policy', 'Policy'))
         grip_sources = decision.get('per_arm_gripper_source', ('Policy', 'Policy'))
         safety = [ai for ai, source in enumerate(controls)
-                  if source in (BOUNDARY_GUARD, HANDOFF_GUARD) or
+                  if source in ({BOUNDARY_GUARD, HANDOFF_GUARD} | CARRY_SOURCES) or
                   (source == 'Policy' and len(grip_sources) == 2 and
                    grip_sources[ai] == 'EventGuide')]
         executed_source = ('Constrained_Joint' if len(safety) == 2 else
@@ -256,7 +257,7 @@ class SimpleCapability:
 
     def observe(self, payload, **_):
         outcome = payload.get('episode_outcome') or {}
-        if outcome.get('protocol') == 'stage_aware_bimanual_recovery_v4_two_event_gripper' and outcome.get('disable_requested'):
+        if outcome.get('protocol') == 'stage_aware_bimanual_recovery_v5_carry_gated_handoff' and outcome.get('disable_requested'):
             self.disabled = True
 
     def snapshot(self):
