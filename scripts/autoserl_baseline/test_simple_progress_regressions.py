@@ -10,7 +10,7 @@ import torch
 from tensordict import TensorDict
 
 from acoserl.simple_autoserl import (
-    ARMS, ArmState, GUIDE_PROGRESS_WINDOW, POLICY_AFTER_GUIDE_STEPS,
+    ARMS, ArmState, GUIDE_PROGRESS_WINDOW,
     SimpleBimanualAutoSERL,
 )
 from acoserl.simple_replay import SimpleDemo
@@ -69,7 +69,7 @@ class GuideProgressTests(unittest.TestCase):
         manager.events = []
         manager._release_guide_to_policy(0, 'stalled_no_qualified_p0')
         self.assertEqual(arm.mode, 'Policy')
-        self.assertEqual(arm.cooldown, POLICY_AFTER_GUIDE_STEPS)
+        self.assertEqual(arm.cooldown, 0)
         self.assertEqual(arm.age, 0)
         self.assertEqual(manager.events[-1]['event'], 'guide_released_to_policy')
         self.assertFalse(any(e.get('event') == 'policy_handback_confirmed'
@@ -126,6 +126,8 @@ class GuideProgressTests(unittest.TestCase):
         }
         contact = {'dynamic_A_B_coupled': False, 'edges': []}
         manager.contacts = types.SimpleNamespace(read=lambda: contact)
+        manager.gripper_events = types.SimpleNamespace(phases=['open', 'open'])
+        manager._guide_gripper_event = lambda state, contact, ai, target: None
         manager.physical_danger = lambda s, c: None
         manager._domain = lambda s, c, ai: (0, 51) if ai == 0 else None
         manager._measure = lambda s, ai, domain: (35, 40, .03, True)
@@ -169,12 +171,12 @@ class GuideProgressTests(unittest.TestCase):
         self.assertEqual(manager.arms[0].takeover, 9)
         self.assertEqual(manager.stop_reason, None)
 
-    def test_unsafe_p0_falls_back_to_policy_with_cooldown(self):
+    def test_unsafe_p0_falls_back_to_policy_without_cooldown(self):
         manager, state = self._manager(can_return=False)
         action, dec = self._choose(manager, state)
         self.assertTrue(np.array_equal(action, np.zeros(14)))
         self.assertEqual(dec['per_arm_control'], ['Policy', 'Policy'])
-        self.assertEqual(manager.arms[0].cooldown, POLICY_AFTER_GUIDE_STEPS)
+        self.assertEqual(manager.arms[0].cooldown, 0)
         self.assertIsNone(manager.stop_reason)
 
     def test_actively_improving_guide_not_interrupted(self):
@@ -183,13 +185,13 @@ class GuideProgressTests(unittest.TestCase):
         self.assertEqual(dec['per_arm_control'], ['Guide', 'Policy'])
         self.assertEqual(manager.arms[0].mode, 'Guide')
 
-    def test_policy_cooldown_prevents_new_returnp0(self):
+    def test_no_cooldown_allows_qualified_returnp0(self):
         manager, state = self._manager(can_return=True)
         manager.arms[0].mode = 'Policy'
-        manager.arms[0].cooldown = 16
+        manager.arms[0].cooldown = 16  # stale telemetry must not gate recovery
         action, dec = self._choose(manager, state)
-        self.assertEqual(dec['per_arm_control'], ['Policy', 'Policy'])
-        self.assertEqual(manager.arms[0].mode, 'Policy')
+        self.assertEqual(dec['per_arm_control'], ['ReturnP0', 'Policy'])
+        self.assertEqual(manager.arms[0].mode, 'ReturnP0')
         self.assertIsNone(manager.stop_reason)
 
 
@@ -201,7 +203,7 @@ class GuideProgressTests(unittest.TestCase):
         after = self._after(manager, state)
         self.assertIsNone(manager.stop_reason)
         self.assertEqual(manager.arms[0].mode, 'Policy')
-        self.assertEqual(manager.arms[0].cooldown, POLICY_AFTER_GUIDE_STEPS)
+        self.assertEqual(manager.arms[0].cooldown, 0)
         self.assertEqual(manager.arms[0].age, 0)
         self.assertFalse(after['handback'])
         self.assertEqual(after['handbacks'], [])
@@ -210,20 +212,13 @@ class GuideProgressTests(unittest.TestCase):
         self.assertEqual(after['control_events'][-1]['reason'],
                          'guide_max_controls')
 
-    def test_policy_cooldown_last_full_step_before_retakeover(self):
+    def test_qualified_recovery_immediate_after_handoff(self):
         manager, state = self._manager(can_return=True)
         manager.arms[0].mode = 'Policy'
-        manager.arms[0].cooldown = POLICY_AFTER_GUIDE_STEPS
-        for cycle in range(POLICY_AFTER_GUIDE_STEPS):
-            action, decision, after = self._complete_policy_step(manager, state)
-            self.assertEqual(decision['per_arm_control'], ['Policy', 'Policy'],
-                             f'premature takeover on policy step {cycle+1}')
-            self.assertEqual(manager.arms[0].mode, 'Policy')
-            self.assertIsNone(manager.stop_reason)
-        self.assertEqual(manager.arms[0].cooldown, 0)
         action, decision = self._choose(manager, state)
         self.assertEqual(decision['per_arm_control'], ['ReturnP0', 'Policy'])
         self.assertEqual(manager.arms[0].mode, 'ReturnP0')
+        self.assertIsNone(manager.stop_reason)
 
     def test_s0_approach_stage_stall_chooses_initial_anchor(self):
         manager, state = self._manager(can_return=True)

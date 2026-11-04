@@ -15,6 +15,7 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 from acoserl.gripper_events import DemoGripperEvents
 from acoserl.relative_guide import RelativeGuideReference
+from acoserl.post_grasp_guide import in_window, trigger_distance_m, guide_exit
 from acoserl.handoff_motion import SOURCE as HANDOFF_GUARD
 from acoserl.carry_handoff import (
     CarryGate, CarryGateError, LIFT as CARRY_LIFT,
@@ -37,7 +38,8 @@ GUIDE_MAX_CONTROLS = 80
 GUIDE_PROGRESS_WINDOW = 20
 GUIDE_MIN_POSITION_PROGRESS_M = .001
 GUIDE_MIN_ROTATION_PROGRESS_RAD = .01
-POLICY_AFTER_GUIDE_STEPS = 32
+# No time-based Guide cooldown: intervention is governed by measured
+# progress and bounded safeguards, as in the reference scheme.
 # AutoSERL-style alternative Guide exit: only after real progress AND
 # convergence inside the permitted window, not merely 80 elapsed controls.
 GUIDE_MOTION_WINDOW = 3
@@ -61,7 +63,9 @@ class ArmState:
     takeover: int = 0
     age: int = 0
     stable: int = 0
-    cooldown: int = 0
+    cooldown: int = 0  # retained as zero-valued legacy telemetry
+    post_grasp_policy_controls: int = -1  # -1 until real confirmed holding
+    post_grasp_guide: bool = False
     boundary_guard_streak: int = 0
     boundary_guard_total: int = 0
     handoff_holding: bool = False
@@ -83,6 +87,7 @@ class ArmState:
         self.handoff_holding = bool(holding)
         self.mode = 'Handoff'
         self.age = self.stable = 0
+        self.post_grasp_guide = False
         self.nearest.clear()
         self.guide_errors.clear()
         self.guide_motion.clear()
@@ -549,7 +554,7 @@ class SimpleBimanualAutoSERL:
         prior_takeover = arm.takeover
         arm.mode, arm.target = 'Policy', None
         arm.age = arm.stable = 0
-        arm.cooldown = max(arm.cooldown, POLICY_AFTER_GUIDE_STEPS)
+        arm.post_grasp_guide = False
         arm.nearest.clear()
         arm.guide_errors.clear()
         arm.guide_motion.clear()
@@ -557,7 +562,7 @@ class SimpleBimanualAutoSERL:
         arm.guide_gripper_goal = None
         self.events.append(dict(event='guide_released_to_policy', arm=ARMS[ai],
             reason=reason, takeover=prior_takeover,
-            policy_budget=POLICY_AFTER_GUIDE_STEPS))
+            policy_budget=0))
 
     def _start(self, ai, mode, target, state=None, gripper_goal=None):
         arm = self.arms[ai]
@@ -574,13 +579,16 @@ class SimpleBimanualAutoSERL:
         arm.guide_origin = (np.asarray(state['poses'][ai]['position']).copy()
                             if mode == 'Guide' and state is not None else None)
         arm.guide_gripper_goal = gripper_goal if mode == 'Guide' else None
+        arm.post_grasp_guide = bool(mode == 'Guide' and
+            in_window(arm.post_grasp_policy_controls,
+                      self.gripper_events.phases[ai] == 'holding', self.cfg))
         self.episode_interventions += 1
         self.events.append(dict(event='start', arm=ARMS[ai], kind=mode,
             anchor=arm.recovery_anchor, goal=arm.recovery_goal,
             target=int(target), takeover=arm.takeover))
 
     def _boundary_safety_candidate(self, ai, state, physical_policy):
-        """Cooldown-only inward proposal; ActionOnly preview is authoritative.
+        """Risk-based inward proposal; ActionOnly preview is authoritative.
 
         The proposal is never called a Guide/Recovery. Refuse an unverified
         risk rather than silently revert to the unsafe outward Policy action.
@@ -588,7 +596,7 @@ class SimpleBimanualAutoSERL:
         from acoserl.boundary_guard import MAX_CONSECUTIVE_CONTROLS
         arm = self.arms[ai]
         if (not self.cfg.get('boundary_guard_enabled', False)
-                or arm.mode != 'Policy' or arm.cooldown <= 0
+                or arm.mode != 'Policy'
                 or not self.cfg['intervention_enabled'] or self.auto_disabled):
             return None
         pos = np.asarray(state['poses'][ai]['position'], dtype=float)
@@ -636,11 +644,11 @@ class SimpleBimanualAutoSERL:
             measurements.append(measurement)
             if not enabled:
                 continue
-            # Boundary safety precedes the ordinary cooldown gate. It is
-            # stateless with respect to Expert handback and never captures
-            # another arm or a gripper. The original physics preview remains.
+            # Independent risk-based BoundaryGuard always precedes Guide.
+            # It acts only on actual boundary risk, not a timed cooldown.
+            # The original physics preview and gripper ownership remain.
             plan = None
-            if arm.mode == 'Policy' and arm.cooldown:
+            if arm.mode == 'Policy':
                 try:
                     plan = self._boundary_safety_candidate(ai, state, policy)
                 except (ValueError, KeyError, AttributeError) as error:
@@ -666,6 +674,7 @@ class SimpleBimanualAutoSERL:
                     cooldown_remaining=int(arm.cooldown),
                     axes=copy.deepcopy(plan['axes'])))
                 continue
+            released_guide_this_cycle = False
             # A stalled Guide can recover using S0, P0 or P1 according to the
             # actual arm/object stage. Never rewind across assembly contact.
             if arm.mode == 'Guide' and domain and not contact['dynamic_A_B_coupled']:
@@ -682,21 +691,26 @@ class SimpleBimanualAutoSERL:
                             nearest_index=int(nearest)))
                     else:
                         self._release_guide_to_policy(ai, 'stalled_no_qualified_anchor')
-            if arm.mode == 'Policy' and domain and not contact['dynamic_A_B_coupled']:
+                        released_guide_this_cycle = True
+            if (arm.mode == 'Policy' and domain and not released_guide_this_cycle
+                    and not contact['dynamic_A_B_coupled']):
                 nearest, target, distance, stagnant = measurement
                 plan = (self._qualified_stage_recovery(state, contact, ai, nearest)
-                        if arm.cooldown == 0 and stagnant else None)
+                        if stagnant else None)
                 # Stage recovery has priority over ordinary Guide correction.
                 if plan:
                     kind, anchor = plan
                     self._start(ai, kind, anchor, state=state)
                 else:
-                    gripper_goal = (self._guide_gripper_event(state, contact, ai, target)
-                                    if arm.cooldown == 0 else None)
-                    toward_reference = (distance > self.cfg['trigger_position_m'] and
+                    gripper_goal = self._guide_gripper_event(state, contact, ai, target)
+                    special = in_window(
+                        arm.post_grasp_policy_controls,
+                        self.gripper_events.phases[ai] == 'holding', self.cfg)
+                    trigger = trigger_distance_m(self.cfg, special)
+                    toward_reference = (distance > trigger and
                         forward_direction(self.positions[:, ai], nearest,
                                           state['poses'][ai]['position'], self.positions[target, ai]))
-                    if arm.cooldown == 0 and (toward_reference or gripper_goal is not None):
+                    if toward_reference or gripper_goal is not None:
                         self._start(ai, 'Guide', target, state=state, gripper_goal=gripper_goal)
             if arm.mode in EXPERT:
                 incompatible = (arm.mode == 'Guide' and domain is not None and
@@ -937,6 +951,7 @@ class SimpleBimanualAutoSERL:
             closed = (command.shape == (2,) and
                       np.allclose(command, [-1., 1.], atol=1e-6, rtol=0))
             grasp_confirmed.append(bool(closed and self._grasp_stable_now(ai)))
+        newly_confirmed = set()
         if self._pending_gripper_phases is not None:
             outcome = self.gripper_events.complete_step(
                 self._pending_gripper_phases, state['poses'],
@@ -945,6 +960,8 @@ class SimpleBimanualAutoSERL:
                 self.events.append(dict(event='gripper_event_executed',
                                         arm=ARMS[ai], kind=kind))
                 if kind == 'grasp_confirmed':
+                    newly_confirmed.add(ai)
+                    self.arms[ai].post_grasp_policy_controls = 0
                     self.episode_interventions += 1
                     self.carry_gate.on_grasp(
                         ai, state, self.points['arms'][ARMS[ai]]['object'])
@@ -1027,10 +1044,11 @@ class SimpleBimanualAutoSERL:
             # Settle are expert operations, not evidence of Actor progress.
             if issued[ai] == 'Policy' and not self.stop_reason:
                 arm.start = min(self.n_states-1, max(arm.floor, arm.start+1))
-            # Exactly 32 completed Policy cycles; safety override and expert
-            # steps neither spend cooldown nor advance the Policy window.
-            if issued[ai] == 'Policy' and not self.stop_reason:
-                arm.cooldown = max(0, arm.cooldown-1)
+                if (arm.post_grasp_policy_controls >= 0 and
+                        ai not in newly_confirmed):
+                    arm.post_grasp_policy_controls += 1
+            # Guide, recovery, safety and partial steps NEVER consume the
+            # ten completed real post-grasp Policy controls.
             if issued[ai] == BOUNDARY_GUARD:
                 arm.boundary_guard_streak += 1
                 arm.boundary_guard_total += 1
@@ -1051,10 +1069,12 @@ class SimpleBimanualAutoSERL:
                 arm.guide_errors.append((float(e['position_m']), float(e['rotation_rad'])))
                 arm.guide_motion.append((np.asarray(state['poses'][ai]['position']).copy(),
                                          np.asarray(state['poses'][ai]['rotation']).copy()))
-                in_target = (e['position_m'] < self.cfg['exit_position_m']
-                             and e['rotation_rad'] < self.cfg['exit_rotation_rad'])
                 converged_progress = self._guide_converged_after_progress(
                     arm, state['poses'][ai], self.cfg, e)
+                exit_allowed, in_target = guide_exit(
+                    self.cfg, arm.post_grasp_guide,
+                    float(e['position_m']), float(e['rotation_rad']),
+                    converged_progress)
                 # A Guide that owns an original demo gripper event must not
                 # hand back on pose convergence alone.
                 if arm.guide_gripper_goal == 'close':
@@ -1067,8 +1087,7 @@ class SimpleBimanualAutoSERL:
                     event_complete = False
                 else:
                     event_complete = True
-                arm.stable = arm.stable+1 if (event_complete and
-                                              (in_target or converged_progress)) else 0
+                arm.stable = arm.stable+1 if (event_complete and exit_allowed) else 0
                 if arm.stable >= self.cfg['stable_exit_steps']:
                     self.events.append(dict(event='guide_exit_to_handoff', arm=ARMS[ai],
                         reason='target' if in_target else 'converged_after_progress',
@@ -1142,7 +1161,7 @@ class SimpleBimanualAutoSERL:
                 self.handbacks[ai] += 1
                 arm.mode = 'Policy'
                 arm.guide_gripper_goal = None
-                arm.cooldown = max(arm.cooldown, POLICY_AFTER_GUIDE_STEPS)
+                arm.post_grasp_guide = False
                 self.events.append(dict(event='policy_handback_confirmed', arm=ARMS[ai],
                     takeover=arm.takeover, policy_budget=arm.cooldown,
                     motion_owner='Policy',
@@ -1180,6 +1199,8 @@ class SimpleBimanualAutoSERL:
                               error_before_m=self._error_before, error_after_m=error_after, handoff_confirmed=bool(handbacks)),
             per_arm_modes=[a.mode for a in self.arms],
             per_arm_cooldown=[a.cooldown for a in self.arms],
+            per_arm_post_grasp_policy_controls=[a.post_grasp_policy_controls
+                                                for a in self.arms],
             boundary_guard_streak=[a.boundary_guard_streak for a in self.arms],
             boundary_guard_total=[a.boundary_guard_total for a in self.arms],
             control_events=copy.deepcopy(self.events[self._event_cursor:]),
