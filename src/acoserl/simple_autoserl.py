@@ -679,6 +679,14 @@ class SimpleBimanualAutoSERL:
                 elif e.get('kind') in RETURN_MODES:
                     self.recovery_events += 1
         self.handoff_disagreements += sum(self.last_decision.get('handoff_disagreement', ()))
+        # A P0 recovery may have opened a previously latched unsuccessful
+        # closure. Re-arm its close event only at the real recovery boundary.
+        for e in self.events[self._event_cursor:]:
+            if e.get('event') == 'start' and e.get('kind') == 'ReturnP0':
+                ai = ARMS.index(e['arm'])
+                self.gripper_expert.reset_arm(ai)
+                if self._handoff_pending is not None:
+                    self._handoff_pending[ai] = 'pregrasp'
         for ai, arm in enumerate(self.arms):
             p = self.points['arms'][ARMS[ai]]
             held = bool(state['actual_grasps'][ARMS[ai]][p['object']])
@@ -856,7 +864,11 @@ class SimpleBimanualAutoSERL:
 
     def episode_result(self, success, **_):
         total = self.guide_events + self.recovery_events + self.handoff_disagreements
-        request = bool(success and total < self.cfg['termination_intervention_steps'])
+        # A safety-projected episode is not evidence of autonomous readiness.
+        # Keep boundary guards out of the requested 3-way count, but refuse
+        # to unlock on an episode that depended on an uncounted safety action.
+        request = bool(success and self.boundary_guard_steps == 0 and
+                       total < self.cfg['termination_intervention_steps'])
         self.auto_disabled |= request
         return dict(stable_full_success=bool(success),
                     assisted_success=bool(success and self.intervention_control_steps),
