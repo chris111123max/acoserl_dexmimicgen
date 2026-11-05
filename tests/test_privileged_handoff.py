@@ -112,6 +112,23 @@ def test_object_relative_pick_not_world_absolute():
     assert not expert.pick_aligned(state, 0)
 
 
+
+def test_verified_actor_grasp_outside_demo_never_forced_open():
+    expert, state = make_expert(), physical_state()
+    state['poses'][0]['position'][0] = .03
+    state['objects']['piece_1']['position'][0] = .03
+    # Break relative alignment while retaining independently verified grasp.
+    state['poses'][0]['position'][1] = .02
+    state['actual_grasps']['A']['piece_1'] = True
+    assert not expert.pick_aligned(state, 0)
+    actor = np.zeros(14)
+    actor[6] = 1.
+    actual, mismatch, goal, phases, _ = expert.propose(
+        state, actor, skipped=(False, True))
+    assert goal[0] == 1. and not mismatch[0]
+    assert actual[6] == 1. and phases[0] == 'closing'
+
+
 def test_recovery_ownership_skips_both_grippers():
     expert, state = make_expert(), physical_state()
     actor = np.zeros(14)
