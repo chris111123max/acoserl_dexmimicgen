@@ -192,12 +192,17 @@ class SimpleDemo:
             ids = decision.get('arm_takeover_ids', ())
             if len(sources) != 2 or len(ids) != 2:
                 raise ValueError('incomplete per-arm takeover identity')
-            owners = frozenset((ai, int(ids[ai])) for ai, source in enumerate(sources)
-                               if source in EXPERT)
-            owners |= frozenset((ai, -1) for ai, owner in enumerate(
+            pose_owners = frozenset((ai, int(ids[ai])) for ai, source in enumerate(sources)
+                                    if source in EXPERT)
+            if any(takeover <= 0 for _, takeover in pose_owners):
+                raise ValueError('unqualified Guide/Recovery takeover identity')
+            # -1 is a deliberate terminal-qualified 1D Handoff marker, NOT
+            # an invalid Guide takeover ID. Do not confuse the two contracts.
+            grip_owners = frozenset((ai, -1) for ai, owner in enumerate(
                 decision.get('gripper_control', ('Policy', 'Policy')))
                 if owner == 'Handoff')
-            if not owners or any(takeover <= 0 for _, takeover in owners):
+            owners = pose_owners | grip_owners
+            if not owners:
                 raise ValueError('unqualified expert takeover identity')
             if not owners & failed:
                 q = self.pending.setdefault(env, deque(maxlen=self.pending_tail))
