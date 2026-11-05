@@ -35,7 +35,9 @@ def raw_row(obs,action,nxt,reward,term,trunc,env,episode,frame,source=1,metadata
  from acoserl.action_provenance import describe
  roles=describe(int(r['action_source']),r['policy_action_proposed'].numpy(),r['action'].numpy(),
                 m.get('auto_intervention',{}).get('active_arm'),bool(r['quality_validated']),
-                guide_gripper_owned=bool(m.get('auto_intervention',{}).get('guide_gripper_owned',False)))
+                guide_gripper_owned=bool(m.get('auto_intervention',{}).get('guide_gripper_owned',False)),
+                per_arm_control=m.get('auto_intervention',{}).get('per_arm_control'),
+                per_arm_gripper_control=m.get('auto_intervention',{}).get('per_arm_gripper_control'))
  for key,value in roles.items():r[key]=torch.tensor(value,dtype=torch.long if key.endswith('sources') else torch.bool)
  r['complete_physics']=torch.tensor(True)
  r['next','bootstrap_allowed']=torch.tensor(bool(m.get('bootstrap_allowed',boot)))

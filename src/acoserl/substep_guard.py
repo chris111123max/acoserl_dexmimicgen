@@ -76,6 +76,26 @@ class WorkspacePreview:
             reason='force_preview_limit'
         elif np.any(bad):
             reason = 'workspace_preview_exit_'+'AB'[int(np.flatnonzero(bad)[0])]
+        # A verified held object must stay clear of the table before a
+        # genuine Policy handback. This check uses a PRIVATE predicted MjData
+        # and refuses BEFORE executing an unsafe live substep; it does not
+        # change qpos/qvel in the physical environment.
+        if reason is None and hasattr(self.manager, 'carry_gate'):
+            from acoserl.carry_handoff import CarryGateError, object_table_gap
+            for ai, arm in enumerate(('A', 'B')):
+                phase = self.manager.carry_gate.phase(ai)
+                if phase not in ('verify', 'ready'):
+                    continue
+                obj = self.manager.points['arms'][arm]['object']
+                try:
+                    gap = object_table_gap(self.env, obj,
+                                           data_override=self.shadow)
+                except CarryGateError:
+                    reason = 'carry_preview_clearance_unavailable_' + arm
+                    break
+                if gap < self.manager.carry_gate.clearance:
+                    reason = 'carry_preview_table_clearance_' + arm
+                    break
         self.stats['calls'] += 1
         self.stats['refusals'] += int(reason is not None)
         self.stats['seconds'] += time.perf_counter()-start

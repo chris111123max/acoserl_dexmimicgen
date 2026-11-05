@@ -3,7 +3,8 @@ import numpy as np
 # Policy0, Guide1, Recover2, SafeHold3, SafetyProjection4, OriginalDemo5,
 # Rejected6, Unknown7. Equal numeric actions do not imply equal ownership.
 def describe(source, policy, executed, active_arm=None, quality=False,
-             guide_gripper_owned=False):
+             guide_gripper_owned=False, per_arm_control=None,
+             per_arm_gripper_control=None):
     policy=np.asarray(policy);executed=np.asarray(executed)
     pose=[0,0];grip=[0,0];expert=np.zeros(14,dtype=bool)
     if source==6:
@@ -27,6 +28,26 @@ def describe(source, policy, executed, active_arm=None, quality=False,
         if active_arm in ('A','B'):ai='AB'.index(active_arm)
         pose=[3,3];grip=[3,3];pose[ai]=grip[ai]=2
         if quality:expert[7*ai:7*ai+7]=True
+    elif source == 13:
+        # Simple dual-arm controller: a gripper-only expert action must not
+        # falsely label the other 12 motion dimensions as expert-controlled.
+        if per_arm_control is None or per_arm_gripper_control is None:
+            pose = grip = [7, 7]
+        else:
+            controls = per_arm_control
+            owned = per_arm_gripper_control
+            for ai in range(2):
+                control = controls[ai]
+                pose[ai] = (1 if control == 'Guide' else
+                            2 if control in ('ReturnS0', 'ReturnP0', 'ReturnP1', 'Replay', 'Settle')
+                            else 4 if control == 'BoundaryGuard' else 0)
+                grip[ai] = (1 if owned[ai] else
+                            2 if control in ('ReturnS0', 'ReturnP0', 'ReturnP1', 'Replay', 'Settle')
+                            else 0)
+                if quality and pose[ai] in (1, 2):
+                    expert[7*ai:7*ai+6] = True
+                if quality and grip[ai] in (1, 2):
+                    expert[7*ai+6] = True
     elif source in (9,10,11):
         for ai in range(2):
             pose[ai]=4 if np.any(abs(policy[7*ai:7*ai+6]-executed[7*ai:7*ai+6])>1e-6) else 0

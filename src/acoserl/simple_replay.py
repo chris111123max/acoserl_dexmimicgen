@@ -11,14 +11,29 @@ import torch
 from acoserl.ascend_data import raw_row, replay
 from acoserl.isolated_nstep import IsolatedNStep
 from acoserl.simple_autoserl import ARMS, EXPERT, SAFETY_ONLY
+from acoserl.boundary_guard import SOURCE as BOUNDARY_GUARD
+from acoserl.handoff_motion import SOURCE as HANDOFF_GUARD
+from acoserl.carry_handoff import SOURCES as CARRY_SOURCES
+from acoserl.post_grasp_z_clip import SOURCE as POST_GRASP_Z_CLIP
 
 
 def make_row(obs, action, nxt, reward, term, trunc, payload):
     metadata = copy.deepcopy(payload)
     decision = metadata.get('auto_intervention') or {}
     sources = decision.get('per_arm_control', ['Policy', 'Policy'])
+    gripper_owners = decision.get('per_arm_gripper_control', [False, False])
+    gripper_sources = decision.get('per_arm_gripper_source', ['Policy', 'Policy'])
     if len(sources) != 2 or any(s not in EXPERT | SAFETY_ONLY | {'Policy'} for s in sources):
         raise ValueError('unknown simple-baseline action owner')
+    if len(gripper_owners) != 2 or any(not isinstance(v, bool) for v in gripper_owners):
+        raise ValueError('invalid explicit Guide gripper ownership')
+    if len(gripper_sources) != 2:
+        raise ValueError('invalid explicit gripper source')
+    # EventGuide can enforce a closed jaw during a motion-only safety
+    # handback. This is a safety gripper override, not a new expert demo.
+    if any(gripper_owners[i] and sources[i] != 'Guide' and
+           gripper_sources[i] != 'EventGuide' for i in range(2)):
+        raise ValueError('unexpected non-Guide gripper ownership')
     # raw_row creates the common tensor schema. It is not used to infer the
     # passive arm as Hold, which the simple baseline never executes.
     metadata['auto_intervention'] = dict(decision, mode='Normal')
@@ -27,7 +42,10 @@ def make_row(obs, action, nxt, reward, term, trunc, payload):
     mask = torch.zeros(14, dtype=torch.bool)
     policy_owned = torch.ones(14, dtype=torch.bool)
     pose, grip = [0, 0], [0, 0]
-    safety_arms = [ai for ai, source in enumerate(sources) if source in SAFETY_ONLY]
+    safety_arms = [ai for ai, source in enumerate(sources)
+                   if source in SAFETY_ONLY or
+                   (source == 'Policy' and gripper_owners[ai] and
+                    gripper_sources[ai] == 'EventGuide')]
     for ai, source in enumerate(sources):
         if source in SAFETY_ONLY:
             pose[ai] = 4  # SafetyProjection, NEVER expert or Policy.
@@ -36,10 +54,13 @@ def make_row(obs, action, nxt, reward, term, trunc, payload):
             pose[ai] = 1 if source == 'Guide' else 2
             mask[7*ai:7*ai+6] = True
             policy_owned[7*ai:7*ai+6] = False
-            if source != 'Guide':
-                grip[ai] = 2
+            if source != 'Guide' or gripper_owners[ai]:
+                grip[ai] = 1 if source == 'Guide' else 2
                 mask[7*ai+6] = True
                 policy_owned[7*ai+6] = False
+        if gripper_owners[ai] and gripper_sources[ai] == 'EventGuide' and source not in EXPERT:
+            grip[ai] = 4  # Event-only safety grip command; not Policy or Demo.
+            policy_owned[7*ai+6] = False
     valid = bool(payload['executed'] and not payload.get('supervisor_stop_reason'))
     # Off-policy Online Replay retains the genuine complete action with
     # provenance; the safety intervention never acquires demo eligibility.
@@ -64,8 +85,8 @@ class SimpleDemo:
     arms complete their own handbacks; failed or unqualified Guides never
     become expert demos merely by running for many control steps.
     """
-    protocol = 'simple_bimanual_demo_handback_v3_boundary_guard'
-    pending_tail = 32
+    protocol = 'simple_bimanual_demo_handback_v5_carry_gated'
+    pending_tail = 96
 
     def __init__(self, capacity=5000, gamma=.99, original_quota=96, positive_quota=2, seed=0):
         self.capacity, self.gamma = capacity, gamma
@@ -81,8 +102,11 @@ class SimpleDemo:
             sampled_dynamic=0, expert_dimensions=0, dual_arm_rows=0,
             staged_rows=0, policy_only_rows=0, expired_candidate_rows=0,
             failed_guide_discarded_rows=0, unqualified_discarded_rows=0,
-            verified_handbacks=0, dropped_on_restore_rows=0,
-            boundary_guard_rows=0, boundary_guard_discarded_candidate_rows=0)
+            verified_handbacks=0, strict_terminal_qualifications=0,
+            dropped_on_restore_rows=0,
+            boundary_guard_rows=0, boundary_guard_discarded_candidate_rows=0,
+            handoff_guard_rows=0, carry_gate_rows=0,
+            post_grasp_z_clip_rows=0, post_grasp_z_clip_discarded_candidate_rows=0)
         self.last_sample = {}
         self._positive = None
 
@@ -138,10 +162,9 @@ class SimpleDemo:
         self.pending_episode[env] = episode
         safe = bool(safe and row['complete_physics'])
         source_controls = (decision or {}).get('per_arm_control', ())
-        if any(source in SAFETY_ONLY for source in source_controls):
-            # No safety override (even with B Guide) can be admitted as a
-            # dynamic expert demonstration. Discard all pending segments that
-            # might otherwise be certified by an unrelated later handback.
+        if any(source == BOUNDARY_GUARD for source in source_controls):
+            # BoundaryGuard's unqualified contact / independent safety
+            # intervention invalidates pending candidate segments.
             self.stats['boundary_guard_rows'] += 1
             self.stats['boundary_guard_discarded_candidate_rows'] += len(self.pending.get(env, ()))
             self.pending.pop(env, None)
@@ -151,6 +174,27 @@ class SimpleDemo:
                 self.close_episode(env, bool(row['next','bootstrap_allowed']),
                                    int(row['next','boundary_kind']))
             return
+        if any(source == POST_GRASP_Z_CLIP for source in source_controls):
+            # A projected Policy action is genuine Online Replay, but never
+            # an original Policy handback or a candidate Dynamic Demo.
+            self.stats['post_grasp_z_clip_rows'] += 1
+            self.stats['post_grasp_z_clip_discarded_candidate_rows'] += len(
+                self.pending.get(env, ()))
+            self.pending.pop(env, None)
+            self.qualified.pop(env, None)
+            self._close_stream(env, bootstrap=True, kind=7)
+            if bool(row['next', 'done']):
+                self.close_episode(env, bool(row['next', 'bootstrap_allowed']),
+                                   int(row['next', 'boundary_kind']))
+            return
+        if any(source == HANDOFF_GUARD for source in source_controls):
+            # Legacy limiter retained for schema compatibility only.
+            self.stats['handoff_guard_rows'] += 1
+        if any(source in CARRY_SOURCES for source in source_controls):
+            # Lift/Verify is Online Replay, NEVER a dynamic expert demo.
+            # Preserve an eligible earlier Guide/Settle tail until a truly
+            # unmodified Policy probe completes and confirms handback.
+            self.stats['carry_gate_rows'] += 1
 
         # A Guide abandoned due to stalled progress or exhausted controls is
         # NOT a handback. Its rows, including dual-arm mixed rows, are invalid.
@@ -209,6 +253,17 @@ class SimpleDemo:
                 qualified.add((ARMS.index(arm), takeover))
                 self.stats['verified_handbacks'] += 1
             q = self.pending.get(env)
+            # An episode reaching strict physical success terminates without
+            # another control step to confirm handback. The final verified
+            # successful transition qualifies genuine expert owners, but only
+            # if every action completed and no safety stop was raised.
+            strict_terminal_success = (bool(row['next', 'terminated']) and
+                                       float(row['next', 'reward']) > 0 and
+                                       safe and not bool(row['next', 'bootstrap_allowed']))
+            if strict_terminal_success and q:
+                for _, owners in q:
+                    qualified.update(owners)
+                self.stats['strict_terminal_qualifications'] += 1
             # Process only a chronologically ordered qualified prefix. Mixed
             # A/B actions wait for BOTH arm IDs; no bad-arm demo is relabeled.
             while q and q[0][1].issubset(qualified):
@@ -230,11 +285,11 @@ class SimpleDemo:
         parts = []
         if forced:
             idx = self._positive[torch.randint(len(self._positive), (forced,), generator=self.generator)]
-            parts.append(original[idx].clone())
+            parts.append(original[idx])
         if n > forced:
-            parts.append(original[torch.randint(len(original), (n-forced,), generator=self.generator)].clone())
+            parts.append(original[torch.randint(len(original), (n-forced,), generator=self.generator)])
         if n < count:
-            parts.append(self.buffer[torch.randint(len(self.buffer), (count-n,), generator=self.generator)].clone())
+            parts.append(self.buffer[torch.randint(len(self.buffer), (count-n,), generator=self.generator)])
         batch = torch.cat(parts, 0)
         self.stats['sampled_original'] += n; self.stats['sampled_dynamic'] += count-n
         self.last_sample = dict(original=n, dynamic=count-n, forced_positive=forced)

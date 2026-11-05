@@ -20,7 +20,7 @@
   "gamma": 0.99,
   "batch_size": 256,
   "offline_fraction": 0.5,
-  "online_capacity": 50000,
+  "online_capacity": 100000,
   "seed": 20261027,
   "warmup_real_steps": 1024,
   "stddev": 0.1,
@@ -37,5 +37,7 @@
   "reset_protocol": "canonical demo_0 frame0 only, at explicit episode reset",
   "initial_weights": "fresh random initialization; no smoke or acceptance checkpoint",
   "resume_boundary": "learner/replay/RNG restore; pending real tails truncated, all workers start NEW episodes; no mid-episode physics restore",
-  "notes": "UTD is critic updates per valid real interaction after warmup; actor updated once per such interaction. No baseline or algorithm ablations."
+  "notes": "UTD is critic updates per valid real interaction after warmup; actor updated once per such interaction. No baseline or algorithm ablations.",
+  "dynamic_demo_capacity": 100000,
+  "memory_budget_note": "100k Online + 100k Dynamic logical capacity; retain immutable 224 original samples; reserve RAM for 16 MuJoCo workers and checkpoint I/O"
 }

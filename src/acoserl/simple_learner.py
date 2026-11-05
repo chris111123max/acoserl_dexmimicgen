@@ -91,20 +91,28 @@ def main():
     cfg=json.loads((ROOT/'configs/ascend16/formal.json').read_text())
     manifest,dependency=source_manifest(),dependency_manifest()
     enabled=a.method=='autoserl'
-    manager=dict(runtime='stage_aware_bimanual_recovery_v2_boundary_guard',method=a.method,
-                 dynamic_demo_enabled=enabled,dynamic_capacity=5000,
+    manager=dict(runtime='stage_aware_bimanual_recovery_v5_carry_gated_handoff',method=a.method,
+                 dynamic_demo_enabled=enabled,dynamic_capacity=cfg['dynamic_demo_capacity'] if a.mode=='formal' else 2048,
                  original_quota=96 if enabled else 128,positive_quota=2,
                  no_passive_hold=True,no_forward_grasp_extension=True,
                  guide_stall_policy='stage_anchor_and_20_step_target_error',
                  recovery_anchors='S0_P0_P1',
                  guide_exit='three_step_target_or_converged_after_real_progress',
+                 full_horizon_sliding_window=True,guide_gripper='event_gated_full_7d_per_arm',
                  sliding_window_clock='completed_policy_controls_only',
-                 post_guide_policy_steps=32,
-                 boundary_guard='policy_cooldown_only_25mm_entry_35mm_inward_target',
+                 post_guide_policy_steps=0,
+                 post_grasp_guide_policy_steps=10,
+                 post_grasp_trigger_position_m=.005,
+                 post_grasp_exit_position_m=.002,
+                 post_grasp_z_clip='verified_early_carry_world_Z_nonnegative',
+                 post_grasp_z_clip_policy_control_budget=10,
+                 post_grasp_z_clip_release_clearance_m=.010,
+                 post_grasp_z_clip_replay='constrained_online_only_no_expert_credit',
+                 boundary_guard='risk_based_25mm_entry_35mm_inward_target',
                  boundary_guard_controls_not_policy_steps=True,
                  boundary_guard_action_source='Constrained_A_or_B',
                  boundary_guard_demo_admission='never',
-                 dynamic_demo_admission='verified_per_arm_handoff_v3_boundary_guard_exclusion')
+                 dynamic_demo_admission='verified_completed_policy_probe_v5_carry_gate_safety_exclusion')
     cfg.update(method='ResFiT RLPD + stage-aware bimanual recovery (SERL ResNet-10)',purpose=a.mode,collector_protocol='simple_bimanual_collector_v1',utd=1,
                manager_config=manager,visual_encoder=a.visual,
                checkpoint_seconds=a.checkpoint_seconds,no_grasp_budget=a.no_grasp_budget,
@@ -174,7 +182,30 @@ def main():
         next_save=(c['valid_real_steps']//25000+1)*25000;next_eval=(c['valid_real_steps']//50000+1)*50000
         rounds=0;empty_rounds=0;reason='wall_clock_limit'
         last_save=time.monotonic();last_status=0.;rate_steps=c['valid_real_steps'];rate_time=time.monotonic()
-        timing={k:0. for k in ('inference','step','reset','sample_transfer','update')}
+        timing={k:0. for k in ('inference','dispatch','step','reset','sample_transfer','update','overlap')}
+        metrics={}
+        def update_pending(reserve=0):
+            """Apply only already-collected real-step update credits.
+
+            Called while the next CPU step is in flight. At checkpoints,
+            evaluate and shutdown, outstanding credits are drained first.
+            """
+            nonlocal budget, metrics
+            while budget>reserve and len(on) and time.time()<deadline:
+                t=time.perf_counter()
+                online_batch=on.sample(128)
+                demo_batch=dynamic.sample_demo(off,128)
+                batch=torch.cat([online_batch,demo_batch],0).to(device)
+                timing['sample_transfer']+=time.perf_counter()-t
+                t=time.perf_counter()
+                values=agent.update(batch,cfg['stddev'],True,bc_batch=None,ref_agent=agent)
+                metrics={k:float(v) for k,v in values.items() if not k.startswith('_')}
+                if not all(np.isfinite(v) for v in metrics.values()):
+                    raise FloatingPointError('nonfinite loss/metric')
+                timing['update']+=time.perf_counter()-t
+                c['critic_updates']+=1
+                c['actor_updates']+=1
+                budget-=1
         while time.time()<deadline and not stop['requested']:
             used=c['valid_real_steps']-start_valid
             if a.mode=='integration' and used+16>a.integration_steps:reason='bounded_integration_complete';break
@@ -185,7 +216,19 @@ def main():
                 data={k:torch.from_numpy(v).to(device) for k,v in old.items()}
                 with torch.no_grad(),eval_mode(agent):actions=agent.act(data,eval_mode=False,stddev=cfg['stddev'],cpu=True).numpy()
             timing['inference']+=time.perf_counter()-t
-            t=time.perf_counter();nxt,reward,term,trunc,info=pool.step(actions);timing['step']+=time.perf_counter()-t
+            # Start CPU physics after action inference, then use the NPU for
+            # updates earned by PREVIOUS accepted real transitions only.
+            t=time.perf_counter()
+            pool.step_async(actions)
+            timing['dispatch']+=time.perf_counter()-t
+            t=time.perf_counter()
+            try:
+                update_pending(reserve=1 if a.mode=='integration' else 0)
+            finally:
+                timing['overlap']+=time.perf_counter()-t
+                t=time.perf_counter()
+                nxt,reward,term,trunc,info=pool.step_wait()
+                timing['step']+=time.perf_counter()-t
             real=partial=0
             for e,payload in enumerate(info):
                 if payload['env_id']!=e:raise AssertionError('worker/transition index mismatch')
@@ -217,17 +260,8 @@ def main():
             current=capability.snapshot()
             if current!=sent:pool.apply_capability(current);sent=current
             t=time.perf_counter();pool.reset_done(term|trunc);timing['reset']+=time.perf_counter()-t
-            metrics={}
-            # Reserve one genuine update for post-reload continuation in integration.
-            while budget>(1 if a.mode=='integration' else 0) and len(on) and time.time()<deadline:
-                t=time.perf_counter()
-                batch=torch.cat([on.sample(128).clone(),dynamic.sample_demo(off,128)],0).to(device)
-                timing['sample_transfer']+=time.perf_counter()-t;t=time.perf_counter()
-                values=agent.update(batch,cfg['stddev'],True,bc_batch=None,ref_agent=agent)
-                metrics={k:float(v) for k,v in values.items() if not k.startswith('_')}
-                if not all(np.isfinite(v) for v in metrics.values()):raise FloatingPointError('nonfinite loss/metric')
-                timing['update']+=time.perf_counter()-t
-                c['critic_updates']+=1;c['actor_updates']+=1;budget-=1
+            # Keep current-cycle credits for the next dispatched CPU step.
+            # This bounded one-rollout lag is tracked in pending_update_budget.
             rounds+=1;empty_rounds=empty_rounds+1 if real==0 else 0
             c.update(global_capability=capability.snapshot(),collection_health=health.snapshot(),pending_update_budget=budget)
             log(out/'learning_curve.jsonl',dict(round=rounds,**c,online_rows=len(on),
@@ -244,13 +278,19 @@ def main():
                 reason='no_stable_grasp_despite_training';break
             if a.mode=='formal' and health.stall()['stop']:reason='collection_health_stop';break
             if a.mode=='formal' and len(on) and (c['valid_real_steps']>=next_save or now-last_save>=a.checkpoint_seconds):
+                update_pending()
+                c['pending_update_budget']=budget
                 cp=save(out/'checkpoints'/f"step_{c['valid_real_steps']:07d}_p{c['proposals']:08d}",agent,on,off,assembler,pool,c,cfg,norm,dynamic)
                 store.checkpoint(cp);last_save=time.monotonic()
                 while next_save<=c['valid_real_steps']:next_save+=25000
             if a.mode=='formal' and c['valid_real_steps']>=next_eval:
+                update_pending()
+                c['pending_update_budget']=budget
                 ev=evaluate(agent,norm,out,c,manager,deadline,device)
                 c['evaluation_interactions']+=ev['actual_evaluation_interactions'];c['evaluation_seconds']+=ev['seconds'];next_eval+=50000
         if stop['requested']:reason='operator_stop'
+        if time.time()<deadline:
+            update_pending(reserve=1 if a.mode=='integration' else 0)
         for e in list(assembler.queues):
             for row in assembler.truncate(e):on.add(row)
         for e in set(dynamic.last)|set(dynamic.stream.queues):dynamic.close_episode(e,True,6)

@@ -23,7 +23,7 @@ if [[ -n "${ACOSERL_CHECKPOINT_MIRROR_ROOT:-}" ]]; then
 fi
 set -o noclobber
 printf '%s\n' "$$" > "$BASE/launcher_logs/$TAG.pid"
-printf 'RUNTIME=stage_aware_bimanual_recovery_v2_boundary_guard\nRUN=%s\nLOG=%s\n' "$BASE/$TAG" "$BASE/launcher_logs/$TAG.log"
+printf 'RUNTIME=stage_aware_bimanual_recovery_v3_full_horizon_gripper\nRUN=%s\nLOG=%s\n' "$BASE/$TAG" "$BASE/launcher_logs/$TAG.log"
 exec python -u scripts/autoserl_baseline/train_simple.py --mode formal --method "$METHOD" \
   --tag "$TAG" --output-root "$BASE" --visual serl_resnet10_spatial84 --utd 1 \
   --checkpoint-seconds "${ACOSERL_CHECKPOINT_SECONDS:-3600}" \

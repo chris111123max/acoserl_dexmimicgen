@@ -16,6 +16,10 @@ import time
 import numpy as np
 import gymnasium as gym
 from acoserl.parallel_autoserl import AutoSERLWorker, FourByFour, SpaceOnly, spaces, IMAGES
+from acoserl.boundary_guard import SOURCE as BOUNDARY_GUARD
+from acoserl.handoff_motion import SOURCE as HANDOFF_GUARD
+from acoserl.carry_handoff import SOURCES as CARRY_SOURCES
+from acoserl.post_grasp_z_clip import SOURCE as POST_GRASP_Z_CLIP
 
 
 @dataclass
@@ -35,6 +39,31 @@ class SimpleFactory:
 
 class SimpleWorker(AutoSERLWorker):
     """Reuse observation/reset/I/O plumbing, not the enhanced control chain."""
+
+    def event(self, event, **extra):
+        """Keep the complete audit stream but avoid reopen/close per step.
+
+        Line buffering preserves each emitted record for crash diagnosis.
+        """
+        import resource
+        stream = getattr(self, '_audit_stream', None)
+        if stream is None:
+            stream = self.log.open('a', buffering=1)
+            self._audit_stream = stream
+        record = dict(event=event, time=time.time(), env_id=self.env_id,
+                      pid=os.getpid(), rss_kb=resource.getrusage(
+                          resource.RUSAGE_SELF).ru_maxrss, **extra)
+        stream.write(json.dumps(record, default=lambda x: x.tolist()
+                                if hasattr(x, 'tolist') else str(x)) + '\n')
+
+    def close(self):
+        stream = getattr(self, '_audit_stream', None)
+        if stream is not None:
+            stream.flush()
+            stream.close()
+            self._audit_stream = None
+        return super().close()
+
     def __init__(self, cfg):
         for key in ('OMP_NUM_THREADS', 'OPENBLAS_NUM_THREADS', 'MKL_NUM_THREADS', 'NUMEXPR_NUM_THREADS'):
             os.environ[key] = '1'
@@ -64,7 +93,7 @@ class SimpleWorker(AutoSERLWorker):
                           reasons={}, episode_length_sum=0, episode_length_histogram={},
                           assisted_successes=0, autonomous_successes=0, intervention_steps=0)
         np.random.seed(cfg.seed)
-        self.event('construct_start', runtime='stage_aware_bimanual_recovery_v2_boundary_guard')
+        self.event('construct_start', runtime='stage_aware_bimanual_recovery_v5_carry_gated_handoff')
         self.w = StrictAssemblyEnv(camera_size=84, env_id=self.env_id)
         n = cfg.normalization
         self.standardizer = StateStandardizer(torch.tensor(n['state_mean']), torch.tensor(n['state_std_population']), min_std=.1)
@@ -133,7 +162,11 @@ class SimpleWorker(AutoSERLWorker):
                                    executed, bool(info.get('partial_physics_step', False)))
         decision = info.get('auto_intervention') or {}
         controls = decision.get('per_arm_control', ('Policy', 'Policy'))
-        safety = [ai for ai, source in enumerate(controls) if source == 'BoundaryGuard']
+        grip_sources = decision.get('per_arm_gripper_source', ('Policy', 'Policy'))
+        safety = [ai for ai, source in enumerate(controls)
+                  if source in ({BOUNDARY_GUARD, HANDOFF_GUARD, POST_GRASP_Z_CLIP} | CARRY_SOURCES) or
+                  (source == 'Policy' and len(grip_sources) == 2 and
+                   grip_sources[ai] == 'EventGuide')]
         executed_source = ('Constrained_Joint' if len(safety) == 2 else
                            'Constrained_A' if safety == [0] else
                            'Constrained_B' if safety == [1] else
@@ -164,7 +197,43 @@ class SimpleWorker(AutoSERLWorker):
 
 
 class SimplePool(FourByFour):
-    """Same asynchronous groups and normalization as the retained learner."""
+    """Same asynchronous groups and normalization as the retained learner.
+
+    The learner may update on NPU while CPU workers execute previously
+    inferred actions. Only one outstanding vector step is permitted.
+    """
+    def step_async(self, actions):
+        if getattr(self, '_step_inflight', False):
+            raise RuntimeError('collector step already in flight')
+        if np.shape(actions) != (16, 14):
+            raise ValueError('expected 16 per-arm-composed actions')
+        dispatch = []
+        for g, v in enumerate(self.groups):
+            dispatch.append(time.time())
+            v.step_async(actions[4*g:4*g+4])
+        self.last_dispatch = dispatch
+        self._step_inflight = True
+
+    def step_wait(self):
+        if not getattr(self, '_step_inflight', False):
+            raise RuntimeError('collector step_wait without step_async')
+        try:
+            result = [v.step_wait(timeout=300) for v in self.groups]
+            obs = {k: np.concatenate([r[0][k] for r in result])
+                   for k in self.observation}
+            rewards = np.concatenate([r[1] for r in result])
+            terms = np.concatenate([r[2] for r in result])
+            truncs = np.concatenate([r[3] for r in result])
+            payload = [json.loads(item) for r in result for item in r[4]['payload']]
+            self.observation = obs
+            return obs, rewards, terms, truncs, payload
+        finally:
+            self._step_inflight = False
+
+    def step(self, actions):
+        self.step_async(actions)
+        return self.step_wait()
+
     def __init__(self, seed, normalization, directory, enabled=True, resume_workers=None, **_):
         self.groups = []; self.directory = Path(directory)
         self.directory.mkdir(parents=True, exist_ok=False)
@@ -189,7 +258,7 @@ class SimpleCapability:
 
     def observe(self, payload, **_):
         outcome = payload.get('episode_outcome') or {}
-        if outcome.get('protocol') == 'stage_aware_bimanual_recovery_v2_boundary_guard' and outcome.get('disable_requested'):
+        if outcome.get('protocol') == 'stage_aware_bimanual_recovery_v5_carry_gated_handoff' and outcome.get('disable_requested'):
             self.disabled = True
 
     def snapshot(self):
