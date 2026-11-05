@@ -13,6 +13,7 @@ import copy
 import json
 import numpy as np
 from scipy.spatial.transform import Rotation
+from acoserl.privileged_handoff import PrivilegedHandoff
 
 ROOT = Path(__file__).resolve().parents[2]
 ARMS = ('A', 'B')
@@ -100,7 +101,7 @@ class SimpleBimanualAutoSERL:
     None of its intervention eligibility, QP or certificate code is called.
     Actual force/workspace/collision checks and ActionOnly substeps remain on.
     """
-    protocol = 'stage_aware_bimanual_recovery_v2_boundary_guard'
+    protocol = 'privileged_handoff_v1_event_termination_10'
 
     def __init__(self, env, config=None, intervention_enabled=True):
         from acoserl.bimanual_core import DEFAULT, Contacts
@@ -123,6 +124,7 @@ class SimpleBimanualAutoSERL:
             if not 0 <= p['s0'] < p['p0'] < p['first_grasp'] <= p['p1'] < self.n_states:
                 raise ValueError('invalid S0/P0/P1 recovery anchors')
         self.contacts = Contacts(env)
+        self.gripper_expert = PrivilegedHandoff(self.points, self.trace, self.cfg)
         self.auto_disabled = False
         self.sequence = 0
         self.reset()
@@ -137,6 +139,9 @@ class SimpleBimanualAutoSERL:
         self.stop_reason = None
         self.last_decision = None
         self.steps = self.intervention_control_steps = self.episode_interventions = 0
+        self.guide_events = self.recovery_events = self.handoff_disagreements = 0
+        self._handoff_pending = None
+        self.gripper_expert.reset()
         self.handbacks = [0, 0]
         self.boundary_guard_steps = 0
         self.initial_snapshot = snapshot(self.env)
@@ -305,13 +310,9 @@ class SimpleBimanualAutoSERL:
         """Pick an anchor from observed task state, not only the sliding index."""
         phase = self._phase_name(state, contact, ai, nearest)
         arm, p = self.arms[ai], self.points['arms'][ARMS[ai]]
-        if phase == 'approach':
-            return 'ReturnS0', p['s0']
         if phase == 'grasp':
             return 'ReturnP0', arm.p0
-        if phase == 'carry':
-            return 'ReturnP1', arm.p1
-        return None  # Assembly/contact and unstable grasp cannot be rewound.
+        return None  # Only failed initial grasp can return to P0; never rewind carry/assembly.
 
     def _eligible_anchor(self, state, contact, ai, mode, anchor):
         """Qualification does not turn an anchor into a teleport or a path proof."""
@@ -468,6 +469,7 @@ class SimpleBimanualAutoSERL:
             return self._refuse(policy, danger)
         self.steps += 1
         self._event_cursor = len(self.events)
+        self._handoff_pending = None
         enabled = self.cfg['intervention_enabled'] and not self.auto_disabled
         action = policy.copy()
         sources = ['Policy', 'Policy']
@@ -581,6 +583,29 @@ class SimpleBimanualAutoSERL:
                     action[7*ai:7*ai+6] = correction[7*ai:7*ai+6]
                     if source in RETURN_MODES or source == 'Settle':
                         action[7*ai+6] = grips[ai]
+        # The Handoff expert owns ONLY the 1D gripper; Guide still owns only 6D.
+        # Recovery/BoundaryGuard owns its own action and must not be overwritten.
+        grip_owners = ['Policy', 'Policy']
+        grip_mask = [False, False]
+        grip_targets = [None, None]
+        grip_phases = list(self.gripper_expert.phases)
+        grip_events = []
+        if enabled:
+            skip = tuple(src in (RETURN_MODES | {'Replay', 'Settle'} | SAFETY_ONLY)
+                         for src in sources)
+            grippers = tuple(self.env.robots[i].gripper['right'].current_action
+                             for i in range(2))
+            # Compare the ORIGINAL Actor proposal, not Guide's posed movement.
+            grip_action, grip_mask, grip_targets, grip_phases, grip_events = (
+                self.gripper_expert.propose(state, policy, skip, grippers))
+            for ai in range(2):
+                if skip[ai]:
+                    grip_owners[ai] = 'Recovery' if sources[ai] in EXPERT else 'Safety'
+                elif grip_mask[ai]:
+                    action[7 * ai + 6] = grip_action[7 * ai + 6]
+                    grip_owners[ai] = 'Handoff'
+        else:
+            grip_owners = ['Policy', 'Policy']
         lo, hi = getattr(self, 'action_bounds', (-np.ones(14), np.ones(14)))
         # Bound expert outputs, never silently alter an independent Policy arm.
         for ai, source in enumerate(sources):
@@ -605,16 +630,23 @@ class SimpleBimanualAutoSERL:
         danger = self.physical_danger(state, contact)
         if danger:
             return self._refuse(policy, danger)
-        signature = tuple((s, a.takeover if s in EXPERT else 0) for s, a in zip(sources, self.arms))
+        signature = tuple((s, a.takeover if s in EXPERT else 0,
+                           grip_owners[i] == 'Handoff')
+                          for i, (s, a) in enumerate(zip(sources, self.arms)))
         if signature != self._segment_signature:
             self._segment += 1; self._segment_signature = signature
         expert = [s in EXPERT for s in sources]
         mode = ('Guide_AB' if any(expert) else
-                'BoundarySafety' if any(s in SAFETY_ONLY for s in sources) else 'Normal')
+                'BoundarySafety' if any(s in SAFETY_ONLY for s in sources) else
+                'Handoff_AB' if any(grip_mask) else 'Normal')
         self.mode = mode
         self.last_decision = dict(mode=mode, execute=True, policy_action=policy.tolist(),
             executed_action=action.tolist(), intervention_action_proposed=action.tolist(),
             indices=self.indices(), takeover_id=self._segment, per_arm_control=sources,
+            gripper_control=grip_owners, handoff_disagreement=grip_mask,
+            privileged_gripper_target=grip_targets,
+            privileged_gripper_phase_before=list(self.gripper_expert.phases),
+            privileged_gripper_events=grip_events,
             arm_takeover_ids=[a.takeover for a in self.arms], simple_protocol=self.protocol,
             per_arm_phase=[self._phase_name(state, contact, i, m[0]) if m is not None
                            else 'assembly_contact' for i, m in enumerate(measurements)],
@@ -622,6 +654,7 @@ class SimpleBimanualAutoSERL:
             measurements=measurements, boundary_safety=copy.deepcopy(self._boundary_risks),
             recovery_step=1 if any(s in EXPERT and a.age == 0 for s, a in zip(sources, self.arms)) else 2,
             stage=max((self._stage(state, i) for i in range(2)), key=lambda x: x != 'approach_pregrasp'))
+        self._handoff_pending = grip_phases if enabled else None
         return action, self.last_decision
 
     def after_step(self):
@@ -636,7 +669,16 @@ class SimpleBimanualAutoSERL:
         settle_diagnostics = {}
         # Boundary safety is non-autonomous too: never label its episode
         # as clean Policy success or prematurely disable the supervisor.
-        self.intervention_control_steps += int(any(s in EXPERT | SAFETY_ONLY for s in issued))
+        self.intervention_control_steps += int(any(s in EXPERT | SAFETY_ONLY for s in issued)
+                                               or any(self.last_decision.get('handoff_disagreement', ())))
+        # Count unique Guide/Recovery starts once, not every control they occupy.
+        for e in self.events[self._event_cursor:]:
+            if e.get('event') == 'start':
+                if e.get('kind') == 'Guide':
+                    self.guide_events += 1
+                elif e.get('kind') in RETURN_MODES:
+                    self.recovery_events += 1
+        self.handoff_disagreements += sum(self.last_decision.get('handoff_disagreement', ()))
         for ai, arm in enumerate(self.arms):
             p = self.points['arms'][ARMS[ai]]
             held = bool(state['actual_grasps'][ARMS[ai]][p['object']])
@@ -781,6 +823,14 @@ class SimpleBimanualAutoSERL:
                     self._assembly_anchor = copy.deepcopy(state['objects']['piece_1'])
         elif not state['official_metrics']['first_piece_assembled']:
             self._assembly_rest.clear()
+        # Commit proposed gripper phase changes only after complete MuJoCo control.
+        if self._handoff_pending is not None:
+            stable = [self.grasp_streak[i] if self._grasp_stable_now(i) else 0
+                      for i in range(2)]
+            grip_changes = self.gripper_expert.commit(self._handoff_pending, state, stable)
+            self.events.extend(dict(event='privileged_gripper_phase', **x)
+                               for x in grip_changes)
+            self._handoff_pending = None
         self._issued = None
         if self.stop_reason:
             for item in handbacks:
@@ -805,13 +855,17 @@ class SimpleBimanualAutoSERL:
         self.auto_disabled = bool(self.auto_disabled or value.get('disable', False))
 
     def episode_result(self, success, **_):
-        request = bool(success and self.intervention_control_steps < self.cfg['termination_intervention_steps'])
+        total = self.guide_events + self.recovery_events + self.handoff_disagreements
+        request = bool(success and total < self.cfg['termination_intervention_steps'])
         self.auto_disabled |= request
         return dict(stable_full_success=bool(success),
                     assisted_success=bool(success and self.intervention_control_steps),
                     autonomous_success=bool(success and not self.intervention_control_steps),
                     intervention_control_steps=self.intervention_control_steps,
                     intervention_events=self.episode_interventions,
+                    guide_events=self.guide_events, recovery_events=self.recovery_events,
+                    handoff_disagreement_steps=self.handoff_disagreements,
+                    intervention_count=total, termination_threshold=self.cfg['termination_intervention_steps'],
                     handbacks=sum(self.handbacks), boundary_guard_steps=self.boundary_guard_steps,
             disable_requested=request,
                     stable_grasp_arms=[ARMS[i] for i in sorted(self._stable_grasp)],
