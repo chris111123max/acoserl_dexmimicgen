@@ -1,7 +1,7 @@
 """Per-arm/per-dimension execution provenance; never Actor input."""
 import numpy as np
 # Policy0, Guide1, Recover2, SafeHold3, SafetyProjection4, OriginalDemo5,
-# Rejected6, Unknown7. Equal numeric actions do not imply equal ownership.
+# Rejected6, Unknown7, PrivilegedHandoff8 (1D only). Equal numeric actions do not imply equal ownership.
 def describe(source, policy, executed, active_arm=None, quality=False,
              guide_gripper_owned=False):
     policy=np.asarray(policy);executed=np.asarray(executed)

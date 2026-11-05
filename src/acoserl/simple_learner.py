@@ -91,7 +91,7 @@ def main():
     cfg=json.loads((ROOT/'configs/ascend16/formal.json').read_text())
     manifest,dependency=source_manifest(),dependency_manifest()
     enabled=a.method=='autoserl'
-    manager=dict(runtime='stage_aware_bimanual_recovery_v2_boundary_guard',method=a.method,
+    manager=dict(runtime='privileged_handoff_v1_event_termination_10',method=a.method,
                  dynamic_demo_enabled=enabled,dynamic_capacity=5000,
                  original_quota=96 if enabled else 128,positive_quota=2,
                  no_passive_hold=True,no_forward_grasp_extension=True,
@@ -104,8 +104,11 @@ def main():
                  boundary_guard_controls_not_policy_steps=True,
                  boundary_guard_action_source='Constrained_A_or_B',
                  boundary_guard_demo_admission='never',
-                 dynamic_demo_admission='verified_per_arm_handoff_v3_boundary_guard_exclusion')
-    cfg.update(method='ResFiT RLPD + stage-aware bimanual recovery (SERL ResNet-10)',purpose=a.mode,collector_protocol='simple_bimanual_collector_v1',utd=1,
+                 dynamic_demo_admission='privileged_gripper_terminal_success_or_verified_guide_handback',
+                 handoff_scope='training_only_1d_privileged_object_relative',
+                 handoff_disagreement='per_arm_per_completed_control_sign_mismatch',
+                 intervention_termination='successful_episode_and_guide_events_plus_handoff_disagreements_plus_recovery_events_lt_10')
+    cfg.update(method='ResFiT RLPD + stage-aware bimanual recovery (SERL ResNet-10)',purpose=a.mode,collector_protocol='privileged_handoff_collector_v1',utd=1,
                manager_config=manager,visual_encoder=a.visual,
                checkpoint_seconds=a.checkpoint_seconds,no_grasp_budget=a.no_grasp_budget,
                intervention_enabled=enabled,passive_hold_entry_gate_enabled=False,

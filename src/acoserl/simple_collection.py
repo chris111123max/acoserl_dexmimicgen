@@ -62,9 +62,10 @@ class SimpleWorker(AutoSERLWorker):
         self.stats = dict(env_id=self.env_id, pid=os.getpid(), seed=cfg.seed, episodes=0, resets=0,
                           real_steps=0, proposals=0, interventions=0, recoveries=0, safe_stops=0,
                           reasons={}, episode_length_sum=0, episode_length_histogram={},
-                          assisted_successes=0, autonomous_successes=0, intervention_steps=0)
+                          assisted_successes=0, autonomous_successes=0, intervention_steps=0,
+                          guide_events=0, recovery_events=0, handoff_disagreements=0)
         np.random.seed(cfg.seed)
-        self.event('construct_start', runtime='stage_aware_bimanual_recovery_v2_boundary_guard')
+        self.event('construct_start', runtime='privileged_handoff_v1_event_termination_10')
         self.w = StrictAssemblyEnv(camera_size=84, env_id=self.env_id)
         n = cfg.normalization
         self.standardizer = StateStandardizer(torch.tensor(n['state_mean']), torch.tensor(n['state_std_population']), min_std=.1)
@@ -110,7 +111,6 @@ class SimpleWorker(AutoSERLWorker):
             executed = True; self.last = self.obs(raw); self.frame += 1; self.stats['real_steps'] += 1
             d, a = info['auto_intervention'], info['recovery_result']
             self.stats['intervention_steps'] += int(d['mode'] != 'Normal')
-            self.stats['interventions'] += int(d.get('recovery_step') == 1)
             self.stats['recoveries'] += len(a.get('handbacks', []))
         except SafeStopBeforeStep as error:
             trunc = True
@@ -127,6 +127,10 @@ class SimpleWorker(AutoSERLWorker):
             outcome = m.episode_result(bool(info.get('success', False)))
             self.stats['assisted_successes'] += int(outcome['assisted_success'])
             self.stats['autonomous_successes'] += int(outcome['autonomous_success'])
+            self.stats['guide_events'] += outcome['guide_events']
+            self.stats['recovery_events'] += outcome['recovery_events']
+            self.stats['handoff_disagreements'] += outcome['handoff_disagreement_steps']
+            self.stats['interventions'] += outcome['intervention_count']
             self.event('episode_end', episode=self.episode, length=self.frame, reason=reason, outcome=outcome)
         state = snapshot(self.w.env)
         kind, bootstrap = boundary(term, trunc, bool(info.get('success', False)), info.get('supervisor_stop_reason'),
@@ -137,7 +141,8 @@ class SimpleWorker(AutoSERLWorker):
         executed_source = ('Constrained_Joint' if len(safety) == 2 else
                            'Constrained_A' if safety == [0] else
                            'Constrained_B' if safety == [1] else
-                           'Policy' if decision.get('mode') == 'Normal' else 'Guide_AB')
+                           'Policy' if decision.get('mode') == 'Normal' else
+                           'Handoff_AB' if decision.get('mode') == 'Handoff_AB' else 'Guide_AB')
         positions = np.asarray([p['position'] for p in state['poses']])
         motion = np.linalg.norm(positions-self.previous_eef_positions, axis=1)
         self.previous_eef_positions = positions.copy()
@@ -189,7 +194,7 @@ class SimpleCapability:
 
     def observe(self, payload, **_):
         outcome = payload.get('episode_outcome') or {}
-        if outcome.get('protocol') == 'stage_aware_bimanual_recovery_v2_boundary_guard' and outcome.get('disable_requested'):
+        if outcome.get('protocol') == 'privileged_handoff_v1_event_termination_10' and outcome.get('disable_requested'):
             self.disabled = True
 
     def snapshot(self):
