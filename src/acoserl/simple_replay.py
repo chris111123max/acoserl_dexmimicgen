@@ -17,6 +17,9 @@ def make_row(obs, action, nxt, reward, term, trunc, payload):
     metadata = copy.deepcopy(payload)
     decision = metadata.get('auto_intervention') or {}
     sources = decision.get('per_arm_control', ['Policy', 'Policy'])
+    grips = decision.get('gripper_control', ['Policy', 'Policy'])
+    if len(grips) != 2 or any(g not in ('Policy', 'Handoff', 'Recovery', 'Safety') for g in grips):
+        raise ValueError('unknown privileged gripper action owner')
     if len(sources) != 2 or any(s not in EXPERT | SAFETY_ONLY | {'Policy'} for s in sources):
         raise ValueError('unknown simple-baseline action owner')
     # raw_row creates the common tensor schema. It is not used to infer the
@@ -40,6 +43,12 @@ def make_row(obs, action, nxt, reward, term, trunc, payload):
                 grip[ai] = 2
                 mask[7*ai+6] = True
                 policy_owned[7*ai+6] = False
+        if grips[ai] == 'Handoff':
+            if source in SAFETY_ONLY or (source in EXPERT and source != 'Guide'):
+                raise ValueError('Handoff cannot override a recovery or safety-owned gripper')
+            grip[ai] = 8  # PrivilegedHandoff; expert 1D correction only.
+            mask[7*ai+6] = True
+            policy_owned[7*ai+6] = False
     valid = bool(payload['executed'] and not payload.get('supervisor_stop_reason'))
     # Off-policy Online Replay retains the genuine complete action with
     # provenance; the safety intervention never acquires demo eligibility.
@@ -64,8 +73,10 @@ class SimpleDemo:
     arms complete their own handbacks; failed or unqualified Guides never
     become expert demos merely by running for many control steps.
     """
-    protocol = 'simple_bimanual_demo_handback_v3_boundary_guard'
-    pending_tail = 32
+    protocol = 'privileged_handoff_demo_terminal_v1'
+    # A full two-arm assembly can span ~229 controls. Do not silently evict
+    # the verified grasp from a successful Handoff-assisted episode.
+    pending_tail = 256
 
     def __init__(self, capacity=5000, gamma=.99, original_quota=96, positive_quota=2, seed=0):
         self.capacity, self.gamma = capacity, gamma
@@ -183,6 +194,9 @@ class SimpleDemo:
                 raise ValueError('incomplete per-arm takeover identity')
             owners = frozenset((ai, int(ids[ai])) for ai, source in enumerate(sources)
                                if source in EXPERT)
+            owners |= frozenset((ai, -1) for ai, owner in enumerate(
+                decision.get('gripper_control', ('Policy', 'Policy')))
+                if owner == 'Handoff')
             if not owners or any(takeover <= 0 for _, takeover in owners):
                 raise ValueError('unqualified expert takeover identity')
             if not owners & failed:
@@ -201,6 +215,10 @@ class SimpleDemo:
 
         if safe:
             qualified = self.qualified.setdefault(env, set())
+            # Privileged Handoff segments qualify ONLY on complete official
+            # task success; a gripper correction alone is not a demonstration.
+            if bool(row['next', 'terminated']) and float(row['next', 'reward']) > 0:
+                qualified.update(((0, -1), (1, -1)))
             for handback in handbacks or ():
                 arm = handback['arm']
                 takeover = int(handback['takeover_id'])
