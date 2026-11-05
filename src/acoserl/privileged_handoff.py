@@ -152,7 +152,11 @@ class PrivilegedHandoff:
                 continue
             phase = self.phases[ai]
             if phase == "pregrasp":
-                if self.pick_aligned(state, ai):
+                # Actor may establish a legitimate physical grasp outside the
+                # demonstration's capture pose. Never force that grasp open.
+                already_held = bool(state["actual_grasps"][("A", "B")[ai]][
+                    ("piece_1", "piece_2")[ai]])
+                if already_held or self.pick_aligned(state, ai):
                     next_phases[ai] = "closing"
                     events.append(("A", "B")[ai] + ":close")
                     desired = 1.0
