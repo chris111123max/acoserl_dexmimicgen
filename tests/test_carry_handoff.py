@@ -71,6 +71,27 @@ def test_carry_ready_allows_unmodified_policy_motion():
     assert g.phase(0) == "done"
 
 
+def test_projected_policy_probe_never_claims_unmodified_handback():
+    g, s = gate(), state()
+    g.on_grasp(0, s, 'piece_1')
+    g.arm(0, s, 'piece_1')
+    for _ in range(3):
+        proposal = g.propose(0, s, .01, False, True)
+        assert proposal['kind'] == 'hold'
+        assert not g.complete(0, proposal, s, .01, False, True)
+    assert g.phase(0) == 'ready'
+    proposal = g.propose(0, s, .01, False, True)
+    assert proposal['kind'] == 'policy'
+    assert not g.complete(
+        0, proposal, s, .01, False, True, unmodified_policy=False)
+    assert g.phase(0) == 'ready'
+    assert g.records[0]['controls'] == 4
+    proposal = g.propose(0, s, .01, False, True)
+    assert g.complete(0, proposal, s, .01, False, True,
+                      unmodified_policy=True)
+    assert g.phase(0) == 'done'
+
+
 def test_carry_ready_still_rejects_failed_physical_clearance():
     g, s = gate(), state()
     g.on_grasp(0, s, "piece_1")

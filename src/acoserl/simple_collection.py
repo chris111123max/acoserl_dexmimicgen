@@ -19,6 +19,7 @@ from acoserl.parallel_autoserl import AutoSERLWorker, FourByFour, SpaceOnly, spa
 from acoserl.boundary_guard import SOURCE as BOUNDARY_GUARD
 from acoserl.handoff_motion import SOURCE as HANDOFF_GUARD
 from acoserl.carry_handoff import SOURCES as CARRY_SOURCES
+from acoserl.post_grasp_z_clip import SOURCE as POST_GRASP_Z_CLIP
 
 
 @dataclass
@@ -163,7 +164,7 @@ class SimpleWorker(AutoSERLWorker):
         controls = decision.get('per_arm_control', ('Policy', 'Policy'))
         grip_sources = decision.get('per_arm_gripper_source', ('Policy', 'Policy'))
         safety = [ai for ai, source in enumerate(controls)
-                  if source in ({BOUNDARY_GUARD, HANDOFF_GUARD} | CARRY_SOURCES) or
+                  if source in ({BOUNDARY_GUARD, HANDOFF_GUARD, POST_GRASP_Z_CLIP} | CARRY_SOURCES) or
                   (source == 'Policy' and len(grip_sources) == 2 and
                    grip_sources[ai] == 'EventGuide')]
         executed_source = ('Constrained_Joint' if len(safety) == 2 else

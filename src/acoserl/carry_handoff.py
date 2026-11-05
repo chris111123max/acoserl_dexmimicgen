@@ -127,7 +127,8 @@ class CarryGate:
         return dict(kind=kind, stage=r["stage"], control=r["controls"] + 1,
                     **info)
 
-    def complete(self, ai, proposal, state, clearance, table_contact, held):
+    def complete(self, ai, proposal, state, clearance, table_contact, held,
+                 unmodified_policy=True):
         """Commit only after a full real physical control cycle."""
         r = self.records[ai]
         if (r is None or r["stage"] != proposal["stage"] or
@@ -151,7 +152,11 @@ class CarryGate:
                 r["stage"] = "ready"
         elif kind == "policy":
             if r["stage"] != "ready" or not clear:
-                raise CarryGateError("unqualified unmodified Policy handback")
+                raise CarryGateError("unqualified Policy handback")
+            # A world-Z-clipped action is a real constrained control step,
+            # but it cannot certify an unmodified Policy handback.
+            if not unmodified_policy:
+                return False
             r["stage"] = "done"
             return True
         else:

@@ -16,6 +16,8 @@ from scipy.spatial.transform import Rotation
 from acoserl.gripper_events import DemoGripperEvents
 from acoserl.relative_guide import RelativeGuideReference
 from acoserl.post_grasp_guide import in_window, trigger_distance_m, guide_exit
+from acoserl.post_grasp_z_clip import (
+    SOURCE as POST_GRASP_Z_CLIP, early_carry_eligible, project_world_z)
 from acoserl.handoff_motion import SOURCE as HANDOFF_GUARD
 from acoserl.carry_handoff import (
     CarryGate, CarryGateError, LIFT as CARRY_LIFT,
@@ -29,7 +31,7 @@ RETURN_MODES = frozenset(('ReturnS0', 'ReturnP0', 'ReturnP1'))
 EXPERT = frozenset(('Guide', 'ReturnS0', 'ReturnP0', 'ReturnP1', 'Replay', 'Settle'))
 # Never credit a boundary-safety override as an Actor or expert action.
 from acoserl.boundary_guard import SOURCE as BOUNDARY_GUARD, evaluate as boundary_risk, world_policy_displacement
-SAFETY_ONLY = frozenset((BOUNDARY_GUARD, HANDOFF_GUARD)) | CARRY_SOURCES
+SAFETY_ONLY = frozenset((BOUNDARY_GUARD, HANDOFF_GUARD, POST_GRASP_Z_CLIP)) | CARRY_SOURCES
 # HandoffGuard is applied to the final Policy motion AFTER the OSC servo.
 MOTION_SERVO_SOURCES = (EXPERT | {BOUNDARY_GUARD}) - {'Replay'}
 # Non-safety control limits, kept separate from 350-step recovery and hard
@@ -66,6 +68,7 @@ class ArmState:
     cooldown: int = 0  # retained as zero-valued legacy telemetry
     post_grasp_policy_controls: int = -1  # -1 until real confirmed holding
     post_grasp_guide: bool = False
+    post_grasp_z_clip_controls: int = -1  # count completed Actor-origin carry controls
     boundary_guard_streak: int = 0
     boundary_guard_total: int = 0
     handoff_holding: bool = False
@@ -147,6 +150,13 @@ class SimpleBimanualAutoSERL:
         self.rotations = self.relative_reference.rotations
         self.contacts = Contacts(env)
         self.carry_gate = CarryGate(self.cfg)
+        if self.cfg.get('post_grasp_z_clip_enabled', False):
+            clip_budget = self.cfg['post_grasp_z_clip_max_controls']
+            clip_release = self.cfg['post_grasp_z_clip_release_clearance_m']
+            if (type(clip_budget) is not int or clip_budget < 1 or
+                    not np.isfinite(clip_release) or
+                    clip_release <= self.carry_gate.clearance):
+                raise ValueError('invalid post-grasp downward clip configuration')
         self.auto_disabled = False
         self.sequence = 0
         self.reset()
@@ -868,6 +878,66 @@ class SimpleBimanualAutoSERL:
         self._pending_gripper_poses = (copy.deepcopy(state['poses']) if enabled else None)
         self._issued_gripper_overrides = tuple(event_overrides)
         self._issued_gripper_events = tuple(event_names)
+        # Optional initial-carry safety projection: keep world XY, wrist and
+        # gripper unchanged. Never replace an expert or another safety owner.
+        # Only a real confirmed grasp, a ready/done CarryGate, an early
+        # free-space reference, and clearance below the release margin qualify.
+        z_clips = [None, None]
+        if enabled and self.cfg.get('post_grasp_z_clip_enabled', False):
+            for ai, arm in enumerate(self.arms):
+                if sources[ai] != 'Policy':
+                    continue
+                name = ARMS[ai]
+                p = self.points['arms'][name]
+                obj = p['object']
+                if (self.gripper_events.phases[ai] != 'holding' or
+                        not bool(state['actual_grasps'][name][obj]) or
+                        not self._grasp_stable_now(ai) or
+                        arm.mode not in ('Handoff', 'Policy') or
+                        self.carry_gate.phase(ai) not in ('ready', 'done') or
+                        self.completed[ai] or
+                        self._assembly_contact(state, contact, ai) or
+                        contact['dynamic_A_B_coupled'] or
+                        arm.start >= int(p['first_contact']) or
+                        arm.post_grasp_z_clip_controls < 0 or
+                        arm.post_grasp_z_clip_controls >=
+                        self.cfg['post_grasp_z_clip_max_controls']):
+                    continue
+                try:
+                    gap = object_table_gap(self.env, obj)
+                    eligible = early_carry_eligible(
+                        self.cfg, holding=True, stable_grasp=True, held=True,
+                        mode=arm.mode, carry_phase=self.carry_gate.phase(ai),
+                        assembled=bool(state['official_metrics'].get(
+                            'first_piece_assembled' if ai == 0 else 'task')),
+                        assembly_contact=False, coupled=False,
+                        reference_before_contact=True,
+                        policy_controls=arm.post_grasp_z_clip_controls,
+                        clearance_m=gap)
+                    if not eligible:
+                        continue
+                    sl = slice(7*ai, 7*ai+7)
+                    projected, evidence = project_world_z(
+                        self.env.robots[ai], action[sl])
+                    if evidence is None:
+                        continue
+                    lower, upper = getattr(
+                        self, 'action_bounds', (-np.ones(14), np.ones(14)))
+                    if (np.any(projected < lower[sl] - 1e-6) or
+                            np.any(projected > upper[sl] + 1e-6)):
+                        raise ValueError('projected action outside offline normalization domain')
+                    action[sl] = projected
+                    sources[ai] = POST_GRASP_Z_CLIP
+                    z_clips[ai] = dict(
+                        **evidence, table_clearance_m=float(gap),
+                        policy_controls_before=int(arm.post_grasp_z_clip_controls),
+                        safety_projection=True)
+                    self.events.append(dict(
+                        event='post_grasp_z_clip_proposed', arm=name,
+                        **z_clips[ai]))
+                except (ValueError, KeyError, AttributeError, CarryGateError) as error:
+                    return self._refuse(
+                        policy, 'post_grasp_z_clip_unverified_'+name+':'+str(error))
         lo, hi = getattr(self, 'action_bounds', (-np.ones(14), np.ones(14)))
         # Bound expert outputs, never silently alter an independent Policy arm.
         for ai, source in enumerate(sources):
@@ -898,6 +968,7 @@ class SimpleBimanualAutoSERL:
         expert = [s in EXPERT for s in sources]
         mode = ('Guide_AB' if any(expert) or any(event_overrides) else
                 'HandoffGuard' if HANDOFF_GUARD in sources else
+                'PolicyZSafety' if any(s == POST_GRASP_Z_CLIP for s in sources) else
                 'BoundarySafety' if any(s in SAFETY_ONLY for s in sources) else 'Normal')
         self.mode = mode
         self.last_decision = dict(mode=mode, execute=True, policy_action=policy.tolist(),
@@ -915,6 +986,7 @@ class SimpleBimanualAutoSERL:
             recovery_anchor_indices=[a.recovery_anchor for a in self.arms],
             measurements=measurements, boundary_safety=copy.deepcopy(self._boundary_risks),
             carry_handoff=copy.deepcopy(carry_proposals),
+            post_grasp_z_clip=copy.deepcopy(z_clips),
             recovery_step=1 if any(s in EXPERT and a.age == 0 for s, a in zip(sources, self.arms)) else 2,
             stage=max((self._stage(state, i) for i in range(2)), key=lambda x: x != 'approach_pregrasp'))
         self._issued_action = action.copy()
@@ -962,6 +1034,7 @@ class SimpleBimanualAutoSERL:
                 if kind == 'grasp_confirmed':
                     newly_confirmed.add(ai)
                     self.arms[ai].post_grasp_policy_controls = 0
+                    self.arms[ai].post_grasp_z_clip_controls = 0
                     self.episode_interventions += 1
                     self.carry_gate.on_grasp(
                         ai, state, self.points['arms'][ARMS[ai]]['object'])
@@ -996,7 +1069,8 @@ class SimpleBimanualAutoSERL:
                 touching = object_static_contact(contact, obj)
                 finished = self.carry_gate.complete(
                     ai, proposal, state, gap, touching,
-                    bool(state['actual_grasps'][name][obj]))
+                    bool(state['actual_grasps'][name][obj]),
+                    unmodified_policy=(issued[ai] == 'Policy'))
             except CarryGateError as error:
                 self.stop('carry_handoff_physics_rejected_' + name + ':' + str(error))
             else:
@@ -1011,6 +1085,10 @@ class SimpleBimanualAutoSERL:
                 if finished:
                     self.events.append(dict(event='carry_policy_probe_completed',
                         arm=name, complete_physics=True))
+                elif proposal['kind'] == 'policy':
+                    self.events.append(dict(event='carry_projected_probe_completed',
+                        arm=name, complete_physics=True,
+                        motion_source=issued[ai], handback=False))
         for ai, name in enumerate(ARMS):
             if (self.gripper_events.phases[ai] == 'holding' and
                     not state['actual_grasps'][name][self.points['arms'][name]['object']]
@@ -1039,9 +1117,22 @@ class SimpleBimanualAutoSERL:
                 nearest = self._measure(state, ai, domain)[0]
                 arm.nearest.append(nearest)
                 arm.floor = max(arm.floor, domain[0])
+            # The initial post-grasp projection budget advances on completed
+            # Actor-origin controls, whether unmodified or safety projected.
+            # It does not conflate projected motion with an unmodified handback.
+            if (issued[ai] in ('Policy', POST_GRASP_Z_CLIP) and
+                    not self.stop_reason and
+                    arm.post_grasp_z_clip_controls >= 0 and
+                    ai not in newly_confirmed):
+                arm.post_grasp_z_clip_controls += 1
+            if issued[ai] == POST_GRASP_Z_CLIP and not self.stop_reason:
+                self.events.append(dict(
+                    event='post_grasp_z_clip_completed', arm=ARMS[ai],
+                    controls=int(arm.post_grasp_z_clip_controls),
+                    complete_physics=True))
             # The sliding reference window advances ONLY on a completed
-            # Policy control cycle. Guide, Return, Replay and even a long
-            # Settle are expert operations, not evidence of Actor progress.
+            # unmodified Policy control cycle. Guide, projected safety,
+            # Return, Replay and Settle are not unmodified Actor progress.
             if issued[ai] == 'Policy' and not self.stop_reason:
                 arm.start = min(self.n_states-1, max(arm.floor, arm.start+1))
                 if (arm.post_grasp_policy_controls >= 0 and
@@ -1201,6 +1292,8 @@ class SimpleBimanualAutoSERL:
             per_arm_cooldown=[a.cooldown for a in self.arms],
             per_arm_post_grasp_policy_controls=[a.post_grasp_policy_controls
                                                 for a in self.arms],
+            per_arm_post_grasp_z_clip_controls=[a.post_grasp_z_clip_controls
+                                                 for a in self.arms],
             boundary_guard_streak=[a.boundary_guard_streak for a in self.arms],
             boundary_guard_total=[a.boundary_guard_total for a in self.arms],
             control_events=copy.deepcopy(self.events[self._event_cursor:]),

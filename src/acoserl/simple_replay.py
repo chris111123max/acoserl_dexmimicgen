@@ -14,6 +14,7 @@ from acoserl.simple_autoserl import ARMS, EXPERT, SAFETY_ONLY
 from acoserl.boundary_guard import SOURCE as BOUNDARY_GUARD
 from acoserl.handoff_motion import SOURCE as HANDOFF_GUARD
 from acoserl.carry_handoff import SOURCES as CARRY_SOURCES
+from acoserl.post_grasp_z_clip import SOURCE as POST_GRASP_Z_CLIP
 
 
 def make_row(obs, action, nxt, reward, term, trunc, payload):
@@ -104,7 +105,8 @@ class SimpleDemo:
             verified_handbacks=0, strict_terminal_qualifications=0,
             dropped_on_restore_rows=0,
             boundary_guard_rows=0, boundary_guard_discarded_candidate_rows=0,
-            handoff_guard_rows=0, carry_gate_rows=0)
+            handoff_guard_rows=0, carry_gate_rows=0,
+            post_grasp_z_clip_rows=0, post_grasp_z_clip_discarded_candidate_rows=0)
         self.last_sample = {}
         self._positive = None
 
@@ -171,6 +173,19 @@ class SimpleDemo:
             if bool(row['next','done']):
                 self.close_episode(env, bool(row['next','bootstrap_allowed']),
                                    int(row['next','boundary_kind']))
+            return
+        if any(source == POST_GRASP_Z_CLIP for source in source_controls):
+            # A projected Policy action is genuine Online Replay, but never
+            # an original Policy handback or a candidate Dynamic Demo.
+            self.stats['post_grasp_z_clip_rows'] += 1
+            self.stats['post_grasp_z_clip_discarded_candidate_rows'] += len(
+                self.pending.get(env, ()))
+            self.pending.pop(env, None)
+            self.qualified.pop(env, None)
+            self._close_stream(env, bootstrap=True, kind=7)
+            if bool(row['next', 'done']):
+                self.close_episode(env, bool(row['next', 'bootstrap_allowed']),
+                                   int(row['next', 'boundary_kind']))
             return
         if any(source == HANDOFF_GUARD for source in source_controls):
             # Legacy limiter retained for schema compatibility only.
